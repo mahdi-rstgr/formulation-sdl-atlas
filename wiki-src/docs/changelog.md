@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-11-07 (second update): All figures and a new interface
+
+### Figures
+
+- **All ten figures are now shown,** each with its full V3 caption (citations linked):
+    - **Figure 2** on [Material Properties](materials/properties.md) and [Dispensing by Material Class](materials/dispensing.md);
+    - **Figure 5** on [Commercial Dispensers](hardware/dispensers.md), [Integrated Platforms](hardware/platforms.md) and [By Yield Stress & Cost](hardware/cost-accuracy.md);
+    - **Figure 6** on [Simulation & Digital Twins](simulation/index.md#the-fidelity-hierarchy).
+- The notes saying Figures 2, 5 and 6 were omitted have been removed. Their captions credit the third-party photographs, screenshots and logos they contain.
+- New **[Figures](figures.md)** gallery listing all ten figures, with captions and links to the pages that discuss each.
+- Click any figure to enlarge it (glightbox).
+
+### Interface
+
+- The visual identity now matches the [interactive atlas](https://mahdi-rstgr.github.io/formulation-sdl-atlas/):
+    - fonts: Bricolage Grotesque (headings), IBM Plex Sans (body) and IBM Plex Mono (code);
+    - colours: an ink-navy header and an accent blue that lightens in dark mode;
+    - material-class badges for <span class="mc mc-liquid">liquid</span> <span class="mc mc-semi-solid">semi-solid</span> <span class="mc mc-powder">powder</span> <span class="mc mc-object">object</span>.
+- Top tabs follow the seven steps, plus Outlook and Reference tabs, with instant page loading.
+- A "Back to atlas" button sits in the header. The footer carries the citation and a repository link.
+- New landing page: a hero section with buttons, the graphical abstract, cards for the seven steps, and the citation.
+- Tables have sticky headers, zebra rows, horizontal scrolling and tabular numbers.
+- Figures are shown as cards. Admonitions use the site palette.
+
 ## 2026-11-07: Rebuilt and updated to manuscript V3
 
 The wiki was rebuilt as part of the [formulation-sdl-atlas](https://github.com/mahdi-rstgr/formulation-sdl-atlas) repository. It was updated to the final V3 manuscript, *Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents* (Rastegardoost, Bao, Sadr, Abdollahi, Darvish, Clasky, Ohsaka, Le Devedec; manuscript in preparation, 2026).

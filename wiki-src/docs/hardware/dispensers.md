@@ -63,8 +63,9 @@ Powders reverse the liquid market. Reported resolution is excellent: ±10 µg fo
 
 "Quote" means no public price was found. "–" means no quantified accuracy is published.
 
-!!! note "Figure 5 not reproduced"
-
-    The review's Figure 5 plots these products on one price axis and gives qualitative profiles of four platforms. It contains vendor product photographs and is not shown here. See [Integrated Platforms](platforms.md) for a text summary.
+<figure class="fig" markdown>
+![Figure 5: commercial dispensers and platforms by price, and platform profiles](../assets/figure_05.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 5.** (A) Commercial dispensers and platforms by material class, mechanism and price (hollow markers: quote only; bracketed numbers: references). (B–E) Qualitative 0–10 profiles of four platforms (‘solid handling’: labware transfer). Photographs adapted from Opentrons [\[15\]](../references.md#ref-15), Chemspeed [\[71\]](../references.md#ref-71), Hamilton [\[16\]](../references.md#ref-16) and Eppendorf [\[75\]](../references.md#ref-75).</figcaption>
+</figure>
 
 **See also:** [Integrated Platforms](platforms.md) · [Retrofits Beyond Factory Spec](retrofits.md) · [Hardware by Material Type](by-material.md)

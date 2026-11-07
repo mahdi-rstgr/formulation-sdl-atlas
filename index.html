@@ -25,6 +25,7 @@
       <a href="#steps">Seven steps</a>
       <a href="#scenarios">Scenarios</a>
       <a href="#product">Self-Formulating Lab</a>
+      <a href="builder/"><b>Lab Builder</b></a>
       <a href="wiki/">Wiki</a>
       <a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a>
     </nav>
@@ -44,7 +45,7 @@
     </div>
     <div class="cta">
       <a class="btn primary" href="#steps">Follow the premix cup</a>
-      <a class="btn" href="#planner">Plan a cell</a>
+      <a class="btn" href="builder/">Build your own lab</a>
     </div>
   </div>
   <figure class="hero-fig">
@@ -160,13 +161,13 @@
     <li><span class="state done">Complete</span><h3>Review</h3><p>Self-Driving Laboratories for Formulation. Eight authors, 178 references, seven tables.</p><a href="#cite">Cite</a></li>
     <li><span class="state done">Updated to V3</span><h3>Wiki</h3><p>Living directory of materials, strategies, hardware, prices and tools, now rebuilt from the final manuscript.</p><a href="wiki/">Open the wiki</a></li>
     <li><span class="state next">Designed</span><h3>Library agent</h3><p>Watches vendor releases and proposes catalogue changes with source and date. A person approves each one.</p><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas/blob/main/docs/library-agent.md">Spec</a></li>
-    <li><span class="state wip">Prototype</span><h3>SFL agent + twin</h3><p>Talks with the user, proposes a cell, and shows it in the twin above with collision-checked motions.</p><a href="#planner">Try the selection step</a></li>
+    <li><span class="state wip">Prototype</span><h3>SFL agent + Lab Builder</h3><p>Talks with the user, proposes a cell, and shows it in the twin above with collision-checked motions. In the Lab Builder, users drag commercial devices into a 3D workstation and the cart prices it live.</p><a href="builder/">Open the Lab Builder</a></li>
   </ol>
 
   <div class="planner" id="planner">
     <div class="planner-in">
       <h3>Plan a cell</h3>
-      <p class="muted small">A preview of the SFL agent's selection step. It is rule-based and uses list prices from the review; the full agent will add layout, footprint and drag-and-drop editing.</p>
+      <p class="muted small">A preview of the SFL agent's selection step. It is rule-based and uses list prices from the review. To lay the cell out yourself, open the <a href="builder/">Lab Builder</a>.</p>
       <form id="plan-form">
         <label for="budget">Budget for handling hardware: <output id="budget-out">$40,000</output></label>
         <input type="range" id="budget" min="5000" max="150000" step="1000" value="40000">

@@ -8,12 +8,21 @@ repo_url: https://github.com/mahdi-rstgr/formulation-sdl-atlas
 repo_name: formulation-sdl-atlas
 edit_uri: edit/main/wiki-src/docs/
 copyright: >-
-  &copy; 2026 the authors. Companion to a manuscript in preparation.
+  Companion to <em>Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects,
+  from Robots to Digital Twins and AI Agents</em> · Rastegardoost, Bao, Sadr, Abdollahi, Darvish, Clasky, Ohsaka,
+  Le Devedec · manuscript in preparation, 2026 ·
+  <a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">Source on GitHub</a>
 
 theme:
   name: material
+  custom_dir: overrides
   language: en
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
   features:
+    - navigation.tabs
+    - navigation.instant
     - navigation.sections
     - navigation.top
     - navigation.indexes
@@ -26,15 +35,15 @@ theme:
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: teal
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: teal
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -43,6 +52,14 @@ theme:
 
 plugins:
   - search
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
 
 markdown_extensions:
   - abbr
@@ -77,6 +94,13 @@ extra_css:
 
 extra:
   generator: false
+  social:
+    - icon: material/map-outline
+      link: https://mahdi-rstgr.github.io/formulation-sdl-atlas/
+      name: Interactive atlas
+    - icon: fontawesome/brands/github
+      link: https://github.com/mahdi-rstgr/formulation-sdl-atlas
+      name: Source on GitHub
 
 validation:
   omitted_files: warn
@@ -85,38 +109,41 @@ validation:
   anchors: warn
 
 nav:
-  - Home: index.md
-  - Seven-step map: steps.md
-  - "Step 1 · Dose: Material Fundamentals":
+  - Home:
+      - index.md
+      - Seven-step map: steps.md
+      - Figures: figures.md
+      - Changelog: changelog.md
+  - "1 · Dose":
       - Material Properties: materials/properties.md
       - Material Spectrum: materials/spectrum.md
       - Dispensing by Material Class: materials/dispensing.md
       - Literature Scenarios (Fig. 3): materials/literature-scenarios.md
-  - Recurring Strategies:
-      - strategies/index.md
-      - Characterize, then Act: strategies/characterize-act.md
-      - Iterative Optimization: strategies/iterative-optimization.md
-      - Real-Time Correction: strategies/real-time-correction.md
-      - Feedforward Prediction: strategies/feedforward-prediction.md
-      - Simulation-Based Generalization: strategies/simulation-generalization.md
-      - Physical Reinvention: strategies/physical-reinvention.md
-      - Tactile Retrieval: strategies/tactile-retrieval.md
-  - "Step 2 · Move: Object Handling":
+      - Recurring Strategies:
+          - strategies/index.md
+          - Characterize, then Act: strategies/characterize-act.md
+          - Iterative Optimization: strategies/iterative-optimization.md
+          - Real-Time Correction: strategies/real-time-correction.md
+          - Feedforward Prediction: strategies/feedforward-prediction.md
+          - Simulation-Based Generalization: strategies/simulation-generalization.md
+          - Physical Reinvention: strategies/physical-reinvention.md
+          - Tactile Retrieval: strategies/tactile-retrieval.md
+  - "2 · Move":
       - Robot Classes: object-handling/robot-classes.md
-  - "Steps 3–4 · Buy & Extend: Commercial Hardware":
+  - "3–4 · Buy & Extend":
       - hardware/index.md
       - Commercial Dispensers: hardware/dispensers.md
       - Integrated Platforms: hardware/platforms.md
       - Retrofits Beyond Factory Spec: hardware/retrofits.md
       - By Material Type: hardware/by-material.md
       - By Yield Stress & Cost: hardware/cost-accuracy.md
-  - "Step 5 · Rehearse: Simulation & Digital Twins":
+  - "5 · Rehearse":
       - simulation/index.md
       - Simulation Tools: simulation/tools.md
-  - "Step 6 · Orchestrate":
+  - "6 · Orchestrate":
       - orchestration/index.md
       - Open-Source Orchestration Software: orchestration/open-source.md
-  - "Step 7 · Decide: AI Infrastructure":
+  - "7 · Decide":
       - ai/index.md
       - Data & Decision Models: ai/data-and-decisions.md
       - LLMs & AI Agents: ai/agents.md
@@ -124,10 +151,10 @@ nav:
       - Feedback Control: ai/feedback-control.md
       - Machine Learning: ai/machine-learning.md
       - Digital Twins & LLMs: ai/digital-twins.md
-  - Safety & Future:
+  - Outlook:
       - Safety in Autonomous Material Handling: outlook/safety.md
       - Future Directions & Emerging Technologies: outlook/future-directions.md
-  - Glossary: glossary.md
-  - References: references.md
-  - Contributing: contributing.md
-  - Changelog: changelog.md
+  - Reference:
+      - Glossary: glossary.md
+      - References: references.md
+      - Contributing: contributing.md

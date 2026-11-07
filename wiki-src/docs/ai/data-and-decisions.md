@@ -6,9 +6,9 @@
 
 A formulation SDL that can dose, move, mix, rehearse and orchestrate still needs something to decide **what to make next**. Every such decision depends on the data, models and strategies behind it.
 
-<figure markdown>
-![Figure 9: the decision ladder](../assets/figure_09.jpg)
-<figcaption><strong>Figure 9.</strong> The decision ladder: data (bottom), models that choose the next experiment (middle) and AI agents (top), connected to the robots by software and data pipelines (right).</figcaption>
+<figure class="fig" markdown>
+![Figure 9: the decision ladder](../assets/figure_09.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 9.** The decision ladder: data (bottom), models that choose the next experiment (middle) and AI agents (top), connected to the robots by software and data pipelines (right).</figcaption>
 </figure>
 
 ## What a formulation experiment records

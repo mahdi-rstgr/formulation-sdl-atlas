@@ -10,6 +10,15 @@ Automated material handling systems span a wide cost range ($1k–$500k+) with c
 
 ---
 
+## Sourced view: price versus mechanism (Figure 5)
+
+<figure class="fig" markdown>
+![Figure 5: commercial dispensers and platforms by price, and platform profiles](../assets/figure_05.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 5.** (A) Commercial dispensers and platforms by material class, mechanism and price (hollow markers: quote only; bracketed numbers: references). (B–E) Qualitative 0–10 profiles of four platforms (‘solid handling’: labware transfer). Photographs adapted from Opentrons [\[15\]](../references.md#ref-15), Chemspeed [\[71\]](../references.md#ref-71), Hamilton [\[16\]](../references.md#ref-16) and Eppendorf [\[75\]](../references.md#ref-75).</figcaption>
+</figure>
+
+---
+
 ## Cost vs. Accuracy Scatter (Typical Values)
 
 ```

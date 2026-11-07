@@ -36,8 +36,8 @@ A formulator who wants to automate should be able to describe what they need in 
 | Browser twin | `web/index.html`; static version on this site | Done |
 | Selection step from budget, materials and repeatability | Atlas page, "Plan a cell" | Preview (rule-based) |
 | Layout optimizer | | Not started |
-| Drag-and-drop editing | | Not started |
-| Bill-of-materials export | | Not started |
+| Drag-and-drop editing | `builder/` (Lab Builder) | Done: library of 39 devices, live cart, overlap, reach and workstation checks, share links, CSV |
+| Bill-of-materials export | `builder/` (CSV) | Done (list prices from the review) |
 | Catalogue beyond UR arms in the twin (dispensers and robots from Tables 2–4) | | Not started (needs meshes) |
 
 ## Design rules

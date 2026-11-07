@@ -26,9 +26,10 @@ Simulations for SDLs differ mainly in how much physics they resolve. Each of the
 - **Level 3** adds masses, friction and contact, which are needed for grasp stability and controller response.
 - **Level 4** resolves the material itself: liquids by computational fluid dynamics (CFD) or smoothed-particle hydrodynamics (SPH), powders by the discrete element method (DEM) and pastes by the material point method (MPM). It is the only level that can predict a dispensed mass or a powder flow.
 
-!!! note "Figure 6 not reproduced"
-
-    The review's Figure 6 illustrates the four levels with screenshots and logos from SimPy, MoveIt 2, MuJoCo and Isaac Lab. Because it contains third-party logos it is not shown here.
+<figure class="fig" markdown>
+![Figure 6: four fidelity levels of a formulation twin](../assets/figure_06.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 6.** Four fidelity levels of a formulation twin, (A) workflow, (B) kinematics, (C) contact dynamics and (D) material physics, at rising compute cost, with example tools (SimPy, MoveIt 2, MuJoCo, Isaac Lab; screenshots and logos from the projects’ repositories under MIT, BSD-3-Clause and Apache-2.0 licenses; logos are trademarks of their owners).</figcaption>
+</figure>
 
 ## Simulators and material models
 
@@ -44,9 +45,9 @@ The cost is an RTX-class GPU. Its interface combines a scene hierarchy, a physic
 
 Chemistry-specific twins are starting to appear. **Chemistry3D** simulates robotic chemistry tasks with liquids and visualizes temperature, color and pH changes [\[110\]](../references.md#ref-110). **MATTERIX** couples manipulation with powder and liquid dynamics, device functions and simple kinetics, and reports sim-to-real transfer [\[111\]](../references.md#ref-111). Vendor tools such as URSim and RoboDK are the easiest to adopt but rarely model instruments or materials.
 
-<figure markdown>
-![Figure 7: the digital twin as a working environment](../assets/figure_07.jpg)
-<figcaption><strong>Figure 7.</strong> The digital twin as a working environment: (A) motion planning in ROS 2 with MoveIt 2, (B) a GPU simulator interface, (C) a DEM/MPM material solver and (D) rehearsal of AI-proposed plans before release to the cell.</figcaption>
+<figure class="fig" markdown>
+![Figure 7: the digital twin as a working environment](../assets/figure_07.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 7.** The digital twin as a working environment: (A) motion planning in ROS 2 with MoveIt 2, (B) a GPU simulator interface, (C) a DEM/MPM material solver and (D) rehearsal of AI-proposed plans before release to the cell.</figcaption>
 </figure>
 
 ### Material models by class

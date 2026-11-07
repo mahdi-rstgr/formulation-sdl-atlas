@@ -4,6 +4,12 @@
 
     The review groups formulation materials by **how they are handled**: liquids (pipetted or pumped), semi-solids (yield stress or viscosity high enough to require extrusion) and powders (particulate solids) [\[13\]](../references.md#ref-13), [\[14\]](../references.md#ref-14). Its Table 1, reproduced on [Dispensing by Material Class](dispensing.md), gives the working ranges used throughout this wiki: low-viscosity liquids 1–20 cP, medium 20–500 cP, high 500–100,000 cP; gels with yield stress ~10–500 Pa; pastes ~100–10,000 Pa, often thixotropic; powders from free-flowing (Hausner ratio ~1.00–1.11) to very cohesive (>1.4), with angles of repose from ~25° to >66°. Industry characterizes semi-solids at two representative shear rates (low, ~1–10 s⁻¹, and high, ~100–1000 s⁻¹) rather than the full flow curve [\[19\]](../references.md#ref-19); tribocharging [\[35\]](../references.md#ref-35) and humidity drive wall adhesion in powders.
 
+
+<figure class="fig" markdown>
+![Figure 2: material properties and handling mechanisms](../assets/figure_02.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 2.** Material properties and handling mechanisms: (A) liquids to pastes and (B) powders by cohesion; (C, E, G) selection charts and (D, F, H) mechanisms for liquids, semi-solids and powders. Product photographs adapted from Opentrons [\[15\]](../references.md#ref-15), Hamilton [\[16\]](../references.md#ref-16), Nordson EFD [\[17\]](../references.md#ref-17) and XQ Instruments; powder dispensers are compared in [\[18\]](../references.md#ref-18).</figcaption>
+</figure>
+
 ## Overview
 
 The key physical properties of liquids, semi-solids, and powders determine which automated handling strategy is most appropriate. Materials span a continuum from low-viscosity Newtonian liquids to highly viscous pastes, yield-stress fluids, powders, and solid dosage forms.

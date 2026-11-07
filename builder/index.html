@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Formulation Lab Builder</title>
+<meta name="description" content="Drag commercial dispensers, gantries, robot arms, mixers and platforms into a 3D workstation, check reach and overlaps, and watch the cart update with list prices from the review.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="builder.css">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="../">Formulation SDL Atlas</a>
+  <h1>Lab Builder</h1>
+  <div class="bar-tools">
+    <label for="template" class="sr">Start from</label>
+    <select id="template">
+      <option value="">Start from a template…</option>
+      <option value="sfl">Self-Formulating Lab cell</option>
+      <option value="liquid">Liquid-handling bench</option>
+      <option value="powder">Powder &amp; paste station</option>
+      <option value="empty">Empty workstation</option>
+    </select>
+    <button type="button" id="share">Copy share link</button>
+    <button type="button" id="csv">Download parts list (CSV)</button>
+    <a href="../wiki/" class="lnk">Wiki</a>
+  </div>
+</header>
+
+<main class="app">
+  <aside class="lib" aria-label="Device library">
+    <div class="lib-head">
+      <h2>Devices</h2>
+      <label for="search" class="sr">Search devices</label>
+      <input id="search" type="search" placeholder="Search devices, e.g. powder, SCARA, Opentrons">
+      <p class="muted small">Drag a device into the workstation, or press Add. Prices and references come from the review's Tables 2–4.</p>
+    </div>
+    <div id="library" class="lib-list"></div>
+  </aside>
+
+  <section class="work" aria-label="Workstation">
+    <div id="canvas" class="canvas"></div>
+    <div class="work-hud">
+      <div class="area">
+        <span>Workstation</span>
+        <label for="aw" class="sr">Width (m)</label><input id="aw" type="number" min="1" max="10" step="0.5" value="3"> ×
+        <label for="ad" class="sr">Depth (m)</label><input id="ad" type="number" min="1" max="10" step="0.5" value="2"> m
+        <button type="button" id="home">Reset view</button>
+        <button type="button" id="clear">Clear</button>
+      </div>
+      <p class="keys muted small">Drag a device to move it · Q / E rotate 15° · R rotate 90° · D duplicate · Delete remove · drag empty space to orbit</p>
+    </div>
+    <div id="selected" class="selected"></div>
+  </section>
+
+  <aside class="cart" aria-label="Cart and checks">
+    <h2>Cart <span class="pill" id="count">0</span></h2>
+    <div class="table-wrap">
+      <table class="lines"><thead><tr><th>Device</th><th class="num">Qty</th><th class="num">List price</th></tr></thead><tbody id="cart-lines"></tbody></table>
+    </div>
+    <div class="total"><span>Total, list prices</span><b id="cart-total">$0</b></div>
+    <p class="muted small" id="cart-quote"></p>
+    <label for="budget" class="budget-l">Budget (USD)</label>
+    <input id="budget" type="number" min="0" step="1000" value="60000">
+    <div class="bbar"><i id="budget-bar"></i></div>
+    <p class="small" id="budget-note"></p>
+    <h3>Layout checks</h3>
+    <ul id="checks" class="checks"></ul>
+    <p class="muted tiny">Platform bodies are approximate shapes at approximate footprints. Check vendor datasheets before you plan a room. Real meshes: the formulation-cell devices, UR e-Series (BSD-3) and UFACTORY Lite 6 (BSD-3).</p>
+  </aside>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="builder.js"></script>
+</body>
+</html>

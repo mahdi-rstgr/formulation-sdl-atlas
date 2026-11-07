@@ -27,6 +27,11 @@ Gantry accuracy is rarely published.
 
 ## Generalist versus specialist
 
+<figure class="fig" markdown>
+![Figure 5: commercial dispensers and platforms by price, and platform profiles](../assets/figure_05.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 5.** (A) Commercial dispensers and platforms by material class, mechanism and price (hollow markers: quote only; bracketed numbers: references). (B–E) Qualitative 0–10 profiles of four platforms (‘solid handling’: labware transfer). Photographs adapted from Opentrons [\[15\]](../references.md#ref-15), Chemspeed [\[71\]](../references.md#ref-71), Hamilton [\[16\]](../references.md#ref-16) and Eppendorf [\[75\]](../references.md#ref-75).</figcaption>
+</figure>
+
 Placed on one price axis, the products fall into three patterns:
 
 - List-priced products cluster in liquid handling.
@@ -35,7 +40,7 @@ Placed on one price axis, the products fall into three patterns:
 
 The **Opentrons Flex** and the **Hamilton Microlab STAR** go furthest beyond a single class. Each is sold with an optional gripper arm that moves labware as well as liquid. Even as an add-on, this generalist capability shows commercially that the direction argued in the review is feasible: platforms that recognize which part of the material spectrum they are working in and switch tools to match.
 
-The review rates four platforms on nine criteria to make the generalist-versus-specialist trade-off explicit:
+The review rates four platforms on nine criteria to make the generalist-versus-specialist trade-off explicit (Fig. 5B–E):
 
 - accuracy
 - price

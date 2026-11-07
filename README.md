@@ -45,6 +45,25 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 `data/twin/<arm>.json` holds the meshes (base64), the kinematics and the planned trajectories. The page runs forward kinematics in the browser. Nothing is simulated beyond kinematics and clearance: there are no forces and no material physics (level 2 of the review's fidelity hierarchy).
 
+## The Lab Builder
+
+[`builder/`](builder/) is a three-pane tool. On the left is a device library, in the middle a 3D workstation, and on the right a cart.
+
+- **Devices:** users drag devices from six categories into the workstation:
+  - material handlers: liquid, paste and powder dispensers
+  - motion providers: a CNC gantry with a three-slot tool dock in front
+  - robot arms: all five classes in the review (Cartesian gantry, SCARA, 6-DOF, 7-DOF, mobile manipulator)
+  - mixers
+  - balances and stations
+  - integrated platforms (OT-2, Flex, Hamilton STAR, epMotion, Fluent, Biomek i7, Bravo, Echo, I.DOT, Chemspeed)
+- **Moving devices:** drag to move, Q/E/R to rotate, D to duplicate, Delete to remove. Tools dropped near a CNC dock slot snap into it.
+- **Cart:** updates live with list prices from Tables 2–4 (USD and EUR kept separate). Quote-only, lab-built and unlisted items are shown but not added to the total. There is a budget bar.
+- **Layout checks:** footprint overlaps, devices outside the workstation, and which stations each arm can reach. Reach rings are drawn on the floor.
+- **Templates and sharing:** templates (SFL cell, liquid-handling bench, powder and paste station), a share link that stores the layout in the URL, a CSV parts list, and autosave in the browser.
+- **Models:**
+  - Real meshes: the formulation-cell CNC gantry, eco-PEN, powder dispenser, balance, mixer and cup, the four UR e-Series arms, and the UFACTORY Lite 6 (`data/models/`, exported by `scripts/export_models.py`).
+  - Everything else is drawn procedurally at approximate footprints (`builder/catalog.js`).
+
 ## Repository layout
 
 | Path | Content |
@@ -52,6 +71,8 @@ The twin is the Self-Formulating Lab cell exported as static data:
 | `index.html`, `assets/` | The atlas page (three.js 0.160 from unpkg, plain ES modules, no build) |
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1–7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |
 | `data/twin/*.json` | Twin scenes and planned transfers per arm |
+| `data/models/*.json` | Real device and arm meshes for the Lab Builder (quantised) |
+| `builder/` | Lab Builder: `catalog.js` (devices, procedural models), `builder.js` (app) |
 | `figures/` | Review figures used on the site (Figs. 1, 3, 4, 7, 8, 9 and the graphical abstract) |
 | `wiki-src/` | MkDocs Material source of the wiki |
 | `wiki/` | Built wiki, served at `/wiki/` |
@@ -111,5 +132,6 @@ Mohammad M. Rastegardoost<sup>a,*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a
 
 - **Code** (`index.html`, `assets/`, `scripts/`): MIT, see [LICENSE](LICENSE).
 - **Review text, tables, figures and wiki content:** © the authors, all rights reserved until the review is published.
-- **UR e-Series meshes and kinematics in `data/twin/`:** BSD-3-Clause, Universal Robots ([data/twin/LICENSE-UR](data/twin/LICENSE-UR)).
+- **UR e-Series meshes and kinematics in `data/twin/` and `data/models/ur*.json`:** BSD-3-Clause, Universal Robots ([data/twin/LICENSE-UR](data/twin/LICENSE-UR)).
+- **UFACTORY Lite 6 mesh (`data/models/lite6.json`):** BSD-3-Clause, UFACTORY Inc., via hygradme/lite6_urdf ([data/models/LICENSE-Lite6](data/models/LICENSE-Lite6)).
 - **Product names** are trademarks of their owners and are used only to identify products. Prices are list prices found by the authors in 2026, and many vendors quote on request.

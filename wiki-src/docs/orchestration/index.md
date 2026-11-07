@@ -12,9 +12,9 @@ Dispensers, robots, retrofits and a digital twin only become a self-driving labo
 
 The review calls this layer **orchestration software**.
 
-<figure markdown>
-![Figure 8: architecture of a formulation SDL](../assets/figure_08.jpg)
-<figcaption><strong>Figure 8.</strong> Architecture of a formulation SDL: (A) execution and equipment hierarchies, (B) functional layers of orchestration software and (C) functions provided by eight open-source systems (details in Supplementary Table S1).</figcaption>
+<figure class="fig" markdown>
+![Figure 8: architecture of a formulation SDL](../assets/figure_08.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 8.** Architecture of a formulation SDL: (A) execution and equipment hierarchies, (B) functional layers of orchestration software and (C) functions provided by eight open-source systems (details in Supplementary Table S1).</figcaption>
 </figure>
 
 ## Terms: two hierarchies

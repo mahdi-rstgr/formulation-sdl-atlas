@@ -1,104 +1,127 @@
-# Self-Driving Laboratories for Formulation
+---
+title: Home
+hide:
+  - navigation
+  - toc
+---
 
-## A wiki for handling liquids, pastes, powders and objects
+<div class="hero" markdown>
 
-This wiki accompanies the review:
+<p class="hero__eyebrow">Companion wiki · Manuscript V3</p>
+
+# Self-Driving Laboratories for Formulation { .hero__title }
+
+<p class="hero__pitch">How a self-driving lab doses liquids, pastes and powders, moves the containers that hold them, rehearses each step in a digital twin, and decides what to make next.</p>
+
+<div class="hero__actions" markdown>
+<a class="md-button md-button--primary" href="../">Open the atlas</a>
+[Seven-step map](steps.md){ .md-button }
+[Figures](figures.md){ .md-button }
+</div>
+
+</div>
+
+<div class="home-split" markdown>
+
+<div markdown>
+
+This wiki is a browsable, living companion to the review *Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents*. It follows the review's seven steps and includes its tables, all ten figures and 178 linked references.
+
+Formulation means combining ingredients into products whose properties depend on both composition and process. An autonomous formulation experiment is a physical choreography:
+
+1. ingredients with very different rheology are dosed into one premix container;
+2. the container is carried to a mixer;
+3. the mix is processed and characterized, often with materials the robot has never handled.
+
+Landmark SDLs show that this physical layer can limit autonomy as much as the planning algorithm does [\[3\]](references.md#ref-3), [\[4\]](references.md#ref-4). The guiding question at every step is **how should this material, in this container, be handled next?**
+
+<span class="mc mc-liquid">Liquids</span> <span class="mc mc-semi-solid">Semi-solids</span> <span class="mc mc-powder">Powders</span> <span class="mc mc-object">Objects</span>
+
+</div>
+
+<figure class="fig" markdown>
+![Graphical abstract of the review](assets/graphical_abstract.jpg){ loading=lazy }
+<figcaption markdown="span">Graphical abstract.</figcaption>
+</figure>
+
+</div>
+
+## The seven steps
+
+<div class="step-cards" markdown>
+
+<a class="step-card" href="materials/dispensing/">
+<span class="step-card__num">1</span>
+<span class="step-card__name">Dose</span>
+<span class="step-card__q">How is each ingredient dosed?</span>
+<span class="step-card__more">Materials, dispensing, 20 scenarios, strategies</span>
+</a>
+
+<a class="step-card" href="object-handling/robot-classes/">
+<span class="step-card__num">2</span>
+<span class="step-card__name">Move</span>
+<span class="step-card__q">How do containers move?</span>
+<span class="step-card__more">Gantries, SCARA, arms, cobots, mobile manipulators</span>
+</a>
+
+<a class="step-card" href="hardware/dispensers/">
+<span class="step-card__num">3</span>
+<span class="step-card__name">Buy</span>
+<span class="step-card__q">What can be bought?</span>
+<span class="step-card__more">Dispensers and integrated platforms by accuracy and price</span>
+</a>
+
+<a class="step-card" href="hardware/retrofits/">
+<span class="step-card__num">4</span>
+<span class="step-card__name">Extend</span>
+<span class="step-card__q">How to go beyond the catalog?</span>
+<span class="step-card__more">Retrofits: end-effectors, sensors, control software</span>
+</a>
+
+<a class="step-card" href="simulation/">
+<span class="step-card__num">5</span>
+<span class="step-card__name">Rehearse</span>
+<span class="step-card__q">Will the plan work?</span>
+<span class="step-card__more">Fidelity hierarchy, simulators, digital twins</span>
+</a>
+
+<a class="step-card" href="orchestration/">
+<span class="step-card__num">6</span>
+<span class="step-card__name">Orchestrate</span>
+<span class="step-card__q">How do devices run as one?</span>
+<span class="step-card__more">Layers L1–L4, interfaces, eight open-source systems</span>
+</a>
+
+<a class="step-card" href="ai/data-and-decisions/">
+<span class="step-card__num">7</span>
+<span class="step-card__name">Decide</span>
+<span class="step-card__q">What to make next?</span>
+<span class="step-card__more">Data, surrogates, Bayesian optimization, AI agents</span>
+</a>
+
+</div>
+
+## Where to start
+
+| I want to... | Go to |
+| --- | --- |
+| Understand liquids, gels and powders | [Material Properties](materials/properties.md) · [Material Spectrum](materials/spectrum.md) |
+| See which strategy suits my material | [Recurring Strategies](strategies/index.md) · [Literature Scenarios](materials/literature-scenarios.md) |
+| Compare commercial dispensers by accuracy and price | [Commercial Dispensers](hardware/dispensers.md) · [Integrated Platforms](hardware/platforms.md) |
+| Choose a robot to move premix containers | [Robot Classes](object-handling/robot-classes.md) |
+| Extend a liquid handler past its factory spec | [Retrofits](hardware/retrofits.md) |
+| Rehearse a workflow before committing material | [Simulation & Digital Twins](simulation/index.md) |
+| Pick orchestration software | [Open-Source Orchestration Software](orchestration/open-source.md) |
+| Use ML and AI agents safely | [Data & Decision Models](ai/data-and-decisions.md) · [LLMs & AI Agents](ai/agents.md) |
+| Understand safety and the outlook | [Safety](outlook/safety.md) · [Future Directions](outlook/future-directions.md) |
+
+## Citation
 
 > **Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents**  
 > Mohammad M. Rastegardoost<sup>a,\*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a</sup>, Nasim Abdollahi<sup>a</sup>, Kourosh Darvish<sup>a</sup>, Aaron Clasky<sup>a</sup>, Hiroki Ohsaka<sup>b</sup>, Frantz Le Devedec<sup>a</sup>  
 > <sup>a</sup> Acceleration Consortium, University of Toronto, Toronto, ON, Canada · <sup>b</sup> SEKISUI Chemical Co., Ltd., Osaka, Japan  
-> <sup>\*</sup> Corresponding author: m.rastegardoost@utoronto.ca
-
-It is a browsable, living companion to the manuscript: every page explains one part of building a formulation self-driving laboratory (SDL) in wiki form, with the review's tables, figures and 178 references linked throughout. Prefer to explore visually? The <a href="../"><strong>interactive atlas</strong></a> maps the same content onto an interactive formulation cell.
-
-<figure markdown>
-![Graphical abstract of the review: a formulation SDL that doses, moves, buys, extends, rehearses, orchestrates and decides.](assets/graphical_abstract.jpg)
-<figcaption>Graphical abstract of the review.</figcaption>
-</figure>
-
-### Core insight
-
-Formulation (combining liquids, pastes and powders into products whose properties emerge from both composition and process) is a promising but comparatively under-automated target for SDLs. An autonomous formulation experiment is a physical choreography: ingredients of very different rheology are dosed into one premix container, which is carried to a mixer, processed and characterized, often with materials the robot has never handled. Landmark SDLs show that this physical layer, the handling of materials and the manipulation of the containers that hold them, can limit autonomy as much as the planning algorithm [\[3\]](references.md#ref-3), [\[4\]](references.md#ref-4). The guiding question at every step is the one a formulation SDL must answer for every new ingredient: **how should this material, in this container, be handled next?**
-
-Across liquids, gels, powders and solids, a small set of [recurring strategies](strategies/index.md) emerges: characterize then act, iterative optimization, real-time correction, feedforward prediction, simulation-based generalization, physical reinvention and tactile retrieval. The review organizes the whole laboratory around seven steps.
-
-## The seven-step map
-
-<div class="step-grid" markdown>
-
-<div markdown>
-**1 · Dose**  
-*How is each ingredient dosed?*  
-[Material properties](materials/properties.md) · [Material spectrum](materials/spectrum.md) · [Dispensing by material class](materials/dispensing.md) · [Literature scenarios](materials/literature-scenarios.md) · [Recurring strategies](strategies/index.md)
-</div>
-
-<div markdown>
-**2 · Move**  
-*How do containers move?*  
-[Robot classes for object handling](object-handling/robot-classes.md)
-</div>
-
-<div markdown>
-**3 · Buy**  
-*What can be bought?*  
-[Commercial dispensers](hardware/dispensers.md) · [Integrated platforms](hardware/platforms.md) · [Hardware overview](hardware/index.md)
-</div>
-
-<div markdown>
-**4 · Extend**  
-*How to go beyond the catalog?*  
-[Retrofits beyond factory spec](hardware/retrofits.md)
-</div>
-
-<div markdown>
-**5 · Rehearse**  
-*Will the plan work?*  
-[Simulation & digital twins](simulation/index.md) · [Simulation tools](simulation/tools.md)
-</div>
-
-<div markdown>
-**6 · Orchestrate**  
-*How do devices run as one?*  
-[Architecture & interfaces](orchestration/index.md) · [Open-source orchestration software](orchestration/open-source.md)
-</div>
-
-<div markdown>
-**7 · Decide**  
-*What to make next?*  
-[Data & decision models](ai/data-and-decisions.md) · [LLMs & AI agents](ai/agents.md) · [AI infrastructure](ai/index.md)
-</div>
-
-</div>
-
-See the [seven-step map](steps.md) for a short summary of each step and how it maps to the review's sections.
-
-## Using this wiki
-
-- **New to material handling?** Start with [Material Properties](materials/properties.md), [Material Spectrum](materials/spectrum.md) and [Dispensing by Material Class](materials/dispensing.md).
-- **Choosing a technology?** Compare [Commercial Dispensers](hardware/dispensers.md), [Integrated Platforms](hardware/platforms.md) and [Robot Classes](object-handling/robot-classes.md) with sourced accuracy and price.
-- **Building an autonomous lab?** Dive into [Recurring Strategies](strategies/index.md) and the [Literature Scenarios](materials/literature-scenarios.md) to see which approaches match your materials, then [Orchestration](orchestration/index.md) to run devices as one system.
-- **Scaling to AI?** See [Simulation & Digital Twins](simulation/index.md), [Data & Decision Models](ai/data-and-decisions.md) and [LLMs & AI Agents](ai/agents.md).
-
-## Quick navigation
-
-| I want to... | Go to |
-| --- | --- |
-| Understand liquids, gels, powders | [Material Spectrum](materials/spectrum.md) |
-| See which strategy to use for my material | [Recurring Strategies](strategies/index.md) |
-| Compare commercial dispensers by accuracy and price | [Commercial Dispensers](hardware/dispensers.md) |
-| Choose a robot to move premix containers | [Robot Classes](object-handling/robot-classes.md) |
-| Extend a liquid handler beyond its factory spec | [Retrofits](hardware/retrofits.md) |
-| Rehearse a workflow before committing material | [Simulation & Digital Twins](simulation/index.md) |
-| Pick orchestration software | [Open-Source Orchestration Software](orchestration/open-source.md) |
-| Learn about sensors and feedback control | [AI Infrastructure](ai/index.md) |
-| Understand safety and future outlook | [Safety & Future](outlook/safety.md) |
-| Contribute to this wiki | [Contributing](contributing.md) |
-
-## Citation
-
-If you use this resource, please cite:
-
-> Rastegardoost, M. M.; Bao, Z.; Sadr, S.; Abdollahi, N.; Darvish, K.; Clasky, A.; Ohsaka, H.; Le Devedec, F. Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents. Manuscript in preparation, 2026.
+> <sup>\*</sup> Corresponding author: m.rastegardoost@utoronto.ca  
+> Manuscript in preparation, 2026.
 
 ```bibtex
 @unpublished{rastegardoost2026formulation,
@@ -109,6 +132,4 @@ If you use this resource, please cite:
 }
 ```
 
----
-
-**This is a living, open-source wiki.** See [Contributing](contributing.md) to add case studies, new strategies or commercial products, and the [Changelog](changelog.md) for what changed in the V3 rebuild.
+This is a living, open-source wiki. See [Contributing](contributing.md) to add case studies, strategies or products, and the [Changelog](changelog.md) for what has changed.

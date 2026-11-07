@@ -14,12 +14,14 @@ Material handling moves matter. **Object handling** moves the vessels and tools 
 
 These are rigid objects of known geometry, so the problem is one of reach, repeatability, payload and integration, not rheology. Even so, object handling gates every step of the formulation. A dose can only go into a container that is in the right place, and a premix can only be mixed once it reaches the mixer.
 
-<figure markdown>
-![Figure 4: robot classes for object handling](../assets/figure_04.jpg)
-<figcaption><strong>Figure 4.</strong> Robot classes for object handling, ordered by axes, reach and cost: (A) Cartesian gantry, (B) SCARA, (C) 6-DOF arm, (D) 7-DOF or dual-arm cobot and (E) mobile manipulator; (F) repeatability versus price (Table 2).</figcaption>
+<figure class="fig" markdown>
+![Figure 4: robot classes for object handling](../assets/figure_04.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 4.** Robot classes for object handling, ordered by axes, reach and cost: (A) Cartesian gantry, (B) SCARA, (C) 6-DOF arm, (D) 7-DOF or dual-arm cobot and (E) mobile manipulator; (F) repeatability versus price (Table 2).</figcaption>
 </figure>
 
 ## The five robot classes
+
+<span class="mc mc-object">Object handling</span> Containers, lids, tools and vials
 
 ### Cartesian gantries
 

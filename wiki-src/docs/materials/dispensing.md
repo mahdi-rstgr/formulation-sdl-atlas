@@ -33,7 +33,14 @@ Each class fails in its own way:
 | Powders | Free-flowing to cohesive | Hausner ratio ~1.00–1.11 (free-flowing) to >1.4 (very cohesive); angle of repose ~25°–>66° | Auger, vibration, gravimetric | Variable | High | Cohesion, electrostatics |
 | Tablets/Pellets | Solid | NA | Pick-and-place, vacuum | Excellent | High | Grasp reliability |
 
+<figure class="fig" markdown>
+![Figure 2: material properties and handling mechanisms](../assets/figure_02.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 2.** Material properties and handling mechanisms: (A) liquids to pastes and (B) powders by cohesion; (C, E, G) selection charts and (D, F, H) mechanisms for liquids, semi-solids and powders. Product photographs adapted from Opentrons [\[15\]](../references.md#ref-15), Hamilton [\[16\]](../references.md#ref-16), Nordson EFD [\[17\]](../references.md#ref-17) and XQ Instruments; powder dispensers are compared in [\[18\]](../references.md#ref-18).</figcaption>
+</figure>
+
 ## Liquids
+
+<span class="mc mc-liquid">Liquid</span> Fig. 3A–H
 
 Liquids are the most mature handling problem. For that reason they show most clearly where vendor defaults stop working and where sensing and feedback have to take over. Viscosity dominates automated liquid dispensing because it sets pressure losses, flow stability, droplet formation and the volumetric accuracy that can be reached [\[14\]](../references.md#ref-14), [\[19\]](../references.md#ref-19), [\[20\]](../references.md#ref-20). Most laboratory liquids are Newtonian, so a single measured viscosity is usually enough to pick a technology.
 
@@ -64,6 +71,8 @@ For a formulation SDL, the lesson is that viscous ingredients do not have to be 
 
 ## Semi-solids: pastes, gels and slurries
 
+<span class="mc mc-semi-solid">Semi-solid</span> Fig. 3I–L
+
 Semi-solids add shear-rate dependence and a yield stress to the liquid problem. The task shifts from tuning a flow rate to sensing how a material deforms. These are also the ingredients that most often define a formulated product, from creams and pastes to inks, slurries and the polymer solutions used to form porous mats [\[29\]](../references.md#ref-29).
 
 Pastes, gels, slurries and bio-inks are typically shear-thinning, occasionally shear-thickening, and may have a yield stress below which they behave as solids. The actuator therefore has to supply enough force or shear to start the flow, and the yield stress has to be measured and compensated for consistent dispensing [\[30\]](../references.md#ref-30). Industry characterizes these materials at two representative shear rates rather than sampling the full flow curve [19]: a low rate for storage and gentle handling, and a high rate for extrusion and spraying.
@@ -86,6 +95,8 @@ Four scenarios (Fig. 3I–L) show that a formulation SDL can infer a paste's rhe
 These studies rely more on estimation and modeling than the liquid studies do. A paste's rheology depends on its shear history, so a single viscosity reading cannot capture it. The open goal is to build in such sensing and feedback without deriving a new policy for every formulation.
 
 ## Powders and granular materials
+
+<span class="mc mc-powder">Powder</span> Fig. 3M–T
 
 Powders replace continuous flow with friction and cohesion at the particle scale. As a result, **acquiring** a dose is the step most likely to fail, not delivering it. Powder flow depends on particle size, shape, density, cohesion and surface interactions, and is summarized by the angle of repose and the Hausner ratio. Cohesive powders bridge (arch) or rat-hole in hoppers, which makes dosing unpredictable. Tribocharging [\[35\]](../references.md#ref-35) and humidity cause wall adhesion and variable packing, so the same equipment rarely dispenses different powders equally well [\[12\]](../references.md#ref-12).
 
@@ -118,6 +129,3 @@ Related work coordinates excavation and deposition of cohesive granular media [\
 
 For a formulation SDL, the powder step is where generalization is hardest, because every new powder changes flowability. The methods that transfer best are those that **sense or simulate** the powder rather than assume its behavior. Once the ingredients are dosed, the premix itself becomes an object that has to be moved: see [Object Handling](../object-handling/robot-classes.md).
 
-!!! note "Figure 2 not reproduced"
-
-    The review's Figure 2 (material properties, selection charts and handling mechanisms) includes third-party product photographs and is therefore not shown in this wiki. Table 1 above and [Material Properties](properties.md) cover the same information.

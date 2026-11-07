@@ -2,9 +2,9 @@
 
 The review looks at formulation from the point of view of a self-driving laboratory and treats building one as a sequence of steps. Each step answers one question that a team building or extending such a laboratory has to settle. The focus throughout is on physical execution and how it couples to sensing, feedback control and experimental planning. By separating fixed automation from systems that adapt their actions to measured material behavior, the review identifies the solutions available today, the capabilities still missing and the trends likely to shape the next generation of formulation SDLs.
 
-<figure markdown>
-![Figure 1: a formulation SDL and its digital twin](assets/figure_01.jpg)
-<figcaption><strong>Figure 1.</strong> A formulation SDL and its digital twin. Physical cell (left): a CNC gantry with dispenser rack and balance (1–3), a SCARA elevator serving two characterizers (4–6) and an arm loading the mixer (7, 8). Digital twin (right): robot trajectories (A), material models (B), virtual sensors (C) and GPU simulation (D) rehearse each step before it runs.</figcaption>
+<figure class="fig" markdown>
+![Figure 1: a formulation SDL and its digital twin](assets/figure_01.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 1.** A formulation SDL and its digital twin. Physical cell (left): a CNC gantry with dispenser rack and balance (1–3), a SCARA elevator serving two characterizers (4–6) and an arm loading the mixer (7, 8). Digital twin (right): robot trajectories (A), material models (B), virtual sensors (C) and GPU simulation (D) rehearse each step before it runs.</figcaption>
 </figure>
 
 ## Why the physical layer matters

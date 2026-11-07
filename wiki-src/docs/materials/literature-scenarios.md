@@ -4,37 +4,39 @@
 
     The review condenses recent work on adaptive material handling into **20 literature scenarios**, each named after its sense–act sequence: liquids (A–H), semi-solids (I–L), and powders and granular media (M–T). The scenarios cover different scales and were validated on different materials. They illustrate complementary strategies (measure, retune or redesign) and are not directly comparable benchmarks.
 
-<figure markdown>
-![Figure 3: twenty literature scenarios titled by their sense–act sequence](../assets/figure_03.jpg)
-<figcaption><strong>Figure 3.</strong> Literature scenarios titled by their sense–act sequence and adapted from the cited studies: liquids (A–H) [\[11\]](../references.md#ref-11), [\[22\]](../references.md#ref-22), [\[23\]](../references.md#ref-23), [\[24\]](../references.md#ref-24), [\[25\]](../references.md#ref-25), [\[26\]](../references.md#ref-26), [\[27\]](../references.md#ref-27), [\[28\]](../references.md#ref-28), semi-solids (I–L) [\[31\]](../references.md#ref-31), [\[32\]](../references.md#ref-32), [\[33\]](../references.md#ref-33), [\[34\]](../references.md#ref-34) and powders and granular media (M–T) [\[12\]](../references.md#ref-12), [\[37\]](../references.md#ref-37), [\[38\]](../references.md#ref-38), [\[39\]](../references.md#ref-39), [\[40\]](../references.md#ref-40), [\[41\]](../references.md#ref-41), [\[42\]](../references.md#ref-42), [\[43\]](../references.md#ref-43).</figcaption>
+<figure class="fig" markdown>
+![Figure 3: twenty literature scenarios by sense-act sequence](../assets/figure_03.jpg){ loading=lazy }
+<figcaption markdown="span">**Figure 3.** Literature scenarios titled by their sense–act sequence and adapted from the cited studies: liquids (A–H) [\[11\]](../references.md#ref-11), [\[22\]](../references.md#ref-22), [\[23\]](../references.md#ref-23), [\[24\]](../references.md#ref-24), [\[25\]](../references.md#ref-25), [\[26\]](../references.md#ref-26), [\[27\]](../references.md#ref-27), [\[28\]](../references.md#ref-28), semi-solids (I–L) [\[31\]](../references.md#ref-31), [\[32\]](../references.md#ref-32), [\[33\]](../references.md#ref-33), [\[34\]](../references.md#ref-34) and powders and granular media (M–T) [\[12\]](../references.md#ref-12), [\[37\]](../references.md#ref-37), [\[38\]](../references.md#ref-38), [\[39\]](../references.md#ref-39), [\[40\]](../references.md#ref-40), [\[41\]](../references.md#ref-41), [\[42\]](../references.md#ref-42), [\[43\]](../references.md#ref-43).</figcaption>
 </figure>
 
 ## All 20 scenarios
 
 | Panel | Material class | Sense–act sequence | Study | Ref |
 |---|---|---|---|---|
-| 3A | liquid | focus → eject → dispense | Zhang et al. | [\[24\]](../references.md#ref-24) |
-| 3B | liquid | flow → measure → infer | Deshmukh et al. | [\[22\]](../references.md#ref-22) |
-| 3C | liquid | dispense → measure → generalize | Soh et al. | [\[23\]](../references.md#ref-23) |
-| 3D | liquid | dispense → weigh → optimize | Velasco et al. | [\[11\]](../references.md#ref-11) |
-| 3E | liquid | couple → vibrate → mix | Durrer et al. | [\[25\]](../references.md#ref-25) |
-| 3F | liquid | suspend → isolate → measure | Ozgulbas | [\[26\]](../references.md#ref-26) |
-| 3G | liquid | actuate → compress → convey | Xu et al. | [\[27\]](../references.md#ref-27) |
-| 3H | liquid | perturb → watch → infer | Walker et al. | [\[28\]](../references.md#ref-28) |
-| 3I | semi-solid | sense → estimate → act | Luo et al. | [\[31\]](../references.md#ref-31) |
-| 3J | semi-solid | poke → simulate → identify | Yang et al. | [\[32\]](../references.md#ref-32) |
-| 3K | semi-solid | watch → detect → correct | Kelly et al. | [\[33\]](../references.md#ref-33) |
-| 3L | semi-solid | measure → predict → print | Shin et al. | [\[34\]](../references.md#ref-34) |
-| 3M | powder | draw → tune → dose | Fermier et al. | [\[37\]](../references.md#ref-37) |
-| 3N | powder | scoop → verify → pour | Radulov et al. | [\[12\]](../references.md#ref-12) |
-| 3O | powder | scoop → dump → transfer | Kadokawa et al. | [\[38\]](../references.md#ref-38) |
-| 3P | powder | measure → calibrate → dispense | Radulov et al. | [\[39\]](../references.md#ref-39) |
-| 3Q | powder | funnel → valve → trickle | Takahashi et al. | [\[40\]](../references.md#ref-40) |
-| 3R | powder | scoop → transport → pour | Wei et al. | [\[41\]](../references.md#ref-41) |
-| 3S | powder | pour → mix → assess | Szymańska et al. | [\[42\]](../references.md#ref-42) |
-| 3T | powder | probe → feel → retrieve | Xu et al. | [\[43\]](../references.md#ref-43) |
+| 3A | <span class="mc mc-liquid">liquid</span> | focus → eject → dispense | Zhang et al. | [\[24\]](../references.md#ref-24) |
+| 3B | <span class="mc mc-liquid">liquid</span> | flow → measure → infer | Deshmukh et al. | [\[22\]](../references.md#ref-22) |
+| 3C | <span class="mc mc-liquid">liquid</span> | dispense → measure → generalize | Soh et al. | [\[23\]](../references.md#ref-23) |
+| 3D | <span class="mc mc-liquid">liquid</span> | dispense → weigh → optimize | Velasco et al. | [\[11\]](../references.md#ref-11) |
+| 3E | <span class="mc mc-liquid">liquid</span> | couple → vibrate → mix | Durrer et al. | [\[25\]](../references.md#ref-25) |
+| 3F | <span class="mc mc-liquid">liquid</span> | suspend → isolate → measure | Ozgulbas | [\[26\]](../references.md#ref-26) |
+| 3G | <span class="mc mc-liquid">liquid</span> | actuate → compress → convey | Xu et al. | [\[27\]](../references.md#ref-27) |
+| 3H | <span class="mc mc-liquid">liquid</span> | perturb → watch → infer | Walker et al. | [\[28\]](../references.md#ref-28) |
+| 3I | <span class="mc mc-semi-solid">semi-solid</span> | sense → estimate → act | Luo et al. | [\[31\]](../references.md#ref-31) |
+| 3J | <span class="mc mc-semi-solid">semi-solid</span> | poke → simulate → identify | Yang et al. | [\[32\]](../references.md#ref-32) |
+| 3K | <span class="mc mc-semi-solid">semi-solid</span> | watch → detect → correct | Kelly et al. | [\[33\]](../references.md#ref-33) |
+| 3L | <span class="mc mc-semi-solid">semi-solid</span> | measure → predict → print | Shin et al. | [\[34\]](../references.md#ref-34) |
+| 3M | <span class="mc mc-powder">powder</span> | draw → tune → dose | Fermier et al. | [\[37\]](../references.md#ref-37) |
+| 3N | <span class="mc mc-powder">powder</span> | scoop → verify → pour | Radulov et al. | [\[12\]](../references.md#ref-12) |
+| 3O | <span class="mc mc-powder">powder</span> | scoop → dump → transfer | Kadokawa et al. | [\[38\]](../references.md#ref-38) |
+| 3P | <span class="mc mc-powder">powder</span> | measure → calibrate → dispense | Radulov et al. | [\[39\]](../references.md#ref-39) |
+| 3Q | <span class="mc mc-powder">powder</span> | funnel → valve → trickle | Takahashi et al. | [\[40\]](../references.md#ref-40) |
+| 3R | <span class="mc mc-powder">powder</span> | scoop → transport → pour | Wei et al. | [\[41\]](../references.md#ref-41) |
+| 3S | <span class="mc mc-powder">powder</span> | pour → mix → assess | Szymańska et al. | [\[42\]](../references.md#ref-42) |
+| 3T | <span class="mc mc-powder">powder</span> | probe → feel → retrieve | Xu et al. | [\[43\]](../references.md#ref-43) |
 
 ## Liquids (A–H)
+
+<span class="mc mc-liquid">Liquid</span>
 
 All eight liquid scenarios run into the same limit: there is no measurement of how an unfamiliar liquid will behave. They cover picoliter to milliliter volumes.
 
@@ -49,12 +51,16 @@ All eight liquid scenarios run into the same limit: there is no measurement of h
 
 ## Semi-solids (I–L)
 
+<span class="mc mc-semi-solid">Semi-solid</span>
+
 - **I · sense → estimate → act.** Luo et al.'s pancake-batter robot estimates viscosity from stirring forces, using a force/torque sensor and a camera, and plans a pouring trajectory with a small neural network. It remains calibrated to one material [\[31\]](../references.md#ref-31).
 - **J · poke → simulate → identify.** Yang et al. poke an unknown paste with an end-effector that has a camera in hand. A differentiable-physics twin recovers the paste's yield stress, modulus and friction coefficient, and the method generalizes across materials [\[32\]](../references.md#ref-32).
 - **K · watch → detect → correct.** Kelly et al. close the loop on extrusion bioprinting, correcting over- and under-extrusion from computer vision within about 10 s [\[33\]](../references.md#ref-33).
 - **L · measure → predict → print.** Shin et al. predict droplet size and volume from bio-ink viscosity and print parameters before printing, the feedforward counterpart of K [\[34\]](../references.md#ref-34).
 
 ## Powders and granular media (M–T)
+
+<span class="mc mc-powder">Powder / granular</span>
 
 - **M · draw → tune → dose.** Fermier et al. tuned vacuum flow and orifice size to reach ≤0.1% RSD on milligram transfers, for one powder and offline [\[37\]](../references.md#ref-37).
 - **N · scoop → verify → pour.** Radulov et al. use vision-guided deep reinforcement learning (DRL) to scoop, correct the volume in real time and reach ~1.93 mg error across seven powders [\[12\]](../references.md#ref-12).

@@ -18,5 +18,5 @@ Status as of November 2026.
 1. **M1: Catalogue as data.** `catalog.json`, validator, and wiki hardware pages generated from it.
 2. **M2: Library agent v1.** Weekly pull requests with sourced changes, reviewed by a person.
 3. **M3: SFL agent v1.** From a requirements chat to a rehearsed cell, a bill of materials and a shareable twin link.
-4. **M4: Drag-and-drop lab builder.** Users compose their own cell from the catalogue, with live reach and collision feedback.
+4. **M4: Drag-and-drop lab builder.** Done in a first version (`builder/`). Next: connect it to the SFL agent so the agent's proposed cell opens in the builder, and add real meshes for more platforms.
 5. **M5: Hand-off.** Export a designed cell in a format a self-building lab can start from.
