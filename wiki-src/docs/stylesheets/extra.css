@@ -1,0 +1,8 @@
+/* Reference list: keep long DOIs from overflowing on narrow screens */
+.ref-list p { overflow-wrap: anywhere; margin: 0.35em 0; }
+.ref-list p:target { background: var(--md-accent-fg-color--transparent); }
+/* Seven-step grid on the home page */
+.step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.8rem; }
+.step-grid > div { border: 1px solid var(--md-default-fg-color--lightest); border-radius: 0.3rem; padding: 0.6rem 0.8rem; }
+.step-grid > div p { margin: 0.25em 0; }
+figure img { border-radius: 0.2rem; }

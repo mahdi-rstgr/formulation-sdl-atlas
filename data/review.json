@@ -1,0 +1,1675 @@
+{
+ "title": "Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents",
+ "version": "V3 (final)",
+ "authors": [
+  {
+   "name": "Mohammad M. Rastegardoost",
+   "affiliation": "a",
+   "corresponding": true
+  },
+  {
+   "name": "Zeqing Bao",
+   "affiliation": "a",
+   "corresponding": false
+  },
+  {
+   "name": "Sara Sadr",
+   "affiliation": "a",
+   "corresponding": false
+  },
+  {
+   "name": "Nasim Abdollahi",
+   "affiliation": "a",
+   "corresponding": false
+  },
+  {
+   "name": "Kourosh Darvish",
+   "affiliation": "a",
+   "corresponding": false
+  },
+  {
+   "name": "Aaron Clasky",
+   "affiliation": "a",
+   "corresponding": false
+  },
+  {
+   "name": "Hiroki Ohsaka",
+   "affiliation": "b",
+   "corresponding": false
+  },
+  {
+   "name": "Frantz Le Devedec",
+   "affiliation": "a",
+   "corresponding": false
+  }
+ ],
+ "affiliations": {
+  "a": "Acceleration Consortium, University of Toronto, Toronto, ON M5S 3H6, Canada",
+  "b": "SEKISUI Chemical Co., Ltd., Osaka, Japan"
+ },
+ "abstract": "Formulation, combining liquids, pastes and powders into products whose properties emerge from both composition and process, is a promising but comparatively under-automated target for self-driving laboratories (SDLs). An autonomous formulation experiment is a physical choreography: ingredients of very different rheology are dosed into one premix container, which is carried to a mixer, processed and characterized, often with materials the robot has never handled. Landmark SDLs show that this physical layer, the handling of materials and the manipulation of the containers that hold them, can limit autonomy as much as the planning algorithm. Yet reviews of the field have mostly treated it as a platform detail. This review examines the methods, trends and open challenges of automating formulation, following a representative workflow through an SDL. We examine how viscosity, yield stress and powder flowability affect dispensing and review how recent studies use sensing, modeling and feedback to handle liquids, semi-solids and powders; compare gantry, SCARA, articulated, collaborative and mobile robots for moving premix containers and tools; and compare commercial dispensers and integrated platforms, finding that price tracks mechanism and ecosystem rather than accuracy and is rarely public, so that researchers can match dispensing methods, robots and platforms to their formulation tasks. We then show how low-cost retrofits extend platforms beyond their factory specifications, how simulation and digital twins let a laboratory rehearse and verify a workflow before material is committed, how system architecture and orchestration software integrate the devices into one laboratory, and how data, machine learning and AI agents, connected through APIs and data pipelines, choose the next experiment. We close with shared benchmarks (reference materials and handling tasks), open interfaces, calibrated twins and safeguards that a laboratory able to formulate with any ingredient will need.",
+ "keywords": [
+  "self-driving laboratories",
+  "formulation",
+  "automated material handling",
+  "object handling",
+  "robotic dispensing",
+  "rheology",
+  "powder handling",
+  "machine learning",
+  "simulation",
+  "digital twins",
+  "large language model agents"
+ ],
+ "sections": [
+  "1. Introduction",
+  "2. Material Handling",
+  "2.1 Liquids",
+  "2.2 Semi-Solids: Pastes, Gels and Slurries",
+  "2.3 Powders and Granular Materials",
+  "3. Object Handling in Formulation SDLs",
+  "4. Commercial Handling Solutions and Integrated Platforms",
+  "4.1 Products by Material Class",
+  "4.2 Integrated Platforms",
+  "5. Customizing Platforms Beyond Their Factory Specification",
+  "6. Simulation and Digital Twins in SDLs",
+  "6.1 Fidelity Hierarchy",
+  "6.2 Simulators and Material Models",
+  "6.3 Tools, Benefits, and Limitations",
+  "7. System Architecture and Orchestration",
+  "7.1 Terms and Functional Layers",
+  "7.2 Open-Source Orchestration Software",
+  "7.3 Interfaces to Devices and Decision Makers",
+  "8. Data, Machine Learning, and AI Agents in Formulation SDLs",
+  "8.1 What a Formulation Experiment Records",
+  "8.2 Surrogate Models and Acquisition Strategies",
+  "8.3 Large Language Models and Agentic Systems",
+  "9. Conclusions and Outlook",
+  "10. References"
+ ],
+ "figure_captions": {
+  "1": "A formulation SDL and its digital twin. Physical cell (left): a CNC gantry with dispenser rack and balance (1–3), a SCARA elevator serving two characterizers (4–6) and an arm loading the mixer (7, 8). Digital twin (right): robot trajectories (A), material models (B), virtual sensors (C) and GPU simulation (D) rehearse each step before it runs.",
+  "2": "Material properties and handling mechanisms: (A) liquids to pastes and (B) powders by cohesion; (C, E, G) selection charts and (D, F, H) mechanisms for liquids, semi-solids and powders. Product photographs adapted from Opentrons [15], Hamilton [16], Nordson EFD [17] and XQ Instruments; powder dispensers are compared in [18].",
+  "3": "Literature scenarios titled by their sense–act sequence and adapted from the cited studies: liquids (A–H) [11,22,23,24,25,26,27,28], semi-solids (I–L) [31,32,33,34] and powders and granular media (M–T) [12,37,38,39,40,41,42,43].",
+  "4": "Robot classes for object handling, ordered by axes, reach and cost: (A) Cartesian gantry, (B) SCARA, (C) 6-DOF arm, (D) 7-DOF or dual-arm cobot and (E) mobile manipulator; (F) repeatability versus price (Table 2).",
+  "5": "(A) Commercial dispensers and platforms by material class, mechanism and price (hollow markers: quote only; bracketed numbers: references). (B–E) Qualitative 0–10 profiles of four platforms (‘solid handling’: labware transfer). Photographs adapted from Opentrons [15], Chemspeed [71], Hamilton [16] and Eppendorf [75].",
+  "6": "Four fidelity levels of a formulation twin, (A) workflow, (B) kinematics, (C) contact dynamics and (D) material physics, at rising compute cost, with example tools (SimPy, MoveIt 2, MuJoCo, Isaac Lab; screenshots and logos from the projects’ repositories under MIT, BSD-3-Clause and Apache-2.0 licenses; logos are trademarks of their owners).",
+  "7": "The digital twin as a working environment: (A) motion planning in ROS 2 with MoveIt 2, (B) a GPU simulator interface, (C) a DEM/MPM material solver and (D) rehearsal of AI-proposed plans before release to the cell.",
+  "8": "Architecture of a formulation SDL: (A) execution and equipment hierarchies, (B) functional layers of orchestration software and (C) functions provided by eight open-source systems (details in Supplementary Table S1).",
+  "9": "The decision ladder: data (bottom), models that choose the next experiment (middle) and AI agents (top), connected to the robots by software and data pipelines (right)."
+ },
+ "source": "Self-Driving Laboratories for Formulation (review manuscript, version 3)",
+ "steps": [
+  {
+   "step": 1,
+   "name": "Dose",
+   "question": "How is each ingredient dosed?",
+   "section": "2. Material Handling"
+  },
+  {
+   "step": 2,
+   "name": "Move",
+   "question": "How do containers move?",
+   "section": "3. Object Handling in Formulation SDLs"
+  },
+  {
+   "step": 3,
+   "name": "Buy",
+   "question": "What can be bought?",
+   "section": "4. Commercial Handling Solutions and Integrated Platforms"
+  },
+  {
+   "step": 4,
+   "name": "Extend",
+   "question": "How to go beyond the catalog?",
+   "section": "5. Customizing Platforms Beyond Their Factory Specification"
+  },
+  {
+   "step": 5,
+   "name": "Rehearse",
+   "question": "Will the plan work?",
+   "section": "6. Simulation and Digital Twins in SDLs"
+  },
+  {
+   "step": 6,
+   "name": "Orchestrate",
+   "question": "How do devices run as one?",
+   "section": "7. System Architecture and Orchestration"
+  },
+  {
+   "step": 7,
+   "name": "Decide",
+   "question": "What to make next?",
+   "section": "8. Data, Machine Learning, and AI Agents in Formulation SDLs"
+  }
+ ],
+ "table_1": {
+  "caption": "Dispensing technologies by material class.",
+  "columns": [
+   "Material",
+   "Viscosity / Particle Size",
+   "Flow Behavior",
+   "Common Technologies",
+   "Typical Accuracy",
+   "Throughput",
+   "Key Challenges"
+  ],
+  "rows": [
+   {
+    "Material": "Low-viscosity liquids",
+    "Viscosity / Particle Size": "1–20 cP",
+    "Flow Behavior": "Newtonian; shear-rate independent",
+    "Common Technologies": "Pipette, syringe, acoustic",
+    "Typical Accuracy": "Excellent",
+    "Throughput": "Very high",
+    "Key Challenges": "Splashing, evaporation"
+   },
+   {
+    "Material": "Medium-viscosity liquids",
+    "Viscosity / Particle Size": "20–500 cP",
+    "Flow Behavior": "Newtonian to mildly shear-thinning; ~10–100 s⁻¹ working range",
+    "Common Technologies": "Syringe, gear pump",
+    "Typical Accuracy": "High",
+    "Throughput": "High",
+    "Key Challenges": "Stringing"
+   },
+   {
+    "Material": "High-viscosity liquids",
+    "Viscosity / Particle Size": "500–100,000 cP",
+    "Flow Behavior": "Shear-thinning; characterized at low (~1–10 s⁻¹) and high (~100–1000 s⁻¹) shear",
+    "Common Technologies": "Peristaltic, piston, progressive cavity",
+    "Typical Accuracy": "Moderate–High",
+    "Throughput": "Moderate",
+    "Key Challenges": "Elasticity, pulsation"
+   },
+   {
+    "Material": "Gels",
+    "Viscosity / Particle Size": "Yield-stress",
+    "Flow Behavior": "Yield stress ~10–500 Pa; shear-thinning above yield point",
+    "Common Technologies": "Screw, pneumatic, piston",
+    "Typical Accuracy": "Moderate",
+    "Throughput": "Moderate",
+    "Key Challenges": "Yield stress, air bubbles"
+   },
+   {
+    "Material": "Pastes",
+    "Viscosity / Particle Size": "Highly viscous",
+    "Flow Behavior": "Yield stress ~100–10,000 Pa; shear-thinning, often thixotropic",
+    "Common Technologies": "Auger, extrusion",
+    "Typical Accuracy": "High",
+    "Throughput": "Moderate",
+    "Key Challenges": "Pressure lag"
+   },
+   {
+    "Material": "Powders",
+    "Viscosity / Particle Size": "Free-flowing to cohesive",
+    "Flow Behavior": "Hausner ratio ~1.00–1.11 (free-flowing) to >1.4 (very cohesive); angle of repose ~25°–>66°",
+    "Common Technologies": "Auger, vibration, gravimetric",
+    "Typical Accuracy": "Variable",
+    "Throughput": "High",
+    "Key Challenges": "Cohesion, electrostatics"
+   },
+   {
+    "Material": "Tablets/Pellets",
+    "Viscosity / Particle Size": "Solid",
+    "Flow Behavior": "NA",
+    "Common Technologies": "Pick-and-place, vacuum",
+    "Typical Accuracy": "Excellent",
+    "Throughput": "High",
+    "Key Challenges": "Grasp reliability"
+   }
+  ]
+ },
+ "table_2": {
+  "caption": "Robot classes for object handling: repeatability and price.",
+  "columns": [
+   "Robot class",
+   "Brand",
+   "Model",
+   "Repeatability",
+   "Price",
+   "Ref"
+  ],
+  "rows": [
+   {
+    "Robot class": "Cartesian gantry pick-and-place",
+    "Brand": "SainSmart",
+    "Model": "Genmitsu 4040-PRO CNC",
+    "Repeatability": "±0.1 mm running accuracy*",
+    "Price": "$599",
+    "Ref": "[46]"
+   },
+   {
+    "Robot class": "Cartesian gantry pick-and-place",
+    "Brand": "igus",
+    "Model": "drylin XYZ Gantry",
+    "Repeatability": "0.3–0.5 mm",
+    "Price": "$2,461",
+    "Ref": "[47]"
+   },
+   {
+    "Robot class": "Cartesian gantry pick-and-place",
+    "Brand": "Machine Agency",
+    "Model": "Jubilee (tool-changing) + CNC (gantry)",
+    "Repeatability": "–",
+    "Price": "~$1,400",
+    "Ref": "[48]"
+   },
+   {
+    "Robot class": "SCARA lab-automation robot",
+    "Brand": "Precise Automation",
+    "Model": "PreciseFlex PF400",
+    "Repeatability": "±0.09 mm",
+    "Price": "Quote",
+    "Ref": "[49]"
+   },
+   {
+    "Robot class": "SCARA lab-automation robot",
+    "Brand": "Epson",
+    "Model": "RS3 SCARA",
+    "Repeatability": "±0.010 mm",
+    "Price": "~$10,000",
+    "Ref": "[50]"
+   },
+   {
+    "Robot class": "6-DOF articulated arm",
+    "Brand": "Universal Robots",
+    "Model": "UR3e",
+    "Repeatability": "±0.03 mm",
+    "Price": "~$30,000",
+    "Ref": "[51]"
+   },
+   {
+    "Robot class": "6-DOF articulated arm",
+    "Brand": "UFACTORY",
+    "Model": "xArm 6",
+    "Repeatability": "±0.1 mm",
+    "Price": "$9,500",
+    "Ref": "[52]"
+   },
+   {
+    "Robot class": "6-DOF articulated arm",
+    "Brand": "UFACTORY",
+    "Model": "Lite 6",
+    "Repeatability": "±0.5 mm",
+    "Price": "~$4,200",
+    "Ref": "[53]"
+   },
+   {
+    "Robot class": "7-DOF collaborative arm",
+    "Brand": "Franka Robotics",
+    "Model": "Franka Research 3",
+    "Repeatability": "<±0.1 mm",
+    "Price": "~$30,000",
+    "Ref": "[54]"
+   },
+   {
+    "Robot class": "7-DOF collaborative arm",
+    "Brand": "Kinova",
+    "Model": "Gen3",
+    "Repeatability": "~±0.1 mm",
+    "Price": "~$35,000",
+    "Ref": "[55]"
+   },
+   {
+    "Robot class": "Mobile manipulator",
+    "Brand": "KUKA",
+    "Model": "KMR iiwa",
+    "Repeatability": "±0.1 mm arm; ~±5 mm base positioning",
+    "Price": "~$42,000 (reseller)",
+    "Ref": "[3,58]"
+   }
+  ]
+ },
+ "table_3": {
+  "caption": "Commercial dispensers by material class and mechanism.",
+  "columns": [
+   "Material",
+   "Mechanism",
+   "Brand",
+   "Model",
+   "Accuracy",
+   "Price",
+   "Ref"
+  ],
+  "rows": [
+   {
+    "Material": "Liquids",
+    "Mechanism": "Air-displacement",
+    "Brand": "Rainin",
+    "Model": "E4 XLS+",
+    "Accuracy": "±0.8% accuracy; ≤0.15% CV",
+    "Price": "$191–350",
+    "Ref": "[59]"
+   },
+   {
+    "Material": "Liquids",
+    "Mechanism": "Air-displacement",
+    "Brand": "Eppendorf",
+    "Model": "Xplorer",
+    "Accuracy": "~±0.6% accuracy",
+    "Price": "$1,300",
+    "Ref": "[60]"
+   },
+   {
+    "Material": "Liquids",
+    "Mechanism": "Positive-displacement",
+    "Brand": "Gilson",
+    "Model": "MICROMAN E, M1000E",
+    "Accuracy": "±3–8% accuracy; ≤0.5–4% imprecision",
+    "Price": "$524–527",
+    "Ref": "[61]"
+   },
+   {
+    "Material": "Liquids",
+    "Mechanism": "Positive-displacement",
+    "Brand": "Hamilton",
+    "Model": "PSD/4 syringe pump",
+    "Accuracy": "±1% accuracy; ≤0.05% repeatability",
+    "Price": "$400–500",
+    "Ref": "[62]"
+   },
+   {
+    "Material": "Liquids",
+    "Mechanism": "Peristaltic pumping",
+    "Brand": "Watson-Marlow",
+    "Model": "Qdos 20",
+    "Accuracy": "±1% dosing accuracy; ±0.5% repeatability",
+    "Price": "$4,248",
+    "Ref": "[63]"
+   },
+   {
+    "Material": "Liquids",
+    "Mechanism": "Peristaltic pumping",
+    "Brand": "Cole-Parmer / Avantor",
+    "Model": "Masterflex L/S Digital",
+    "Accuracy": "±0.1–0.25% speed-control accuracy",
+    "Price": "$9,000",
+    "Ref": "[64]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Syringe-based extrusion",
+    "Brand": "CELLINK",
+    "Model": "Syringe Pump Printhead",
+    "Accuracy": "-",
+    "Price": "$3,190",
+    "Ref": "[65]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Air pressure-driven extrusion",
+    "Brand": "Allevi (3D Systems)",
+    "Model": "Allevi 2",
+    "Accuracy": "5 µm XY / 1 µm Z motion precision",
+    "Price": "$15,000",
+    "Ref": "[66]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Air pressure-driven extrusion",
+    "Brand": "Nordson EFD",
+    "Model": "Ultimus V",
+    "Accuracy": "-",
+    "Price": "~$6,750",
+    "Ref": "[17]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Air pressure-driven extrusion",
+    "Brand": "CELLINK",
+    "Model": "BIO X Pneumatic Printhead",
+    "Accuracy": "±0.5 °C temperature precision",
+    "Price": "$2,500",
+    "Ref": "[67]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Screw-based (auger) extrusion",
+    "Brand": "ViscoTec",
+    "Model": "preeflow eco-PEN300",
+    "Accuracy": "±1% dosing accuracy; process capability cP = 4.26",
+    "Price": "Quote",
+    "Ref": "[68]"
+   },
+   {
+    "Material": "Semi-solids  gels-pastes",
+    "Mechanism": "Screw-based (auger) extrusion",
+    "Brand": "Fisnar",
+    "Model": "PDV-1000",
+    "Accuracy": "min size 0.508 mm",
+    "Price": "Quote",
+    "Ref": "[69]"
+   },
+   {
+    "Material": "Powder / granular solids",
+    "Mechanism": "Auger/screw feeding",
+    "Brand": "Coperion K-Tron",
+    "Model": "MT12 Twin-Screw Micro-Feeder",
+    "Accuracy": "SFT weighing resolution 1:4,000,000 in 80 ms",
+    "Price": "~$9,800",
+    "Ref": "[70]"
+   },
+   {
+    "Material": "Powder / granular solids",
+    "Mechanism": "Auger/screw feeding",
+    "Brand": "Chemspeed",
+    "Model": "SWILE / GDU-P",
+    "Accuracy": "±10 µg resolution",
+    "Price": "Quote",
+    "Ref": "[71]"
+   },
+   {
+    "Material": "Powder / granular solids",
+    "Mechanism": "Gravimetric dosing head",
+    "Brand": "Mettler-Toledo",
+    "Model": "Quantos (QB1/QB6)",
+    "Accuracy": "Balance readable to 0.001 mg",
+    "Price": "Quote",
+    "Ref": "[72]"
+   },
+   {
+    "Material": "Powder / granular solids",
+    "Mechanism": "Vibratory, gravity-fed hopper dosing",
+    "Brand": "3P Innovation",
+    "Model": "VF1 Vibratory Feeder",
+    "Accuracy": "±1 mg dose accuracy",
+    "Price": "Quote",
+    "Ref": "[73]"
+   },
+   {
+    "Material": "Powder / granular solids",
+    "Mechanism": "Vibratory, gravity-fed hopper dosing",
+    "Brand": "Eriez",
+    "Model": "Hi-Vi Volumatic Feeder",
+    "Accuracy": "-",
+    "Price": "Quote",
+    "Ref": "[74]"
+   }
+  ]
+ },
+ "table_4": {
+  "caption": "Integrated liquid-handling platforms: mechanism, pipetting accuracy and price (gantry accuracy is rarely published).",
+  "columns": [
+   "Platform",
+   "Mechanism",
+   "Accuracy / precision",
+   "Price",
+   "Ref"
+  ],
+  "rows": [
+   {
+    "Platform": "Opentrons OT-2 / Flex",
+    "Mechanism": "Gantry-mounted air-displacement pipetting",
+    "Accuracy / precision": "±15% systematic error / ±5% CV at 1 µL; ±0.6% / ±0.3% CV at 300 µL (strongly volume-dependent)",
+    "Price": "OT-2 from $15,950; Flex from $26,400",
+    "Ref": "[15]"
+   },
+   {
+    "Platform": "Hamilton Microlab STAR",
+    "Mechanism": "Deck-based, up to 8-channel air/positive-displacement pipetting",
+    "Accuracy / precision": "Trueness ≤0.75–1%; precision CV ≤1.5–2% (low- and high-volume channels)",
+    "Price": "€104,500",
+    "Ref": "[16]"
+   },
+   {
+    "Platform": "Eppendorf epMotion 5075",
+    "Mechanism": "Benchtop 1-/8-channel air-cushion pipetting",
+    "Accuracy / precision": "Systematic error ±0.6–0.7% at full-scale volume (TS1000 tool)",
+    "Price": "~$8,000–20,000",
+    "Ref": "[75]"
+   },
+   {
+    "Platform": "Dispendix I.DOT",
+    "Mechanism": "Non-contact, pressure-driven drop-on-demand dispensing",
+    "Accuracy / precision": "<5% accuracy/CV for 100 nL–10 µL; <8% below 100 nL; range 8 nL–30 µL",
+    "Price": "-",
+    "Ref": "[76]"
+   },
+   {
+    "Platform": "Tecan Fluent (successor to Freedom EVO, sales of which ended Dec. 2025)",
+    "Mechanism": "Deck-based robotic arm, disposable-tip pipetting (Liquid FCA head)",
+    "Accuracy / precision": "CV ≤3% at 10 µL, ≤0.5% at 100 µL (standard head); CV ≤8% at 1 µL, ≤1.5% at 10 µL (low-volume head)",
+    "Price": "Freedom EVO $20,000–24,000; Fluent 1080 $32,995–75,000",
+    "Ref": "[77]"
+   },
+   {
+    "Platform": "Beckman Coulter Biomek i7",
+    "Mechanism": "Dual-arm workstation, 96/384-channel head + 8-tip Span-8 syringe pipetting",
+    "Accuracy / precision": "Not published as a numeric accuracy/CV spec by Beckman; only volume ranges are given on official pages",
+    "Price": "$34,995–38,995",
+    "Ref": "[78]"
+   },
+   {
+    "Platform": "Agilent Bravo",
+    "Mechanism": "96/384/1536-channel pipette head robot, fixed or disposable tips",
+    "Accuracy / precision": "96-channel 50 µL fixed-tip head: ±4.4% accuracy / 3.9% CV at 0.1 µL; ±2.1% / 2.1% CV at 1.0 µL",
+    "Price": "$37,995–63,195",
+    "Ref": "[79]"
+   },
+   {
+    "Platform": "Labcyte/Beckman Coulter Echo 525",
+    "Mechanism": "Non-contact, focused acoustic droplet ejection",
+    "Accuracy / precision": "<10% transfer accuracy; <8% transfer precision (CV); range 25 nL–5 µL",
+    "Price": "-",
+    "Ref": "[80]"
+   }
+  ]
+ },
+ "table_5": {
+  "caption": "Retrofits that extend platforms beyond their factory specification.",
+  "columns": [
+   "Layer modified",
+   "Base platform",
+   "Novel idea",
+   "New capability unlocked",
+   "Ref"
+  ],
+  "rows": [
+   {
+    "Layer modified": "Control parameters (unmodified hardware)",
+    "Base platform": "Opentrons OT-2",
+    "Novel idea": "Bayesian-optimize aspirate/dispense speed against gravimetric feedback instead of a fixed viscosity lookup table",
+    "New capability unlocked": "<5% error dispensing liquids up to 1275 cP on a robot rated for water-like liquids",
+    "Ref": "[11]"
+   },
+   {
+    "Layer modified": "Control parameters (unmodified hardware)",
+    "Base platform": "Opentrons OT-2",
+    "Novel idea": "Treat the pipetting robot’s own dispense-time/mass data as a viscosity-proxy signal",
+    "New capability unlocked": "Turns a liquid handler into a high-throughput viscometer with no dedicated rheometer",
+    "Ref": "[23,81]"
+   },
+   {
+    "Layer modified": "End-effector replacement",
+    "Base platform": "Generic robot arm",
+    "Novel idea": "Replace the pipette tip with a vibrating acoustofluidic coupler",
+    "New capability unlocked": "Mixes liquids ~10⁶× more viscous than water without a pump",
+    "Ref": "[25]"
+   },
+   {
+    "Layer modified": "End-effector replacement",
+    "Base platform": "Opentrons OT-1",
+    "Novel idea": "3D-printed adapter turns the robot’s own stepper motor into an infuse/withdraw syringe pump",
+    "New capability unlocked": "Extends a microliter-rated robot to 15–50 nL transfers for under $6,000 total system cost",
+    "Ref": "[82]"
+   },
+   {
+    "Layer modified": "End-effector replacement",
+    "Base platform": "Councill’s modified Opentrons OT-1",
+    "Novel idea": "Add two-position/selector valves to the same syringe-pump retrofit",
+    "New capability unlocked": "Same platform doubles as an autosampler feeding an LC-MS instrument",
+    "Ref": "[83]"
+   },
+   {
+    "Layer modified": "End-effector replacement",
+    "Base platform": "Generic robot arms",
+    "Novel idea": "Sub-$200, three-part 3D-printed pipette end-effector",
+    "New capability unlocked": "Lets arms that cannot grip a pipette at all reach commercial-liquid-handler accuracy",
+    "Ref": "[84]"
+   },
+   {
+    "Layer modified": "End-effector replacement",
+    "Base platform": "Generic tool-exchange gripper",
+    "Novel idea": "Container-shape taxonomy drives dual-material compliant gripper-finger design",
+    "New capability unlocked": "One gripper reliably grasps vessel shapes a stock gripper’s fingers cannot",
+    "Ref": "[85]"
+   },
+   {
+    "Layer modified": "Sensing add-on via tool-changing",
+    "Base platform": "Opentrons OT-2",
+    "Novel idea": "Adapter with two mounting bores lets the existing tool-change slot carry a pipette or a camera",
+    "New capability unlocked": "Same robot alternates dispensing and in-situ imaging without a separate imaging station",
+    "Ref": "[86]"
+   },
+   {
+    "Layer modified": "Sensing add-on via tool-changing",
+    "Base platform": "Opentrons OT-2",
+    "Novel idea": "Mount a camera + transilluminator, pair with a Detectron2 vision model",
+    "New capability unlocked": "Liquid handler gains automated colony picking (~240/h) at a fraction of a dedicated picker’s cost",
+    "Ref": "[87]"
+   },
+   {
+    "Layer modified": "Software/control layer",
+    "Base platform": "Opentrons, Hamilton, Tecan",
+    "Novel idea": "Hardware-agnostic Python driver replaces vendor firmware",
+    "New capability unlocked": "Exposes physically possible moves vendor software never programmed, e.g., dual-plate pipetting",
+    "Ref": "[88]"
+   }
+  ]
+ },
+ "table_6": {
+  "caption": "Simulation tools for SDL material handling.",
+  "columns": [
+   "Tool or class",
+   "Level",
+   "What it resolves",
+   "ROS 2 link",
+   "Best SDL use",
+   "Main constraint"
+  ],
+  "rows": [
+   {
+    "Tool or class": "Discrete-event simulation (e.g. SimPy)",
+    "Level": "1",
+    "What it resolves": "Queues, resources, timing",
+    "ROS 2 link": "Indirect",
+    "Best SDL use": "Throughput, scheduling, bottleneck analysis",
+    "Main constraint": "No geometry or physics"
+   },
+   {
+    "Tool or class": "Device emulators, SiLA 2 mocks",
+    "Level": "1",
+    "What it resolves": "Command protocols, device states",
+    "ROS 2 link": "Via drivers",
+    "Best SDL use": "Testing orchestration before hardware arrives",
+    "Main constraint": "Fidelity limited to the protocol"
+   },
+   {
+    "Tool or class": "Lightweight kinematic twins",
+    "Level": "1–2",
+    "What it resolves": "Geometry, FK/IK, clearance",
+    "ROS 2 link": "Shares URDF",
+    "Best SDL use": "Reachability, layout, verified offline programs, shareable visualization",
+    "Main constraint": "No forces or material behavior"
+   },
+   {
+    "Tool or class": "MoveIt 2 with RViz",
+    "Level": "2",
+    "What it resolves": "Motion planning, collision checking",
+    "ROS 2 link": "Native",
+    "Best SDL use": "Collision-free planning for ROS-based cells",
+    "Main constraint": "Planning, not physics"
+   },
+   {
+    "Tool or class": "Vendor offline programming (URSim, RoboDK)",
+    "Level": "2",
+    "What it resolves": "Robot kinematics, native program code",
+    "ROS 2 link": "Limited",
+    "Best SDL use": "Fast commissioning of a single arm",
+    "Main constraint": "Few instrument or material models; brand lock-in"
+   },
+   {
+    "Tool or class": "Gazebo",
+    "Level": "3",
+    "What it resolves": "Rigid-body dynamics, sensors",
+    "ROS 2 link": "Native bridge",
+    "Best SDL use": "Mobile manipulators and multi-station cells",
+    "Main constraint": "Limited fluids and granular media"
+   },
+   {
+    "Tool or class": "MuJoCo",
+    "Level": "3",
+    "What it resolves": "Fast, robust contact dynamics",
+    "ROS 2 link": "Community bridges",
+    "Best SDL use": "Grasping, insertion, learning-based control",
+    "Main constraint": "Simplified deformables and fluids"
+   },
+   {
+    "Tool or class": "PyBullet",
+    "Level": "3",
+    "What it resolves": "Rigid-body dynamics",
+    "ROS 2 link": "Community bridges",
+    "Best SDL use": "Scripted experiments, rapid prototyping",
+    "Main constraint": "Aging ecosystem, basic rendering"
+   },
+   {
+    "Tool or class": "NVIDIA Isaac Sim",
+    "Level": "3 (+4)",
+    "What it resolves": "GPU physics, particle fluids, deformables, ray-traced sensors",
+    "ROS 2 link": "Native bridge",
+    "Best SDL use": "Synthetic images of glassware and liquids, digital twins of whole cells",
+    "Main constraint": "RTX GPU required, steep learning curve"
+   },
+   {
+    "Tool or class": "Isaac Lab",
+    "Level": "3",
+    "What it resolves": "Massively parallel environments",
+    "ROS 2 link": "Via Isaac Sim",
+    "Best SDL use": "Reinforcement and imitation learning of handling skills",
+    "Main constraint": "Sim-to-real gap for materials"
+   },
+   {
+    "Tool or class": "Chemistry twins (Chemistry3D, MATTERIX)",
+    "Level": "3–4",
+    "What it resolves": "Robot, devices, liquids, powders, simple chemistry",
+    "ROS 2 link": "Via Isaac Sim",
+    "Best SDL use": "Rehearsing complete chemistry workflows",
+    "Main constraint": "Early-stage, validation ongoing"
+   },
+   {
+    "Tool or class": "CFD (VOF) and SPH solvers",
+    "Level": "4",
+    "What it resolves": "Free-surface liquid flow",
+    "ROS 2 link": "None",
+    "Best SDL use": "Dispensing, pouring, mixing accuracy",
+    "Main constraint": "Hours per case; little robot coupling"
+   },
+   {
+    "Tool or class": "DEM solvers",
+    "Level": "4",
+    "What it resolves": "Particle-scale granular flow",
+    "ROS 2 link": "None",
+    "Best SDL use": "Powder dosing, hopper and feeder design",
+    "Main constraint": "Contact parameters need calibration"
+   },
+   {
+    "Tool or class": "MPM and differentiable simulators (e.g. Taichi, FluidLab)",
+    "Level": "4",
+    "What it resolves": "Elasto-viscoplastic and multi-material flow",
+    "ROS 2 link": "None",
+    "Best SDL use": "Pastes and gels; gradient-based optimization of handling",
+    "Main constraint": "Research code; constitutive parameters needed"
+   }
+  ]
+ },
+ "table_7": {
+  "caption": "Agent roles in a formulation SDL.",
+  "columns": [
+   "Agent",
+   "Assists",
+   "Example tasks",
+   "Autonomy",
+   "Human checkpoint",
+   "SDL examples"
+  ],
+  "rows": [
+   {
+    "Agent": "Campaign designer",
+    "Assists": "Scientist",
+    "Example tasks": "Goal to draft campaign; dry-run checks of seed formulations",
+    "Autonomy": "Draft; submit only in approved campaigns",
+    "Human checkpoint": "Scientist approves campaign and runs",
+    "SDL examples": "La Agente Óptima [174]; ChemAgents [175]"
+   },
+   {
+    "Agent": "Laboratory copilot",
+    "Assists": "Scientist, operator",
+    "Example tasks": "Explains status, rejections and validation verdicts",
+    "Autonomy": "Inform",
+    "Human checkpoint": "None (read-only)",
+    "SDL examples": "ORGANA [172]; CRESt [178]"
+   },
+   {
+    "Agent": "Recovery advisor",
+    "Assists": "Operator",
+    "Example tasks": "Gathers fault context; ranks recovery options",
+    "Autonomy": "Draft",
+    "Human checkpoint": "Operator decides the recovery",
+    "SDL examples": "La Agente Óptima [174]"
+   },
+   {
+    "Agent": "Results analyst",
+    "Assists": "Scientist, engineer",
+    "Example tasks": "Explains proposals; sandboxed analysis; report drafts",
+    "Autonomy": "Act digitally",
+    "Human checkpoint": "Author reviews reports",
+    "SDL examples": "LLM-RDF [176]; AILA [177]"
+   },
+   {
+    "Agent": "Knowledge assistant",
+    "Assists": "Everyone",
+    "Example tasks": "Cited answers from SOPs, manuals and safety data sheets",
+    "Autonomy": "Inform",
+    "Human checkpoint": "None (read-only)",
+    "SDL examples": "Coscientist [125]; ChemCrow [127]"
+   }
+  ]
+ },
+ "literature_scenarios": [
+  {
+   "figure": "Fig. 3A",
+   "material_class": "liquid",
+   "sense_act": "focus -> eject -> dispense",
+   "ref": 24,
+   "citation": "Zhang, H.; Jin, J.; Zhao, Z.; He, Z.; Zhou, Y.; Duan, X. Self-focused acoustically driven pL-level dispensing pipet enabling rapid concentration gradient genera"
+  },
+  {
+   "figure": "Fig. 3B",
+   "material_class": "liquid",
+   "sense_act": "flow -> measure -> infer",
+   "ref": 22,
+   "citation": "Deshmukh, S.; Bishop, M. T.; Dermody, D.; Dietsche, L.; Kuo, T.-C.; Mushrush, M.; Harris, K.; Zieman, J.; Morabito, P.; Orvosh, B.; Patrick, D. A Novel High-Thr"
+  },
+  {
+   "figure": "Fig. 3C",
+   "material_class": "liquid",
+   "sense_act": "dispense -> measure -> generalize",
+   "ref": 23,
+   "citation": "Soh, B. W.; Chitre, A.; Tan, S. Z.; Wang, Y.; Yi, Y.; Soh, W.; Hippalgaonkar, K.; Wilson, D. I. Opentrons for automated and high-throughput viscometry. Digital "
+  },
+  {
+   "figure": "Fig. 3D",
+   "material_class": "liquid",
+   "sense_act": "dispense -> weigh -> optimize",
+   "ref": 11,
+   "citation": "Velasco, P. Q.; Low, K. Y. A.; Leong, C. J.; Ng, W. T.; Qiu, S.; Jhunjhunwala, S.; Li, B.; Qian, A.; Hippalgaonkar, K.; Cheng, J. J. W. Optimization of liquid h"
+  },
+  {
+   "figure": "Fig. 3E",
+   "material_class": "liquid",
+   "sense_act": "couple -> vibrate -> mix",
+   "ref": 25,
+   "citation": "Durrer, J.; Agrawal, P.; Ozgul, A.; Neuhauss, S. C. F.; Nama, N.; Ahmed, D. A robot-assisted acoustofluidic end effector. Nat. Commun. 2022, 13, 6370. https://d"
+  },
+  {
+   "figure": "Fig. 3F",
+   "material_class": "liquid",
+   "sense_act": "suspend -> isolate -> measure",
+   "ref": 26,
+   "citation": "Ozgulbas, D. Y. et al. Robotic pendant drop: containerless liquid for μs-resolved, AI-executable XPCS. Light Sci. Appl. 2023, 12, 196. https://doi.org/10.1038/s"
+  },
+  {
+   "figure": "Fig. 3G",
+   "material_class": "liquid",
+   "sense_act": "actuate -> compress -> convey",
+   "ref": 27,
+   "citation": "Xu, S.; Nunez, C. M.; Souri, M.; Wood, R. J. A compact DEA-based soft peristaltic pump for power and control of fluidic robots. Sci. Robot. 2023, 8 (79), eadd46"
+  },
+  {
+   "figure": "Fig. 3H",
+   "material_class": "liquid",
+   "sense_act": "perturb -> watch -> infer",
+   "ref": 28,
+   "citation": "Walker, M.; Pizzuto, G.; Fakhruldeen, H.; Cooper, A. I. Go with the flow: deep learning methods for autonomous viscosity estimations. Digital Discovery 2023, 2 "
+  },
+  {
+   "figure": "Fig. 3I",
+   "material_class": "semi-solid",
+   "sense_act": "sense -> estimate -> act",
+   "ref": 31,
+   "citation": "Luo, X.; Jin, S.; Huang, H.-J.; Yuan, W. An Intelligent Robotic System for Perceptive Pancake Batter Stirring and Precise Pouring. In 2024 IEEE/RSJ Internationa"
+  },
+  {
+   "figure": "Fig. 3J",
+   "material_class": "semi-solid",
+   "sense_act": "poke -> simulate -> identify",
+   "ref": 32,
+   "citation": "Yang, X.; Ji, Z.; Lai, Y.-K. Differentiable physics-based system identification for robotic manipulation of elastoplastic materials. Int. J. Robot. Res. 2025, 4"
+  },
+  {
+   "figure": "Fig. 3K",
+   "material_class": "semi-solid",
+   "sense_act": "watch -> detect -> correct",
+   "ref": 33,
+   "citation": "Kelly, D.; Sergis, V.; Ventura i Blanco, L.; Mason, K.; Daly, A. C. Autonomous control of extrusion bioprinting using convolutional neural networks. Adv. Funct."
+  },
+  {
+   "figure": "Fig. 3L",
+   "material_class": "semi-solid",
+   "sense_act": "measure -> predict -> print",
+   "ref": 34,
+   "citation": "Shin, J.; Kang, R.; Hyun, K.; Li, Z.; Kumar, H.; Kim, K.; Park, S. S.; Kim, K. Machine learning-enhanced optimization for high-throughput precision in cellular "
+  },
+  {
+   "figure": "Fig. 3M",
+   "material_class": "powder",
+   "sense_act": "draw -> tune -> dose",
+   "ref": 37,
+   "citation": "Fermier, A. M.; Troisi, J.; Heritage, E. C.; Drexel, M. A.; Gallea, P.; Swinney, K. A. Powder dispensing robot for sample preparation. Analyst 2003, 128, 790–79"
+  },
+  {
+   "figure": "Fig. 3N",
+   "material_class": "powder",
+   "sense_act": "scoop -> verify -> pour",
+   "ref": 12,
+   "citation": "Radulov, N.; Little, T.; Cooper, A. I.; Pizzuto, G. Vision-guided adaptive scooping for powder weighing in autonomous chemistry laboratories. Digital Discovery "
+  },
+  {
+   "figure": "Fig. 3O",
+   "material_class": "powder",
+   "sense_act": "scoop -> dump -> transfer",
+   "ref": 38,
+   "citation": "Kadokawa, Y.; Hamaya, M.; Tanaka, K. Learning robotic powder weighing from simulation for laboratory automation. In 2023 IEEE/RSJ International Conference on In"
+  },
+  {
+   "figure": "Fig. 3P",
+   "material_class": "powder",
+   "sense_act": "measure -> calibrate -> dispense",
+   "ref": 39,
+   "citation": "Radulov, N.; Wright, A.; Little, T.; Cooper, A. I.; Pizzuto, G. FLIP: Flowability-Informed Powder Weighing. arXiv:2506.03896, 2025."
+  },
+  {
+   "figure": "Fig. 3Q",
+   "material_class": "powder",
+   "sense_act": "funnel -> valve -> trickle",
+   "ref": 40,
+   "citation": "Takahashi, T.; Nakajima, Y.; Beltran-Hernandez, C. C.; Kuroda, Y.; Tanaka, K.; Hamaya, M.; Ono, K.; Ushiku, Y. A Flexible Funnel-Shaped Robotic Hand with an Int"
+  },
+  {
+   "figure": "Fig. 3R",
+   "material_class": "powder",
+   "sense_act": "scoop -> transport -> pour",
+   "ref": 41,
+   "citation": "Wei, M.; Yang, X.; Lai, Y.-K.; Tafrishi, S. A.; Ji, Z. A physics-informed demonstration-guided learning framework for granular material manipulation. IEEE Trans"
+  },
+  {
+   "figure": "Fig. 3S",
+   "material_class": "powder",
+   "sense_act": "pour -> mix -> assess",
+   "ref": 42,
+   "citation": "Szymańska, E.; Hughes, J. Robotic optimization of powdered beverages leveraging computer vision and Bayesian optimization. Front. Robot. AI 2025, 12, 1603729. h"
+  },
+  {
+   "figure": "Fig. 3T",
+   "material_class": "powder",
+   "sense_act": "probe -> feel -> retrieve",
+   "ref": 43,
+   "citation": "Xu, J.; Jia, Y.; Yang, D.; Meng, P.; Zhu, X.; Guo, Z.; Song, S.; Ciocarlie, M. Tactile-based object retrieval from granular media. Auton. Robots 2025, 49 (4), 3"
+  }
+ ],
+ "references": [
+  {
+   "n": 1,
+   "text": "Abolhasani, M.; Kumacheva, E. The rise of self-driving labs in chemical and materials sciences. Nat. Synth. 2023, 2, 483–492. https://doi.org/10.1038/s44160-022-00231-0"
+  },
+  {
+   "n": 2,
+   "text": "Rastegardoost, M. M.; Tafreshi, O. A.; Saadatnia, Z.; Ghaffari-Mosanenzadeh, S.; Park, C. B.; Naguib, H. E. Recent advances on porous materials and structures for high-performance triboelectric nanogenerators. Nano Energy 2023, 111, 108365. https://doi.org/10.1016/j.nanoen.2023.108365"
+  },
+  {
+   "n": 3,
+   "text": "Burger, B.; Maffettone, P. M.; Gusev, V. V.; Aitchison, C. M.; Bai, Y.; Wang, X.; Li, X.; Alston, B. M.; Li, B.; Clowes, R.; Rankin, N.; Harris, B.; Sprick, R. S.; Cooper, A. I. A mobile robotic chemist. Nature 2020, 583, 237–241. https://doi.org/10.1038/s41586-020-2442-2"
+  },
+  {
+   "n": 4,
+   "text": "Szymanski, N. J.; Rendy, B.; Fei, Y.; Kumar, R. E.; He, T.; Milsted, D.; McDermott, M. J.; Gallant, M.; Cubuk, E. D.; Merchant, A.; Kim, H.; Jain, A.; Bartel, C. J.; Persson, K.; Zeng, Y.; Ceder, G. An autonomous laboratory for the accelerated synthesis of inorganic materials. Nature 2023, 624, 86–91. https://doi.org/10.1038/s41586-023-06734-w"
+  },
+  {
+   "n": 5,
+   "text": "King, R. D.; Rowland, J.; Oliver, S. G.; Young, M.; Aubrey, W.; Byrne, E.; Liakata, M.; Markham, M.; Pir, P.; Soldatova, L. N.; Sparkes, A.; Whelan, K. E.; Clare, A. The automation of science. Science 2009, 324 (5923), 85–89. https://doi.org/10.1126/science.1165620"
+  },
+  {
+   "n": 6,
+   "text": "Steiner, S.; Wolf, J.; Glatzel, S.; Andreou, A.; Granda, J. M.; Keenan, G.; Hinkley, T.; Aragon-Camarasa, G.; Kitson, P. J.; Angelone, D.; Cronin, L. Organic synthesis in a modular robotic system driven by a chemical programming language. Science 2019, 363 (6423), eaav2211. https://doi.org/10.1126/science.aav2211"
+  },
+  {
+   "n": 7,
+   "text": "MacLeod, B. P.; Parlane, F. G. L.; Morrissey, T. D.; Häse, F.; Roch, L. M.; Dettelbach, K. E.; Moreira, R.; Yunker, L. P. E.; Rooney, M. B.; Deeth, J. R.; Lai, V.; Ng, G. J.; Situ, H.; Zhang, R. H.; Elliott, M. S.; Haley, T. H.; Dvorak, D. J.; Aspuru-Guzik, A.; Hein, J. E.; Berlinguette, C. P. Self-driving laboratory for accelerated discovery of thin-film materials. Sci. Adv. 2020, 6 (20), eaaz8867. https://doi.org/10.1126/sciadv.aaz8867"
+  },
+  {
+   "n": 8,
+   "text": "Seifrid, M.; Pollice, R.; Aguilar-Granda, A.; Morgan Chan, Z.; Hotta, K.; Ser, C. T.; Vestfrid, J.; Wu, T. C.; Aspuru-Guzik, A. Autonomous chemical experiments: challenges and perspectives on establishing a self-driving lab. Acc. Chem. Res. 2022, 55 (17), 2454–2466. https://doi.org/10.1021/acs.accounts.2c00220"
+  },
+  {
+   "n": 9,
+   "text": "Stach, E.; DeCost, B.; Kusne, A. G.; Hattrick-Simpers, J.; Brown, K. A.; Reyes, K. G.; Schrier, J.; Billinge, S.; Buonassisi, T.; Foster, I.; Gomes, C. P.; Gregoire, J. M.; Mehta, A.; Montoya, J.; Olivetti, E.; Park, C.; Rotenberg, E.; Saikin, S. K.; Smullin, S.; Stanev, V.; Maruyama, B. Autonomous experimentation systems for materials development: a community perspective. Matter 2021, 4 (9), 2702–2726. https://doi.org/10.1016/j.matt.2021.06.036"
+  },
+  {
+   "n": 10,
+   "text": "Tom, G.; Schmid, S. P.; Baird, S. G.; Cao, Y.; Darvish, K.; Hao, H.; Lo, S.; Pablo-García, S.; Rajaonson, E. M.; Skreta, M.; Yoshikawa, N.; Corapi, S.; Akkoc, G. D.; Strieth-Kalthoff, F.; Seifrid, M.; Aspuru-Guzik, A. Self-driving laboratories for chemistry and materials science. Chem. Rev. 2024, 124 (16), 9633–9732. https://doi.org/10.1021/acs.chemrev.4c00055"
+  },
+  {
+   "n": 11,
+   "text": "Velasco, P. Q.; Low, K. Y. A.; Leong, C. J.; Ng, W. T.; Qiu, S.; Jhunjhunwala, S.; Li, B.; Qian, A.; Hippalgaonkar, K.; Cheng, J. J. W. Optimization of liquid handling parameters for viscous liquid transfers with pipetting robots, a \"sticky situation.\" Digital Discovery 2024, 3 (5), 1011–1020. https://doi.org/10.1039/D3DD00255A"
+  },
+  {
+   "n": 12,
+   "text": "Radulov, N.; Little, T.; Cooper, A. I.; Pizzuto, G. Vision-guided adaptive scooping for powder weighing in autonomous chemistry laboratories. Digital Discovery 2026, 5 (5), 2120–2127. https://doi.org/10.1039/D5DD00569H"
+  },
+  {
+   "n": 13,
+   "text": "Tadros, T. F. Rheology of Dispersions: Principles and Applications; Wiley-VCH: Weinheim, 2010. ISBN 978-3-527-32003-5."
+  },
+  {
+   "n": 14,
+   "text": "Mezger, T. G. The Rheology Handbook: For Users of Rotational and Oscillatory Rheometers, 5th ed.; Vincentz Network: Hannover, 2020. ISBN 978-3-86630-532-8."
+  },
+  {
+   "n": 15,
+   "text": "Opentrons Labworks Inc. OT-2 and Flex Liquid Handling Robots; product pages. https://opentrons.com/products/ot-2-robot (accessed 2026)."
+  },
+  {
+   "n": 16,
+   "text": "Hamilton Company. Microlab STAR Automated Liquid Handling Workstation; product page. https://www.hamiltoncompany.com (accessed 2026)."
+  },
+  {
+   "n": 17,
+   "text": "Nordson EFD. Ultimus V Precision Dispenser; product page. https://www.nordson.com/en/products/efd-products/ultimus-v-dispensers (accessed 2026)."
+  },
+  {
+   "n": 18,
+   "text": "Bahr, M. N.; Damon, D.; Yates, S.; Chin, A.; Christopher, D.; Cromer, S.; Perrotto, N.; Quiroz, J.; Rosso, V. Collaborative Evaluation of Commercially Available Automated Powder Dispensing Platforms for High-Throughput Experimentation in Pharmaceutical Applications. Org. Process Res. Dev. 2018, 22 (11), 1500–1508. https://doi.org/10.1021/acs.oprd.8b00259"
+  },
+  {
+   "n": 19,
+   "text": "Barnes, H. A. A Handbook of Elementary Rheology; University of Wales Institute of Non-Newtonian Fluid Mechanics: Aberystwyth, 2000 (reprinted 2005). ISBN 0-9538032-0-1."
+  },
+  {
+   "n": 20,
+   "text": "Macosko, C. W. Rheology: Principles, Measurements, and Applications; VCH Publishers: New York, 1994. ISBN 1-56081-579-5."
+  },
+  {
+   "n": 21,
+   "text": "Kanase, D.; Watson, T. Viscous Liquid Handling Automation Using the Opentrons OT-2; Application Note; Opentrons Labworks Inc. https://opentrons-landing-img.s3.amazonaws.com/application+notes/Viscous+Liquids+App+Note.pdf (accessed 2026)."
+  },
+  {
+   "n": 22,
+   "text": "Deshmukh, S.; Bishop, M. T.; Dermody, D.; Dietsche, L.; Kuo, T.-C.; Mushrush, M.; Harris, K.; Zieman, J.; Morabito, P.; Orvosh, B.; Patrick, D. A Novel High-Throughput Viscometer. ACS Comb. Sci. 2016, 18 (7), 405–414. https://doi.org/10.1021/acscombsci.5b00176"
+  },
+  {
+   "n": 23,
+   "text": "Soh, B. W.; Chitre, A.; Tan, S. Z.; Wang, Y.; Yi, Y.; Soh, W.; Hippalgaonkar, K.; Wilson, D. I. Opentrons for automated and high-throughput viscometry. Digital Discovery 2025, 4 (3), 711–722. https://doi.org/10.1039/D4DD00368C"
+  },
+  {
+   "n": 24,
+   "text": "Zhang, H.; Jin, J.; Zhao, Z.; He, Z.; Zhou, Y.; Duan, X. Self-focused acoustically driven pL-level dispensing pipet enabling rapid concentration gradient generation. Anal. Chem. 2025, 97 (47), 26274–26282. https://doi.org/10.1021/acs.analchem.5c05838"
+  },
+  {
+   "n": 25,
+   "text": "Durrer, J.; Agrawal, P.; Ozgul, A.; Neuhauss, S. C. F.; Nama, N.; Ahmed, D. A robot-assisted acoustofluidic end effector. Nat. Commun. 2022, 13, 6370. https://doi.org/10.1038/s41467-022-34167-y"
+  },
+  {
+   "n": 26,
+   "text": "Ozgulbas, D. Y. et al. Robotic pendant drop: containerless liquid for μs-resolved, AI-executable XPCS. Light Sci. Appl. 2023, 12, 196. https://doi.org/10.1038/s41377-023-01233-z"
+  },
+  {
+   "n": 27,
+   "text": "Xu, S.; Nunez, C. M.; Souri, M.; Wood, R. J. A compact DEA-based soft peristaltic pump for power and control of fluidic robots. Sci. Robot. 2023, 8 (79), eadd4649. https://doi.org/10.1126/scirobotics.add4649"
+  },
+  {
+   "n": 28,
+   "text": "Walker, M.; Pizzuto, G.; Fakhruldeen, H.; Cooper, A. I. Go with the flow: deep learning methods for autonomous viscosity estimations. Digital Discovery 2023, 2 (5), 1540–1547. https://doi.org/10.1039/D3DD00109A"
+  },
+  {
+   "n": 29,
+   "text": "Rastegardoost, M. M.; Tafreshi, O. A.; Saadatnia, Z.; Ghaffari-Mosanenzadeh, S.; Park, C. B.; Naguib, H. E. Porous PVDF mats with significantly enhanced dielectric properties and novel dipole arrangement for high-performance triboelectric nanogenerators. Appl. Mater. Today 2023, 30, 101732. https://doi.org/10.1016/j.apmt.2023.101732"
+  },
+  {
+   "n": 30,
+   "text": "Malkin, A. Ya.; Derkach, S. R.; Kulichikhin, V. G. Rheology of Gels and Yielding Liquids. Gels 2023, 9 (9), 715. https://doi.org/10.3390/gels9090715"
+  },
+  {
+   "n": 31,
+   "text": "Luo, X.; Jin, S.; Huang, H.-J.; Yuan, W. An Intelligent Robotic System for Perceptive Pancake Batter Stirring and Precise Pouring. In 2024 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE, 2024. arXiv:2407.01755."
+  },
+  {
+   "n": 32,
+   "text": "Yang, X.; Ji, Z.; Lai, Y.-K. Differentiable physics-based system identification for robotic manipulation of elastoplastic materials. Int. J. Robot. Res. 2025, 44 (13), 2126–2155. https://doi.org/10.1177/02783649251334661"
+  },
+  {
+   "n": 33,
+   "text": "Kelly, D.; Sergis, V.; Ventura i Blanco, L.; Mason, K.; Daly, A. C. Autonomous control of extrusion bioprinting using convolutional neural networks. Adv. Funct. Mater. 2025, 35, 2424553. https://doi.org/10.1002/adfm.202424553"
+  },
+  {
+   "n": 34,
+   "text": "Shin, J.; Kang, R.; Hyun, K.; Li, Z.; Kumar, H.; Kim, K.; Park, S. S.; Kim, K. Machine learning-enhanced optimization for high-throughput precision in cellular droplet bioprinting. Adv. Sci. 2025, 12 (20), e2412831. https://doi.org/10.1002/advs.202412831"
+  },
+  {
+   "n": 35,
+   "text": "Rastegardoost, M. M.; Tafreshi, O. A.; Saadatnia, Z.; Ghaffari-Mosanenzadeh, S.; Serles, P.; Filleter, T.; Park, C. B.; Naguib, H. E. Highly durable triboelectric nanogenerators based on fibrous fluoropolymer composite mats with enhanced mechanical and dielectric properties. Mater. Today Energy 2023, 38, 101431. https://doi.org/10.1016/j.mtener.2023.101431"
+  },
+  {
+   "n": 36,
+   "text": "Abbas, F.; Salehian, M.; Hou, P. et al. Accelerated drug development using a digital formulator and a self-driving tableting data factory. Nat. Commun. 2026, 17, 4739. https://doi.org/10.1038/s41467-026-71204-6"
+  },
+  {
+   "n": 37,
+   "text": "Fermier, A. M.; Troisi, J.; Heritage, E. C.; Drexel, M. A.; Gallea, P.; Swinney, K. A. Powder dispensing robot for sample preparation. Analyst 2003, 128, 790–795. https://doi.org/10.1039/b300274h"
+  },
+  {
+   "n": 38,
+   "text": "Kadokawa, Y.; Hamaya, M.; Tanaka, K. Learning robotic powder weighing from simulation for laboratory automation. In 2023 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Detroit, MI, 2023; pp. 2932–2939."
+  },
+  {
+   "n": 39,
+   "text": "Radulov, N.; Wright, A.; Little, T.; Cooper, A. I.; Pizzuto, G. FLIP: Flowability-Informed Powder Weighing. arXiv:2506.03896, 2025."
+  },
+  {
+   "n": 40,
+   "text": "Takahashi, T.; Nakajima, Y.; Beltran-Hernandez, C. C.; Kuroda, Y.; Tanaka, K.; Hamaya, M.; Ono, K.; Ushiku, Y. A Flexible Funnel-Shaped Robotic Hand with an Integrated Single-Sheet Valve for Milligram-Scale Powder Handling. arXiv:2512.07091, 2025."
+  },
+  {
+   "n": 41,
+   "text": "Wei, M.; Yang, X.; Lai, Y.-K.; Tafrishi, S. A.; Ji, Z. A physics-informed demonstration-guided learning framework for granular material manipulation. IEEE Trans. Neural Netw. Learn. Syst. 2026, 37 (4), 1590–1604. https://doi.org/10.1109/TNNLS.2025.3622482"
+  },
+  {
+   "n": 42,
+   "text": "Szymańska, E.; Hughes, J. Robotic optimization of powdered beverages leveraging computer vision and Bayesian optimization. Front. Robot. AI 2025, 12, 1603729. https://doi.org/10.3389/frobt.2025.1603729"
+  },
+  {
+   "n": 43,
+   "text": "Xu, J.; Jia, Y.; Yang, D.; Meng, P.; Zhu, X.; Guo, Z.; Song, S.; Ciocarlie, M. Tactile-based object retrieval from granular media. Auton. Robots 2025, 49 (4), 32. https://doi.org/10.1007/s10514-025-10212-9"
+  },
+  {
+   "n": 44,
+   "text": "Treers, L.; Soto, D.; Hwang, J.; Goodisman, M. A. D.; Goldman, D. I. Robot excavation and manipulation of geometrically cohesive granular media. Granular Matter 2026, 28 (2), 35. https://doi.org/10.1007/s10035-025-01597-6"
+  },
+  {
+   "n": 45,
+   "text": "Lo, S.; Baird, S. G.; Schrier, J.; Blaiszik, B.; Carson, N.; Foster, I.; Aguilar-Granda, A.; Kalinin, S. V.; Maruyama, B.; Politi, M.; Tran, H.; Sparks, T. D.; Aspuru-Guzik, A. Review of low-cost self-driving laboratories in chemistry and materials science: the “frugal twin” concept. Digital Discovery 2024, 3 (5), 842–868. https://doi.org/10.1039/D3DD00223C"
+  },
+  {
+   "n": 46,
+   "text": "SainSmart. Genmitsu 4040-PRO Desktop CNC Machine; product page, https://www.sainsmart.com/collections/cnc-machines/products/genmitsu-4040-pro-semi-assembly-desktop-cnc-machine-for-carving-and-cutting; running accuracy from the 4040-PRO MAX product page, https://www.sainsmart.com/products/4040-pro-max (accessed 2026)."
+  },
+  {
+   "n": 47,
+   "text": "igus GmbH. drylin XYZ Gantry Robot; product configurator page. https://www.igus.com/automation/xyz-gantry (accessed 2026)."
+  },
+  {
+   "n": 48,
+   "text": "Machine Agency, University of Washington. Jubilee: An Open-Source Multi-Tool Motion Platform; specifications, https://jubilee3d.com/index.php?title=Specs; and Science Jubilee Pipette Tool documentation, https://science-jubilee.readthedocs.io/en/latest/building/pipette_tool.html (accessed 2026)."
+  },
+  {
+   "n": 49,
+   "text": "Brooks Automation (Precise Automation). PreciseFlex 400; datasheet 379272-en-US. https://www.brooks.com (accessed 2026)."
+  },
+  {
+   "n": 50,
+   "text": "Seiko Epson Corporation. RS3 SCARA Robot (RRS-351SSR13); product page. https://www.epson.com (accessed 2026)."
+  },
+  {
+   "n": 51,
+   "text": "Universal Robots A/S. UR3e Collaborative Robot Arm; product page and e-Series datasheet. https://www.universal-robots.com/products/ur3e/ (accessed 2026)."
+  },
+  {
+   "n": 52,
+   "text": "UFACTORY. xArm 6 Collaborative Robot; product page. https://www.ufactory.us/product/ufactory-xarm-6 (accessed 2026)."
+  },
+  {
+   "n": 53,
+   "text": "UFACTORY. Lite 6 Collaborative Robot Arm; product listing (Knox Labs). https://www.knoxlabs.com/products/ufactory-lite-6-collaborative-robot-arm (accessed 2026)."
+  },
+  {
+   "n": 54,
+   "text": "Franka Robotics GmbH. Franka Research 3; datasheet R02212, Rev. 2.4. https://franka.de/hubfs/Datasheet_FrankaResearch3_R02212_2.4.pdf?hsLang=en (accessed 2026)."
+  },
+  {
+   "n": 55,
+   "text": "Kinova Inc. Gen3 Ultra Lightweight Robot; one-pager specification. https://www.kinovarobotics.com/uploads/Kinova_Onepager_Gen3_2024_EN.pdf (accessed 2026)."
+  },
+  {
+   "n": 56,
+   "text": "Lunt, A. M.; Fakhruldeen, H.; Pizzuto, G. et al. Modular, multi-robot integration of laboratories: an autonomous workflow for solid-state chemistry. Chem. Sci. 2024, 15 (7), 2456–2463. https://doi.org/10.1039/D3SC06206F"
+  },
+  {
+   "n": 57,
+   "text": "Dai, T.; Vijayakrishnan, S.; Szczypiński, F. T.; Ayme, J.-F.; Simaei, E.; Fellowes, T.; Clowes, R.; Kotopanov, L.; Shields, C. E.; Zhou, Z.; Ward, J. W.; Cooper, A. I. Autonomous mobile robots for exploratory synthetic chemistry. Nature 2024, 635, 890–897. https://doi.org/10.1038/s41586-024-08173-7"
+  },
+  {
+   "n": 58,
+   "text": "KUKA AG. KMR iiwa Mobile Robot System; product brochure, https://www.parmley-graham.co.uk/content/wp-content/uploads/2024/07/KUKA_KMRiiwa_EN.pdf; platform positioning, https://qviro.com/product/kuka/kmr-iiwa; reseller price listing, https://www.indiamart.com/proddetail/kuka-kmr-iiwa-2854399368830.html (accessed 2026)."
+  },
+  {
+   "n": 59,
+   "text": "Rainin (Mettler-Toledo). E4 XLS+ Electronic Pipette; product specification. https://www.shoprainin.com/Products/Pipettes-and-Tips/Pipettes/Single-Channel-Electronic-Pipettes/E4-XLS/E4-Electronic-Pipette,-LTS-E4-1000XLS+/p/17014482 (accessed 2026)."
+  },
+  {
+   "n": 60,
+   "text": "Eppendorf SE. Xplorer / Xplorer plus Electronic Pipettes; product page. https://www.eppendorf.com/us-en/Products/Liquid-Handling/All-Pipettes-Dispensers-Automated-Liquid-Handlers/Eppendorf-Xplorer-Eppendorf-Xplorer-plus-p-PF-191054 (accessed 2026)."
+  },
+  {
+   "n": 61,
+   "text": "Gilson, Inc. MICROMAN E Positive-Displacement Pipette; User’s Guide LT801547-E. https://es.gilson.com/pub/media/docs/LT801547-E_MICROMAN_E_UG_web.pdf (accessed 2026)."
+  },
+  {
+   "n": 62,
+   "text": "Hamilton Company. PSD/4 Syringe Pump; specification sheet. https://www.hamiltoncompany.com/knowledge-base/spec-sheet/psd-4-specification-sheet (accessed 2026)."
+  },
+  {
+   "n": 63,
+   "text": "Watson-Marlow Fluid Technology Solutions. Qdos 20 Chemical Metering Pump; product page. https://www.wmfts.com/en-us/brands/watson-marlow-peristaltic-pumps/cased-pumps/qdos-accurate-versatile-chemical-dosing-pumps/ (accessed 2026)."
+  },
+  {
+   "n": 64,
+   "text": "Cole-Parmer (Avantor). Masterflex L/S Digital Precision Pump System; product listing. https://www.fishersci.com/shop/products/masterflex-l-s-digital-precision-pump-systems-open-head-sensor-easy-load-head-4/11747346 (accessed 2026)."
+  },
+  {
+   "n": 65,
+   "text": "CELLINK (BICO Group). Syringe Pump Printhead; product page. https://www.cellink.com/product/syringe-pump-printhead/ (accessed 2026)."
+  },
+  {
+   "n": 66,
+   "text": "Allevi (3D Systems). Allevi 2 Bioprinter; product page. https://www.allevi3d.com/allevi-2/ (accessed 2026)."
+  },
+  {
+   "n": 67,
+   "text": "CELLINK (BICO Group). BIO X Pneumatic Printhead; product page. https://www.cellink.com/product/bio-x-pneumatic-printhead/ (accessed 2026)."
+  },
+  {
+   "n": 68,
+   "text": "ViscoTec Pumpen- u. Dosiertechnik GmbH. preeflow eco-PEN Precision Volumetric Dosing Pump; product page. https://www.preeflow.com/en/hoechste-praezision-als-standard/ (accessed 2026)."
+  },
+  {
+   "n": 69,
+   "text": "Fisnar Inc. PDV-1000 Precision Positive-Displacement Auger Valve; product page. https://www.fisnar.com/products/dispensing-valves/positive-displacement-dispensing-valves/pdv1000-precision-positive-displacement-auger-valves/ (accessed 2026)."
+  },
+  {
+   "n": 70,
+   "text": "Coperion K-Tron. Micro-Screw Feeders (MT12); product page. https://coperion.com/en/products-services/process-equipment/feeders/micro-screw-feeders (accessed 2026)."
+  },
+  {
+   "n": 71,
+   "text": "Chemspeed Technologies AG. SWILE Gravimetric Powder Dosing; product page. https://www.chemspeed.com/crystal-swile/ (accessed 2026)."
+  },
+  {
+   "n": 72,
+   "text": "Mettler-Toledo International. Quantos Automated Powder and Liquid Dosing; data sheet. https://www.mt.com/us/en/home/library/product-brochures/laboratory-weighing/06_Automated_Sample_Preparation/02_QB_Liquid_Powder_Dispensing/02_Data_Sheets/DS_QB_Powder_Dosing.html (accessed 2026)."
+  },
+  {
+   "n": 73,
+   "text": "3P Innovation Ltd. VF1 Vibratory Feeder; product page. https://www.3pinnovation.com/pharma-equipment/discover-range/vibratory-feeder (accessed 2026)."
+  },
+  {
+   "n": 74,
+   "text": "Eriez Manufacturing Co. Hi-Vi Volumatic Feeder Machine; product page. https://www.eriez.com/Products/Sample-Preparation/Vibratory-Feeders/Volumatic-Feeder-Machine (accessed 2026)."
+  },
+  {
+   "n": 75,
+   "text": "Eppendorf SE. epMotion 5075 Automated Pipetting Workstation; technical specifications brochure. https://www.eppendorf.com (accessed 2026)."
+  },
+  {
+   "n": 76,
+   "text": "Dispendix GmbH. I.DOT Non-Contact Liquid Handler; product page. https://www.dispendix.com/idot-non-contact-liquid-handler (accessed 2026)."
+  },
+  {
+   "n": 77,
+   "text": "Tecan Group Ltd. Fluent Laboratory Automation Workstation; product page. https://lifesciences.tecan.com/fluent-laboratory-automation-workstation (accessed 2026)."
+  },
+  {
+   "n": 78,
+   "text": "Beckman Coulter Life Sciences. Biomek i7 Automated Workstation; product page. https://www.beckman.com/liquid-handlers/biomek-i-series-automated-workstations/biomek-i7 (accessed 2026)."
+  },
+  {
+   "n": 79,
+   "text": "Agilent Technologies. Bravo Automated Liquid Handling Platform; product page. https://www.agilent.com/en/product/automated-liquid-handling/automated-liquid-handling-platforms/bravo-automated-liquid-handling-platform (accessed 2026)."
+  },
+  {
+   "n": 80,
+   "text": "Beckman Coulter Life Sciences. Echo 525 Acoustic Liquid Handler; product page. https://www.beckman.com/liquid-handlers/echo-acoustic/echo-525 (accessed 2026)."
+  },
+  {
+   "n": 81,
+   "text": "Soh, B. W.; Chitre, A.; Lee, W. Y.; Bash, D.; Kumar, J. N.; Hippalgaonkar, K. Automated pipetting robot for proxy high-throughput viscometry of Newtonian fluids. Digital Discovery 2023, 2 (2), 481–488. https://doi.org/10.1039/D2DD00126H"
+  },
+  {
+   "n": 82,
+   "text": "Councill, E. E. A. W.; Axtell, N. B.; Truong, T.; Liang, Y.; Aposhian, A. L.; Webber, K. G. I.; Zhu, Y.; Cong, Y.; Carson, R. H.; Kelly, R. T. Adapting a low-cost and open-source commercial pipetting robot for nanoliter liquid handling. SLAS Technol. 2021, 26 (3), 310–319. https://doi.org/10.1177/2472630320973591"
+  },
+  {
+   "n": 83,
+   "text": "Axtell, N. B.; Webber, K. G. I. et al. Modification of a low-cost pipetting robot for nanoliter liquid handling and autosampling for liquid chromatography-mass spectrometry. J. Sep. Sci. 2026, 49 (2), e70379. https://doi.org/10.1002/jssc.70379"
+  },
+  {
+   "n": 84,
+   "text": "Yoshikawa, N.; Darvish, K.; Ghazi Vakili, M.; Garg, A.; Aspuru-Guzik, A. Digital pipette: open hardware for liquid transfer in self-driving laboratories. Digital Discovery 2023, 2 (6), 1745–1751. https://doi.org/10.1039/D3DD00115F"
+  },
+  {
+   "n": 85,
+   "text": "Zwirnmann, H.; Knobbe, D.; Culha, U.; Haddadin, S. Towards flexible biolaboratory automation: container taxonomy-based, 3D-printed gripper fingers. In 2023 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Detroit, MI, 2023. arXiv:2302.03644."
+  },
+  {
+   "n": 86,
+   "text": "Nazeri, M.; Watchorn, J.; Mei, S.; Zhang, A.; Allen, C.; Gu, F. Leveraging flexible pipette-based tool changes to transform liquid handling systems into dual-function sample preparation and imaging platforms. HardwareX 2025, 22, e00653. https://doi.org/10.1016/j.ohx.2025.e00653"
+  },
+  {
+   "n": 87,
+   "text": "del Olmo Lianes, I.; Yubero, P.; Gómez-Luengo, Á.; Nogales, J.; Espeso, D. R. Technical upgrade of an open-source liquid handler to support bacterial colony screening. Front. Bioeng. Biotechnol. 2023, 11, 1202836. https://doi.org/10.3389/fbioe.2023.1202836"
+  },
+  {
+   "n": 88,
+   "text": "Wierenga, R. P.; Golas, S. M.; Ho, W.; Coley, C. W.; Esvelt, K. M. PyLabRobot: an open-source, hardware-agnostic interface for liquid-handling robots and accessories. Device 2023, 1 (4), 100111. https://doi.org/10.1016/j.device.2023.100111"
+  },
+  {
+   "n": 89,
+   "text": "Grieves, M.; Vickers, J. Digital twin: mitigating unpredictable, undesirable emergent behavior in complex systems. In Transdisciplinary Perspectives on Complex Systems; Kahlen, F.-J., Flumerfelt, S., Alves, A., Eds.; Springer: Cham, 2017; pp 85–113. https://doi.org/10.1007/978-3-319-38756-7_4"
+  },
+  {
+   "n": 90,
+   "text": "Tao, F.; Zhang, H.; Liu, A.; Nee, A. Y. C. Digital twin in industry: state-of-the-art. IEEE Trans. Ind. Inform. 2019, 15 (4), 2405–2415. https://doi.org/10.1109/TII.2018.2873186"
+  },
+  {
+   "n": 91,
+   "text": "Pal, P. K.; Hens, A.; Behera, N.; Lahiri, S. K. Digital twins: transforming the chemical process industry—a review. Can. J. Chem. Eng. 2025, 103 (8), 3611–3636. https://doi.org/10.1002/cjce.25611"
+  },
+  {
+   "n": 92,
+   "text": "Zhang, S.; Zhang, J.; Lapkin, A. A. A knowledge graph framework for digital twins of chemical processes. Nat. Chem. Eng. 2026, 3 (5), 286–297. https://doi.org/10.1038/s44286-026-00392-1"
+  },
+  {
+   "n": 93,
+   "text": "Rihm, S. D.; Bai, J.; Kondinski, A.; Mosbach, S.; Akroyd, J.; Kraft, M. Transforming research laboratories with connected digital twins. Nexus 2024, 1 (1), 100004. https://doi.org/10.1016/j.ynexs.2024.100004"
+  },
+  {
+   "n": 94,
+   "text": "SimPy. SimPy: discrete event simulation for Python; software documentation. https://simpy.readthedocs.io (accessed 2026)."
+  },
+  {
+   "n": 95,
+   "text": "Bär, H.; Hochstrasser, R.; Papenfuß, B. SiLA: basic standards for rapid integration in laboratory automation. J. Lab. Autom. 2012, 17 (2), 86–95. https://doi.org/10.1177/2211068211424550"
+  },
+  {
+   "n": 96,
+   "text": "Macenski, S.; Foote, T.; Gerkey, B.; Lalancette, C.; Woodall, W. Robot Operating System 2: design, architecture, and uses in the wild. Sci. Robot. 2022, 7 (66), eabm6074. https://doi.org/10.1126/scirobotics.abm6074"
+  },
+  {
+   "n": 97,
+   "text": "Coleman, D.; Şucan, I. A.; Chitta, S.; Correll, N. Reducing the barrier to entry of complex robotic software: a MoveIt! case study. J. Softw. Eng. Robot. 2014, 5 (1), 3–16. arXiv:1404.3785."
+  },
+  {
+   "n": 98,
+   "text": "Beeson, P.; Ames, B. TRAC-IK: an open-source library for improved solving of generic inverse kinematics. In 2015 IEEE-RAS 15th International Conference on Humanoid Robots (Humanoids); IEEE: Seoul, South Korea, 2015; pp 928–935. https://doi.org/10.1109/HUMANOIDS.2015.7363472"
+  },
+  {
+   "n": 99,
+   "text": "Şucan, I. A.; Moll, M.; Kavraki, L. E. The Open Motion Planning Library. IEEE Robot. Autom. Mag. 2012, 19 (4), 72–82. https://doi.org/10.1109/MRA.2012.2205651"
+  },
+  {
+   "n": 100,
+   "text": "Pan, J.; Chitta, S.; Manocha, D. FCL: a general purpose library for collision and proximity queries. In 2012 IEEE International Conference on Robotics and Automation (ICRA); IEEE: Saint Paul, MN, USA, 2012; pp 3859–3866. https://doi.org/10.1109/ICRA.2012.6225337"
+  },
+  {
+   "n": 101,
+   "text": "Fakhruldeen, H.; Pizzuto, G.; Glowacki, J.; Cooper, A. I. ARChemist: autonomous robotic chemistry system architecture. In 2022 International Conference on Robotics and Automation (ICRA); IEEE: Philadelphia, PA, USA, 2022; pp 6013–6019. https://doi.org/10.1109/ICRA46639.2022.9811996"
+  },
+  {
+   "n": 102,
+   "text": "Koenig, N.; Howard, A. Design and use paradigms for Gazebo, an open-source multi-robot simulator. In 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Sendai, Japan, 2004; Vol. 3, pp 2149–2154. https://doi.org/10.1109/IROS.2004.1389727"
+  },
+  {
+   "n": 103,
+   "text": "Todorov, E.; Erez, T.; Tassa, Y. MuJoCo: a physics engine for model-based control. In 2012 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Vilamoura-Algarve, Portugal, 2012; pp 5026–5033. https://doi.org/10.1109/IROS.2012.6386109"
+  },
+  {
+   "n": 104,
+   "text": "Coumans, E.; Bai, Y. PyBullet, a Python module for physics simulation for games, robotics and machine learning; software, 2016–2021. https://pybullet.org (accessed 2026)."
+  },
+  {
+   "n": 105,
+   "text": "Rohmer, E.; Singh, S. P. N.; Freese, M. V-REP: a versatile and scalable robot simulation framework. In 2013 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Tokyo, Japan, 2013; pp 1321–1326. https://doi.org/10.1109/IROS.2013.6696520"
+  },
+  {
+   "n": 106,
+   "text": "Michel, O. Cyberbotics Ltd. Webots™: professional mobile robot simulation. Int. J. Adv. Robot. Syst. 2004, 1 (1), 5. https://doi.org/10.5772/5618"
+  },
+  {
+   "n": 107,
+   "text": "Makoviychuk, V.; Wawrzyniak, L.; Guo, Y. et al. Isaac Gym: high performance GPU-based physics simulation for robot learning. In Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks 1 (NeurIPS Datasets and Benchmarks 2021); 2021; arXiv:2108.10470."
+  },
+  {
+   "n": 108,
+   "text": "Mittal, M.; Yu, C.; Yu, Q. et al. Orbit: a unified simulation framework for interactive robot learning environments. IEEE Robot. Autom. Lett. 2023, 8 (6), 3740–3747. https://doi.org/10.1109/LRA.2023.3270034"
+  },
+  {
+   "n": 109,
+   "text": "Mittal, M.; Roth, P.; Tigue, J. et al. Isaac Lab: a GPU-accelerated simulation framework for multi-modal robot learning. arXiv 2025, arXiv:2511.04831."
+  },
+  {
+   "n": 110,
+   "text": "Li, S.; Huang, Y.; Guo, C.; Wu, T.; Zhang, J.; Zhang, L.; Ding, W. Chemistry3D: robotic interaction toolkit for chemistry experiments. In 2025 IEEE International Conference on Robotics and Automation (ICRA); IEEE: Atlanta, GA, USA, 2025; pp 8064–8071. https://doi.org/10.1109/ICRA55743.2025.11128846"
+  },
+  {
+   "n": 111,
+   "text": "Darvish, K.; Sohal, A.; Mandal, A. et al. MATTERIX: toward a digital twin for robotics-assisted chemistry laboratory automation. Nat. Comput. Sci. 2026, 6 (1), 67–82. https://doi.org/10.1038/s43588-025-00924-4"
+  },
+  {
+   "n": 112,
+   "text": "Hirt, C. W.; Nichols, B. D. Volume of fluid (VOF) method for the dynamics of free boundaries. J. Comput. Phys. 1981, 39 (1), 201–225. https://doi.org/10.1016/0021-9991(81)90145-5"
+  },
+  {
+   "n": 113,
+   "text": "Monaghan, J. J. Smoothed particle hydrodynamics. Annu. Rev. Astron. Astrophys. 1992, 30, 543–574. https://doi.org/10.1146/annurev.aa.30.090192.002551"
+  },
+  {
+   "n": 114,
+   "text": "Macklin, M.; Müller, M.; Chentanez, N.; Kim, T.-Y. Unified particle physics for real-time applications. ACM Trans. Graph. 2014, 33 (4). https://doi.org/10.1145/2601097.2601152"
+  },
+  {
+   "n": 115,
+   "text": "Schenck, C.; Fox, D. SPNets: differentiable fluid dynamics for deep neural networks. In Proceedings of The 2nd Conference on Robot Learning (CoRL 2018), PMLR vol. 87; 2018; pp 317–335."
+  },
+  {
+   "n": 116,
+   "text": "Sulsky, D.; Chen, Z.; Schreyer, H. L. A particle method for history-dependent materials. Comput. Methods Appl. Mech. Eng. 1994, 118 (1–2), 179–196. https://doi.org/10.1016/0045-7825(94)90112-0"
+  },
+  {
+   "n": 117,
+   "text": "Stomakhin, A.; Schroeder, C.; Chai, L.; Teran, J.; Selle, A. A material point method for snow simulation. ACM Trans. Graph. 2013, 32 (4), 102. https://doi.org/10.1145/2461912.2461948"
+  },
+  {
+   "n": 118,
+   "text": "Huang, Z.; Hu, Y.; Du, T.; Zhou, S.; Su, H.; Tenenbaum, J. B.; Gan, C. PlasticineLab: a soft-body manipulation benchmark with differentiable physics. In International Conference on Learning Representations (ICLR 2021); 2021; arXiv:2104.03311."
+  },
+  {
+   "n": 119,
+   "text": "Hu, Y.; Anderson, L.; Li, T.-M.; Sun, Q.; Carr, N.; Ragan-Kelley, J.; Durand, F. DiffTaichi: differentiable programming for physical simulation. In International Conference on Learning Representations (ICLR 2020); 2020; arXiv:1910.00935."
+  },
+  {
+   "n": 120,
+   "text": "Xian, Z.; Zhu, B.; Xu, Z.; Tung, H.-Y.; Torralba, A.; Fragkiadaki, K.; Gan, C. FluidLab: a differentiable environment for benchmarking complex fluid manipulation. In International Conference on Learning Representations (ICLR 2023); 2023; arXiv:2303.02346."
+  },
+  {
+   "n": 121,
+   "text": "Cundall, P. A.; Strack, O. D. L. A discrete numerical model for granular assemblies. Géotechnique 1979, 29 (1), 47–65. https://doi.org/10.1680/geot.1979.29.1.47"
+  },
+  {
+   "n": 122,
+   "text": "Coetzee, C. J. Review: calibration of the discrete element method. Powder Technol. 2017, 310, 104–142. https://doi.org/10.1016/j.powtec.2017.01.015"
+  },
+  {
+   "n": 123,
+   "text": "Jop, P.; Forterre, Y.; Pouliquen, O. A constitutive law for dense granular flows. Nature 2006, 441 (7094), 727–730. https://doi.org/10.1038/nature04801"
+  },
+  {
+   "n": 124,
+   "text": "Tobin, J.; Fong, R.; Ray, A.; Schneider, J.; Zaremba, W.; Abbeel, P. Domain randomization for transferring deep neural networks from simulation to the real world. In 2017 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS); IEEE: Vancouver, BC, Canada, 2017; pp 23–30. https://doi.org/10.1109/IROS.2017.8202133"
+  },
+  {
+   "n": 125,
+   "text": "Boiko, D. A.; MacKnight, R.; Kline, B.; Gomes, G. Autonomous chemical research with large language models. Nature 2023, 624, 570–578. https://doi.org/10.1038/s41586-023-06792-0"
+  },
+  {
+   "n": 126,
+   "text": "Yoshikawa, N.; Skreta, M.; Darvish, K. et al. Large language models for chemistry robotics. Auton. Robots 2023, 47 (8), 1057–1086. https://doi.org/10.1007/s10514-023-10136-2"
+  },
+  {
+   "n": 127,
+   "text": "M. Bran, A.; Cox, S.; Schilter, O.; Baldassari, C.; White, A. D.; Schwaller, P. Augmenting large language models with chemistry tools. Nat. Mach. Intell. 2024, 6 (5), 525–535. https://doi.org/10.1038/s42256-024-00832-8"
+  },
+  {
+   "n": 128,
+   "text": "Zhao, W.; Queralta, J. P.; Westerlund, T. Sim-to-real transfer in deep reinforcement learning for robotics: a survey. In 2020 IEEE Symposium Series on Computational Intelligence (SSCI); IEEE: Canberra, ACT, Australia, 2020; pp 737–744. https://doi.org/10.1109/SSCI47803.2020.9308468"
+  },
+  {
+   "n": 129,
+   "text": "Mandal, I.; Soni, J.; Zaki, M. et al. Evaluating large language model agents for automation of atomic force microscopy. Nat. Commun. 2025, 16, 9104. https://doi.org/10.1038/s41467-025-64105-7"
+  },
+  {
+   "n": 130,
+   "text": "Tang, X.; Jin, Q.; Zhu, K. et al. Risks of AI scientists: prioritizing safeguarding over autonomy. Nat. Commun. 2025, 16, 8317. https://doi.org/10.1038/s41467-025-63913-1"
+  },
+  {
+   "n": 131,
+   "text": "Rastegardoost, M. M.; Tafreshi, O. A.; Ghaffari-Mosanenzadeh, S.; Park, C. B.; Naguib, H. E. Ultra-lightweight aerogel-fibrous material with high thermal stability and boosted triboelectricity for crack detection in harsh environments. Mater. Today Energy 2026, 56, 102221. https://doi.org/10.1016/j.mtener.2026.102221"
+  },
+  {
+   "n": 132,
+   "text": "Rastegardoost, M. M.; Aghababaei Tafreshi, O.; Ghaffari-Mosanenzadeh, S.; Saadatnia, Z.; Park, C. B.; Naguib, H. E. Ultra-lightweight aerogel composites for sound-driven triboelectric nanogenerator. Nano Energy 2025, 136, 110765. https://doi.org/10.1016/j.nanoen.2025.110765"
+  },
+  {
+   "n": 133,
+   "text": "Wilkinson, M. D.; Dumontier, M.; Aalbersberg, I. J. et al. The FAIR Guiding Principles for scientific data management and stewardship. Sci. Data 2016, 3, 160018. https://doi.org/10.1038/sdata.2016.18"
+  },
+  {
+   "n": 134,
+   "text": "Lookman, T.; Balachandran, P. V.; Xue, D.; Yuan, R. Active learning in materials science with emphasis on adaptive sampling using uncertainties for targeted design. npj Comput. Mater. 2019, 5, 21. https://doi.org/10.1038/s41524-019-0153-8"
+  },
+  {
+   "n": 135,
+   "text": "Shahriari, B.; Swersky, K.; Wang, Z.; Adams, R. P.; de Freitas, N. Taking the human out of the loop: a review of Bayesian optimization. Proc. IEEE 2016, 104 (1), 148–175. https://doi.org/10.1109/JPROC.2015.2494218"
+  },
+  {
+   "n": 136,
+   "text": "Balandat, M.; Karrer, B.; Jiang, D. R.; Daulton, S.; Letham, B.; Wilson, A. G.; Bakshy, E. BoTorch: a framework for efficient Monte-Carlo Bayesian optimization. In Advances in Neural Information Processing Systems 33 (NeurIPS 2020); arXiv:1910.06403."
+  },
+  {
+   "n": 137,
+   "text": "Cao, L.; Russo, D.; Felton, K.; Salley, D.; Sharma, A.; Keenan, G.; Mauer, W.; Gao, H.; Cronin, L.; Lapkin, A. A. Optimization of formulations using robotic experiments driven by machine learning DoE. Cell Rep. Phys. Sci. 2021, 2 (1), 100295. https://doi.org/10.1016/j.xcrp.2020.100295"
+  },
+  {
+   "n": 138,
+   "text": "OpenAI. GPT-4 Technical Report. arXiv:2303.08774, 2023."
+  },
+  {
+   "n": 139,
+   "text": "Anthropic. The Claude 3 Model Family: Opus, Sonnet, Haiku; model card, 2024. https://www.anthropic.com/news/claude-3-family (accessed 2026)."
+  },
+  {
+   "n": 140,
+   "text": "Zhou, J.; Luo, M.; Chen, L.; Zhu, Q.; Jiang, S.; Zhang, F.; Shang, W.; Jiang, J. A multi-robot–multi-task scheduling system for autonomous chemistry laboratories. Digital Discovery 2025, 4 (3), 636–652. https://doi.org/10.1039/D4DD00313F"
+  },
+  {
+   "n": 141,
+   "text": "Panapitiya, G.; Saldanha, E.; Job, H.; Hess, O. AutoLabs: cognitive multi-agent systems with self-correction for autonomous chemical experimentation. Sci. Rep. 2026, 16 (1), 19554. https://doi.org/10.1038/s41598-026-45593-z"
+  },
+  {
+   "n": 142,
+   "text": "Rupprecht, S.; Gao, Q.; Karia, T.; Schweidtmann, A. M. Multi-agent systems for chemical engineering: a review and perspective. Curr. Opin. Chem. Eng. 2026, 51, 101209. https://www.sciencedirect.com/science/article/pii/S2211339825001212 (preprint: arXiv:2508.07880)"
+  },
+  {
+   "n": 143,
+   "text": "Roch, L. M.; Häse, F.; Kreisbeck, C.; Tamayo-Mendoza, T.; Yunker, L. P. E.; Hein, J. E.; Aspuru-Guzik, A. ChemOS: an orchestration software to democratize autonomous discovery. PLoS ONE 2020, 15 (4), e0229862. https://doi.org/10.1371/journal.pone.0229862"
+  },
+  {
+   "n": 144,
+   "text": "Sim, M.; Vakili, M. G.; Strieth-Kalthoff, F.; Hao, H.; Hickman, R. J.; Miret, S.; Pablo-García, S.; Aspuru-Guzik, A. ChemOS 2.0: an orchestration architecture for chemical self-driving laboratories. Matter 2024, 7 (9), 2959–2977. https://doi.org/10.1016/j.matt.2024.04.022"
+  },
+  {
+   "n": 145,
+   "text": "Brohan, A.; Brown, N.; Carbajal, J. et al. RT-2: vision-language-action models transfer web knowledge to robotic control. In Proc. 7th Conference on Robot Learning (CoRL 2023), PMLR vol. 229; arXiv:2307.15818."
+  },
+  {
+   "n": 146,
+   "text": "Chi, C.; Xu, Z.; Feng, S.; Cousineau, E.; Du, Y.; Burchfiel, B.; Tedrake, R.; Song, S. Diffusion policy: visuomotor policy learning via action diffusion. Int. J. Robot. Res. 2025, 44 (10–11), 1684–1704. https://doi.org/10.1177/02783649241273668"
+  },
+  {
+   "n": 147,
+   "text": "Octo Model Team; Ghosh, D.; Walke, H.; Pertsch, K. et al. Octo: an open-source generalist robot policy. In Proc. Robotics: Science and Systems (RSS 2024); arXiv:2405.12213."
+  },
+  {
+   "n": 148,
+   "text": "Kim, M. J.; Pertsch, K.; Karamcheti, S. et al. OpenVLA: an open-source vision-language-action model. In Proc. 8th Conference on Robot Learning (CoRL 2024); arXiv:2406.09246."
+  },
+  {
+   "n": 149,
+   "text": "Ai, B.; Tian, S.; Shi, H. et al. A review of learning-based dynamics models for robotic manipulation. Sci. Robot. 2025, 10 (106), eadt1497. https://doi.org/10.1126/scirobotics.adt1497"
+  },
+  {
+   "n": 150,
+   "text": "Ren, Y.; Liu, Z.; Chen, X. et al. LabVLA: grounding vision-language-action models in scientific laboratories. arXiv:2606.13578, 2026."
+  },
+  {
+   "n": 151,
+   "text": "Nelder, J. A.; Mead, R. A simplex method for function minimization. Comput. J. 1965, 7 (4), 308–313. https://doi.org/10.1093/comjnl/7.4.308"
+  },
+  {
+   "n": 152,
+   "text": "Chemspeed Technologies AG. FLEX FORMAX automated formulation workstation; product page. https://www.chemspeed.com (accessed 2026)."
+  },
+  {
+   "n": 153,
+   "text": "Jain, A.; Ong, S. P.; Chen, W. et al. FireWorks: a dynamic workflow system designed for high-throughput applications. Concurr. Comput.: Pract. Exper. 2015, 27 (17), 5037–5059. https://doi.org/10.1002/cpe.3505"
+  },
+  {
+   "n": 154,
+   "text": "Huber, S. P.; Zoupanos, S.; Uhrin, M. et al. AiiDA 1.0, a scalable computational infrastructure for automated reproducible workflows and data provenance. Sci. Data 2020, 7, 300. https://doi.org/10.1038/s41597-020-00638-4"
+  },
+  {
+   "n": 155,
+   "text": "Mehr, S. H. M.; Craven, M.; Leonov, A. I.; Keenan, G.; Cronin, L. A universal system for digitization and automatic execution of the chemical synthesis literature. Science 2020, 370 (6512), 101–108. https://doi.org/10.1126/science.abc2986"
+  },
+  {
+   "n": 156,
+   "text": "Vogler, M.; Busk, J.; Hajiyani, H. et al. Brokering between tenants for an international materials acceleration platform. Matter 2023, 6 (9), 2647–2665. https://doi.org/10.1016/j.matt.2023.07.016"
+  },
+  {
+   "n": 157,
+   "text": "Allan, D.; Caswell, T.; Campbell, S.; Rakitin, M. Bluesky’s ahead: a multi-facility collaboration for an a la carte software project for data acquisition and management. Synchrotron Radiat. News 2019, 32 (3), 19–22. https://doi.org/10.1080/08940886.2019.1608121"
+  },
+  {
+   "n": 158,
+   "text": "Lewis, R. D.; Ginsburg, T. S.; Ozgulbas, D.; Stone, C.; Stroka, A.; Cleary, A.; Foster, I. T.; Paulson, N. MADSci: a modular Python-based framework to enable autonomous science. J. Open Source Softw. 2026, 11 (119), 9416. https://doi.org/10.21105/joss.09416"
+  },
+  {
+   "n": 159,
+   "text": "Fei, Y.; Rendy, B.; Kumar, R. et al. AlabOS: a Python-based reconfigurable workflow management framework for autonomous laboratories. Digital Discovery 2024, 3 (11), 2275–2288. https://doi.org/10.1039/D4DD00129J"
+  },
+  {
+   "n": 160,
+   "text": "Angelopoulos, A.; Baykal, C.; Kandel, J.; Verber, M.; Cahoon, J. F.; Alterovitz, R. The Experiment Orchestration System (EOS): comprehensive foundation for laboratory automation. In 2025 IEEE International Conference on Robotics and Automation (ICRA); IEEE, 2025; pp 15900–15906. https://doi.org/10.1109/ICRA55743.2025.11128578"
+  },
+  {
+   "n": 161,
+   "text": "Guevarra, D.; Kan, K.; Lai, Y.; Jones, R. J. R.; Zhou, L.; Donnelly, P.; Richter, M.; Stein, H. S.; Gregoire, J. M. Orchestrating nimble experiments across interconnected labs. Digital Discovery 2023, 2 (6), 1806–1812. https://doi.org/10.1039/D3DD00166K"
+  },
+  {
+   "n": 162,
+   "text": "Zhang, W.; Hao, L.; Lai, V. et al. IvoryOS: an interoperable web interface for orchestrating Python-based self-driving laboratories. Nat. Commun. 2025, 16, 5182. https://doi.org/10.1038/s41467-025-60514-w"
+  },
+  {
+   "n": 163,
+   "text": "Gao, J.; Chang, J.; Que, H. et al. UniLabOS: an AI-native operating system for autonomous laboratories. arXiv 2025, arXiv:2512.21766. https://doi.org/10.48550/arXiv.2512.21766"
+  },
+  {
+   "n": 164,
+   "text": "Tamura, R.; Yoshikawa, N.; Tsuda, K.; Matsuda, S. NIMO: a software platform for closed-loop materials exploration with diverse AI algorithms. Digital Discovery 2026. https://doi.org/10.1039/D6DD00371K"
+  },
+  {
+   "n": 165,
+   "text": "Air Force Research Laboratory. ARES OS 2.0: autonomous self-driving laboratory orchestration software; software repository. https://github.com/AFRL-ARES/ARES (accessed 2026)."
+  },
+  {
+   "n": 166,
+   "text": "Yoo, H. J.; Lee, K.-Y.; Kim, D.; Han, S. S. OCTOPUS: operation control system for task optimization and job parallelization via a user-optimal scheduler. Nat. Commun. 2024, 15, 9669. https://doi.org/10.1038/s41467-024-54067-7"
+  },
+  {
+   "n": 167,
+   "text": "Juchli, D. SiLA 2: the next generation lab automation standard. Adv. Biochem. Eng./Biotechnol. 2022, 147–174. https://doi.org/10.1007/10_2022_204"
+  },
+  {
+   "n": 168,
+   "text": "Brendel, A.; Dorfmüller, F.; Liebscher, A.; Kraus, P.; Kress, K.; Oehme, H.; Arnold, M.; Koschitzki, R. Laboratory and Analytical Device Standard (LADS): a communication standard based on OPC UA for networked laboratories. Adv. Biochem. Eng./Biotechnol. 2022, 175–194. https://doi.org/10.1007/10_2022_209"
+  },
+  {
+   "n": 169,
+   "text": "AnIML Working Group. AnIML: Analytical Information Markup Language, an open XML format for analytical data; specification. https://www.animl.org (accessed 2026)."
+  },
+  {
+   "n": 170,
+   "text": "Allotrope Foundation. Allotrope Data Format and Allotrope Simple Model; data standards. https://www.allotrope.org (accessed 2026)."
+  },
+  {
+   "n": 171,
+   "text": "Anthropic. Model Context Protocol (MCP); specification. https://modelcontextprotocol.io/specification/2025-06-18 (accessed 2026)."
+  },
+  {
+   "n": 172,
+   "text": "Darvish, K.; Skreta, M.; Zhao, Y. et al. ORGANA: a robotic assistant for automated chemistry experimentation and characterization. Matter 2025, 8 (2), 101897. https://doi.org/10.1016/j.matt.2024.10.015"
+  },
+  {
+   "n": 173,
+   "text": "Zou, Y.; Cheng, A. H.; Aldossary, A. et al. El Agente: an autonomous agent for quantum chemistry. Matter 2025, 8 (7), 102263. https://doi.org/10.1016/j.matt.2025.102263"
+  },
+  {
+   "n": 174,
+   "text": "Müller, M.; Bai, J.; Gottstein, W. et al. La Agente Óptima: towards agentic self-driving laboratories. arXiv 2026, arXiv:2609.04564. https://doi.org/10.48550/arXiv.2609.04564"
+  },
+  {
+   "n": 175,
+   "text": "Song, T.; Luo, M.; Zhang, X. et al. A multiagent-driven robotic AI chemist enabling autonomous chemical research on demand. J. Am. Chem. Soc. 2025, 147 (15), 12534–12545. https://doi.org/10.1021/jacs.4c17738"
+  },
+  {
+   "n": 176,
+   "text": "Ruan, Y.; Lu, C.; Xu, N. et al. An automatic end-to-end chemical synthesis development platform powered by large language models. Nat. Commun. 2024, 15, 10160. https://doi.org/10.1038/s41467-024-54457-x"
+  },
+  {
+   "n": 177,
+   "text": "Mandal, I.; Soni, J.; Zaki, M. et al. Evaluating large language model agents for automation of atomic force microscopy. Nat. Commun. 2025, 16, 9104. https://doi.org/10.1038/s41467-025-64105-7"
+  },
+  {
+   "n": 178,
+   "text": "Zhang, Z.; Ren, Z.; Hsu, C.-W. et al. A multimodal robotic platform for multi-element electrocatalyst discovery. Nature 2025, 647 (8089), 390–396. https://doi.org/10.1038/s41586-025-09640-5"
+  }
+ ]
+}

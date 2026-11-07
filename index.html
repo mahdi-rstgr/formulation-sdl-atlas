@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Formulation SDL Atlas</title>
+<meta name="description" content="An interactive atlas of self-driving laboratories for formulation: how liquids, pastes and powders are dosed, moved, bought, extended, rehearsed, orchestrated and decided, with a live digital twin of a formulation cell.">
+<meta property="og:title" content="Formulation SDL Atlas">
+<meta property="og:description" content="Seven steps to a self-driving formulation lab, from the review 'Self-Driving Laboratories for Formulation', with a live digital twin and the Self-Formulating Lab agent.">
+<meta property="og:image" content="figures/graphical_abstract.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<a class="skip" href="#steps">Skip to the seven steps</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#">Formulation SDL Atlas</a>
+    <nav aria-label="Sections">
+      <a href="#steps">Seven steps</a>
+      <a href="#scenarios">Scenarios</a>
+      <a href="#product">Self-Formulating Lab</a>
+      <a href="wiki/">Wiki</a>
+      <a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero wrap" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <p class="eyebrow">Liquids · pastes · powders · objects</p>
+    <h1 id="hero-title">A formulation lab is a physical choreography.</h1>
+    <p class="lede">Ingredients of very different rheology are dosed into one premix cup, carried to a mixer, processed and characterized. This atlas follows that cup through the seven questions a team must answer to automate it, using the data of our review and a live digital twin of a formulation cell.</p>
+    <div class="hero-stats" id="hero-stats" aria-label="Review at a glance">
+      <div><b>178</b><span>references</span></div>
+      <div><b>7</b><span>comparison tables</span></div>
+      <div><b>20</b><span>literature scenarios</span></div>
+      <div><b>4</b><span>robot arms in the twin</span></div>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="#steps">Follow the premix cup</a>
+      <a class="btn" href="#planner">Plan a cell</a>
+    </div>
+  </div>
+  <figure class="hero-fig">
+    <img src="figures/graphical_abstract.jpg" alt="Graphical abstract: a formulation SDL dosing liquids, pastes and powders into a premix container that robots move to a mixer and characterizers, mirrored by a digital twin and directed by AI agents." width="1800" height="737">
+    <figcaption>Graphical abstract of the review.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================================================ seven steps with sticky twin -->
+<section id="steps" class="story" aria-label="The seven steps, with the digital twin">
+  <div class="stage" id="stage" aria-label="Digital twin of a formulation cell">
+    <div id="view" class="view"></div>
+    <div class="stage-hud">
+      <div class="hud-row">
+        <label for="arm">Arm</label>
+        <select id="arm">
+          <option value="ur3e">UR3e</option>
+          <option value="ur5e" selected>UR5e</option>
+          <option value="ur10e">UR10e</option>
+          <option value="ur16e">UR16e</option>
+        </select>
+        <button class="chipbtn" id="play" type="button">Run balance → mixer</button>
+        <button class="chipbtn" id="boxes" type="button" aria-pressed="false">Collision boxes</button>
+      </div>
+      <div class="hud-meta" id="hud-meta">Loading twin…</div>
+      <div class="hud-steps" id="hud-steps"></div>
+    </div>
+    <p class="stage-note">Real UR e-Series kinematics and meshes; every motion is an RRT-Connect plan checked against the device boxes before it plays.</p>
+  </div>
+
+  <div class="chapters">
+    <article class="chapter" data-step="0" data-focus="overview" id="step-0">
+      <p class="kicker">The cell</p>
+      <h2>One cup, four stations</h2>
+      <p>The twin on the right is the Self-Formulating Lab cell: an analytical balance, a CNC dispensing gantry, a planetary mixer and a characterizer around a collaborative arm. It is the same cell as Fig. 1 of the review, reduced to the stations a premix cup visits.</p>
+      <figure><img src="figures/figure_01.jpg" alt="Figure 1: a physical formulation cell with a CNC gantry, balance, SCARA elevator, characterizers and an arm loading a mixer, beside its digital twin." loading="lazy" width="1430" height="804"><figcaption>Fig. 1. A formulation SDL and its digital twin.</figcaption></figure>
+      <p class="muted">Scroll on. Each step below moves the camera to the part of the cell it is about.</p>
+    </article>
+
+    <article class="chapter" data-step="1" data-focus="cnc" id="dose">
+      <p class="kicker"><span class="num">1</span> Dose</p>
+      <h2>How is each ingredient dosed?</h2>
+      <p>Viscosity, yield stress and powder flowability decide the mechanism. Drag the marker along any scale to see which technologies the review recommends there (Table 1).</p>
+      <div class="spectrum" id="spectrum"></div>
+      <div class="pick" id="spectrum-pick" aria-live="polite"></div>
+    </article>
+
+    <article class="chapter" data-step="2" data-focus="arm" data-run="balance-mixer" id="move">
+      <p class="kicker"><span class="num">2</span> Move</p>
+      <h2>How does the premix cup move?</h2>
+      <p>Five robot classes carry containers between stations, ordered by axes, reach and cost. Price tracks the class and the ecosystem more than the repeatability (Table 2). Select a point for details.</p>
+      <div class="chart" id="robots"></div>
+      <div class="pick" id="robot-pick" aria-live="polite"></div>
+    </article>
+
+    <article class="chapter" data-step="3" data-focus="balance" id="buy">
+      <p class="kicker"><span class="num">3</span> Buy</p>
+      <h2>What can be bought?</h2>
+      <p>Commercial dispensers by material class and integrated liquid-handling platforms (Tables 3 and 4). Bars show list prices on a log scale; hollow tags are quote-only, which is common where handling is hardest.</p>
+      <div class="filters" id="buy-filters" role="group" aria-label="Filter catalogue"></div>
+      <div class="catalog" id="catalog"></div>
+    </article>
+
+    <article class="chapter" data-step="4" data-focus="cnc" id="extend">
+      <p class="kicker"><span class="num">4</span> Extend</p>
+      <h2>How do you go beyond the catalogue?</h2>
+      <p>Low-cost retrofits change one layer of a purchased platform and unlock a capability its maker never specified (Table 5).</p>
+      <div class="retro" id="retrofits"></div>
+    </article>
+
+    <article class="chapter" data-step="5" data-focus="overview" data-boxes="1" data-run="mixer-characterizer" id="rehearse">
+      <p class="kicker"><span class="num">5</span> Rehearse</p>
+      <h2>Will the plan work?</h2>
+      <p>A twin rehearses a workflow before material is committed. Fidelity rises in four levels, and so does compute cost. The twin here works at level 2: kinematics and collision checking, shown by the boxes it plans against (Table 6).</p>
+      <div class="ladder" id="fidelity"></div>
+      <figure><img src="figures/figure_07.jpg" alt="Figure 7: the digital twin as a working environment, with MoveIt 2 motion planning, a GPU simulator, a DEM/MPM material solver and rehearsal of AI-proposed plans." loading="lazy" width="1800" height="1218"><figcaption>Fig. 7. The digital twin as a working environment.</figcaption></figure>
+    </article>
+
+    <article class="chapter" data-step="6" data-focus="characterizer" id="orchestrate">
+      <p class="kicker"><span class="num">6</span> Orchestrate</p>
+      <h2>How do the devices run as one?</h2>
+      <p>Orchestration software sits between decisions and devices: it schedules work, holds the resource model, drives instruments through their interfaces and records what happened. The review compares the functions of eight open-source systems.</p>
+      <figure><img src="figures/figure_08.jpg" alt="Figure 8: architecture of a formulation SDL with execution and equipment hierarchies, functional layers of orchestration software and functions of eight open-source systems." loading="lazy" width="1800" height="1563"><figcaption>Fig. 8. Architecture of a formulation SDL.</figcaption></figure>
+    </article>
+
+    <article class="chapter" data-step="7" data-focus="overview" id="decide">
+      <p class="kicker"><span class="num">7</span> Decide</p>
+      <h2>What should we make next?</h2>
+      <p>Data at the bottom, models that choose the next experiment in the middle, AI agents on top. Each agent role gets an autonomy level and a human checkpoint (Table 7).</p>
+      <div class="agents" id="agents"></div>
+      <figure><img src="figures/figure_09.jpg" alt="Figure 9: the decision ladder from data to models to AI agents, connected to robots by software and data pipelines." loading="lazy" width="1800" height="1199"><figcaption>Fig. 9. The decision ladder.</figcaption></figure>
+    </article>
+  </div>
+</section>
+
+<!-- ============================================================ scenarios -->
+<section id="scenarios" class="band">
+  <div class="wrap">
+    <p class="eyebrow">Fig. 3 of the review</p>
+    <h2 class="h2">Twenty ways labs sense, then act</h2>
+    <p class="lede narrow">Each study is titled by its sense–act sequence. Read across a row and a pattern appears: methods that measure the material before or while dosing it generalize best.</p>
+    <div class="filters" id="sc-filters" role="group" aria-label="Filter scenarios by material"></div>
+    <ol class="scenarios" id="sc-grid"></ol>
+  </div>
+</section>
+
+<!-- ============================================================ product -->
+<section id="product" class="wrap product">
+  <p class="eyebrow">What we are building</p>
+  <h2 class="h2">From a review to a lab that designs itself</h2>
+  <p class="lede narrow">The review is the knowledge. The wiki keeps it current. Two agents put it to work: one watches vendors, the other designs a lab for a user's budget, materials and room.</p>
+  <ol class="pipeline">
+    <li><span class="state done">Complete</span><h3>Review</h3><p>Self-Driving Laboratories for Formulation. Eight authors, 178 references, seven tables.</p><a href="#cite">Cite</a></li>
+    <li><span class="state done">Updated to V3</span><h3>Wiki</h3><p>Living directory of materials, strategies, hardware, prices and tools, now rebuilt from the final manuscript.</p><a href="wiki/">Open the wiki</a></li>
+    <li><span class="state next">Designed</span><h3>Library agent</h3><p>Watches vendor releases and proposes catalogue changes with source and date. A person approves each one.</p><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas/blob/main/docs/library-agent.md">Spec</a></li>
+    <li><span class="state wip">Prototype</span><h3>SFL agent + twin</h3><p>Talks with the user, proposes a cell, and shows it in the twin above with collision-checked motions.</p><a href="#planner">Try the selection step</a></li>
+  </ol>
+
+  <div class="planner" id="planner">
+    <div class="planner-in">
+      <h3>Plan a cell</h3>
+      <p class="muted small">A preview of the SFL agent's selection step. It is rule-based and uses list prices from the review; the full agent will add layout, footprint and drag-and-drop editing.</p>
+      <form id="plan-form">
+        <label for="budget">Budget for handling hardware: <output id="budget-out">$40,000</output></label>
+        <input type="range" id="budget" min="5000" max="150000" step="1000" value="40000">
+        <fieldset>
+          <legend>Ingredients you will handle</legend>
+          <label><input type="checkbox" id="m-liq" checked> Water-like liquids (1–20 cP)</label>
+          <label><input type="checkbox" id="m-visc" checked> Viscous liquids (20–100,000 cP)</label>
+          <label><input type="checkbox" id="m-paste"> Gels and pastes (yield stress)</label>
+          <label><input type="checkbox" id="m-pow" checked> Powders</label>
+        </fieldset>
+        <label for="rep">Repeatability needed to place the cup</label>
+        <select id="rep">
+          <option value="0.5">±0.5 mm (open containers)</option>
+          <option value="0.1" selected>±0.1 mm (racks and fixtures)</option>
+          <option value="0.03">±0.03 mm (tight docking)</option>
+        </select>
+      </form>
+    </div>
+    <div class="planner-out" id="plan-out" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ============================================================ SBL + team -->
+<section class="wrap twocol" id="cite">
+  <div>
+    <p class="eyebrow">Cite the review</p>
+    <h2 class="h2 small">The paper behind the atlas</h2>
+    <p class="citation" id="citation"></p>
+    <p class="muted small">Manuscript in preparation (2026). The tables on this page are the review's Tables 1–7; numbered links go to its reference list in the wiki.</p>
+  </div>
+  <div>
+    <p class="eyebrow">Related work</p>
+    <h2 class="h2 small">Self-Building Labs</h2>
+    <p>Self-Building Labs (Bai, Zhao et al., <a href="https://arxiv.org/abs/2610.23826">arXiv 2610.23826</a>) build the layout, twin, robot skills and workflows a lab needs for a scientific goal. The Self-Formulating Lab works one step earlier, choosing what to buy and how to lay it out for a formulation budget, so its output could be a starting point for a self-building lab.</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Formulation SDL Atlas · Acceleration Consortium, University of Toronto</span>
+    <span><a href="wiki/">Wiki</a> · <a href="data/review.json">Data (JSON)</a> · <a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">Source</a></span>
+  </div>
+</footer>
+
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>

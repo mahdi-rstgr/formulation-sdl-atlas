@@ -1,0 +1,133 @@
+site_name: Formulation SDL Wiki
+site_description: >-
+  Companion wiki to the review "Self-Driving Laboratories for Formulation: Handling Liquids,
+  Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents".
+site_author: Mohammad M. Rastegardoost et al.
+site_url: https://mahdi-rstgr.github.io/formulation-sdl-atlas/wiki/
+repo_url: https://github.com/mahdi-rstgr/formulation-sdl-atlas
+repo_name: formulation-sdl-atlas
+edit_uri: edit/main/wiki-src/docs/
+copyright: >-
+  &copy; 2026 the authors. Companion to a manuscript in preparation.
+
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.action.edit
+    - content.code.copy
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true
+      inline_syntax: [round]
+      block_syntax: [dollar, square, begin]
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3.2.2/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+nav:
+  - Home: index.md
+  - Seven-step map: steps.md
+  - "Step 1 · Dose: Material Fundamentals":
+      - Material Properties: materials/properties.md
+      - Material Spectrum: materials/spectrum.md
+      - Dispensing by Material Class: materials/dispensing.md
+      - Literature Scenarios (Fig. 3): materials/literature-scenarios.md
+  - Recurring Strategies:
+      - strategies/index.md
+      - Characterize, then Act: strategies/characterize-act.md
+      - Iterative Optimization: strategies/iterative-optimization.md
+      - Real-Time Correction: strategies/real-time-correction.md
+      - Feedforward Prediction: strategies/feedforward-prediction.md
+      - Simulation-Based Generalization: strategies/simulation-generalization.md
+      - Physical Reinvention: strategies/physical-reinvention.md
+      - Tactile Retrieval: strategies/tactile-retrieval.md
+  - "Step 2 · Move: Object Handling":
+      - Robot Classes: object-handling/robot-classes.md
+  - "Steps 3–4 · Buy & Extend: Commercial Hardware":
+      - hardware/index.md
+      - Commercial Dispensers: hardware/dispensers.md
+      - Integrated Platforms: hardware/platforms.md
+      - Retrofits Beyond Factory Spec: hardware/retrofits.md
+      - By Material Type: hardware/by-material.md
+      - By Yield Stress & Cost: hardware/cost-accuracy.md
+  - "Step 5 · Rehearse: Simulation & Digital Twins":
+      - simulation/index.md
+      - Simulation Tools: simulation/tools.md
+  - "Step 6 · Orchestrate":
+      - orchestration/index.md
+      - Open-Source Orchestration Software: orchestration/open-source.md
+  - "Step 7 · Decide: AI Infrastructure":
+      - ai/index.md
+      - Data & Decision Models: ai/data-and-decisions.md
+      - LLMs & AI Agents: ai/agents.md
+      - Sensing & Characterization: ai/sensing.md
+      - Feedback Control: ai/feedback-control.md
+      - Machine Learning: ai/machine-learning.md
+      - Digital Twins & LLMs: ai/digital-twins.md
+  - Safety & Future:
+      - Safety in Autonomous Material Handling: outlook/safety.md
+      - Future Directions & Emerging Technologies: outlook/future-directions.md
+  - Glossary: glossary.md
+  - References: references.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
