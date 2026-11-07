@@ -4,73 +4,108 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Formulation Lab Builder</title>
-<meta name="description" content="Drag commercial dispensers, gantries, robot arms, mixers and platforms into a 3D workstation, check reach and overlaps, and watch the cart update with list prices from the review.">
+<meta name="description" content="Design a self-driving formulation lab in 3D: drag dispensers, gantries, robot arms, mixers and platforms into a workstation, watch them run, check reach and capabilities, and price the cart with list prices from the review.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="builder.css">
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="../">Formulation SDL Atlas</a>
+  <a class="brand" href="../"><span class="logo" aria-hidden="true"></span>Formulation SDL Atlas</a>
+  <span class="slash">/</span>
   <h1>Lab Builder</h1>
+  <span class="live"><i></i>Live simulation</span>
   <div class="bar-tools">
-    <label for="template" class="sr">Start from</label>
+    <label for="template" class="sr">Load a template</label>
     <select id="template">
-      <option value="">Start from a template…</option>
+      <option value="">Load a template…</option>
       <option value="sfl">Self-Formulating Lab cell</option>
-      <option value="liquid">Liquid-handling bench</option>
+      <option value="liquid">Liquid-handling bench (Flex + UR5e)</option>
       <option value="powder">Powder &amp; paste station</option>
+      <option value="platforms">Platform hall (STAR, Fluent, KMR)</option>
       <option value="empty">Empty workstation</option>
     </select>
-    <button type="button" id="share">Copy share link</button>
-    <button type="button" id="csv">Download parts list (CSV)</button>
+    <button type="button" id="share">Share link</button>
+    <button type="button" id="csv">Parts list CSV</button>
     <a href="../wiki/" class="lnk">Wiki</a>
   </div>
 </header>
 
-<main class="app">
-  <aside class="lib" aria-label="Device library">
-    <div class="lib-head">
-      <h2>Devices</h2>
-      <label for="search" class="sr">Search devices</label>
-      <input id="search" type="search" placeholder="Search devices, e.g. powder, SCARA, Opentrons">
-      <p class="muted small">Drag a device into the workstation, or press Add. Prices and references come from the review's Tables 2–4.</p>
-    </div>
-    <div id="library" class="lib-list"></div>
-  </aside>
+<section class="banner" aria-label="Device library">
+  <div class="banner-top">
+    <div id="cats" class="cats" role="group" aria-label="Device categories"></div>
+    <label for="search" class="sr">Search devices</label>
+    <input id="search" type="search" placeholder="Search: powder, SCARA, Opentrons…">
+  </div>
+  <div class="banner-row">
+    <button type="button" class="scr" id="scrollL" aria-label="Scroll devices left">‹</button>
+    <div id="cards" class="cards"></div>
+    <button type="button" class="scr" id="scrollR" aria-label="Scroll devices right">›</button>
+  </div>
+</section>
 
+<main class="app">
   <section class="work" aria-label="Workstation">
     <div id="canvas" class="canvas"></div>
-    <div class="work-hud">
-      <div class="area">
-        <span>Workstation</span>
-        <label for="aw" class="sr">Width (m)</label><input id="aw" type="number" min="1" max="10" step="0.5" value="3"> ×
-        <label for="ad" class="sr">Depth (m)</label><input id="ad" type="number" min="1" max="10" step="0.5" value="2"> m
-        <button type="button" id="home">Reset view</button>
+    <div id="labels" class="labels"></div>
+    <div id="tip" class="tip" hidden></div>
+
+    <div class="hud hud-l">
+      <div class="seg">
+        <span class="lbl">Workstation</span>
+        <label for="aw" class="sr">Width (m)</label><input id="aw" type="number" min="1" max="12" step="0.5" value="3"><span>×</span>
+        <label for="ad" class="sr">Depth (m)</label><input id="ad" type="number" min="1" max="12" step="0.5" value="2"><span>m</span>
+      </div>
+      <div class="seg">
+        <button type="button" id="run" aria-pressed="true">❚❚ Pause</button>
+        <button type="button" id="labelsBtn" aria-pressed="true">Labels #</button>
+        <button type="button" id="arrange" class="smart">✦ Auto-arrange</button>
+      </div>
+      <div class="seg">
+        <button type="button" data-view="iso">Iso</button><button type="button" data-view="top">Top</button><button type="button" data-view="front">Front</button>
         <button type="button" id="clear">Clear</button>
       </div>
-      <p class="keys muted small">Drag a device to move it · Q / E rotate 15° · R rotate 90° · D duplicate · Delete remove · drag empty space to orbit</p>
     </div>
-    <div id="selected" class="selected"></div>
+
+    <div class="hud hud-r" aria-label="Cell metrics">
+      <div class="metric"><span>Devices</span><b id="m-devices">0</b></div>
+      <div class="metric"><span>Reach coverage</span><b id="m-cov">–</b></div>
+      <div class="metric"><span>Floor used</span><b id="m-fp">0%</b></div>
+      <div class="metric"><span>Budget used</span><b id="m-budget">–</b></div>
+      <div class="metric"><span>Issues</span><b id="m-issues">0</b></div>
+    </div>
+
+    <div id="inspector" class="inspector" hidden></div>
+    <p class="keys">Drag to move · <kbd>G</kbd> move gizmo · <kbd>R</kbd> rotate gizmo · <kbd>Q</kbd>/<kbd>E</kbd> yaw 15° · <kbd>D</kbd> duplicate · <kbd>Del</kbd> remove · <kbd>Space</kbd> run/pause · <kbd>L</kbd> labels</p>
   </section>
 
-  <aside class="cart" aria-label="Cart and checks">
-    <h2>Cart <span class="pill" id="count">0</span></h2>
-    <div class="table-wrap">
-      <table class="lines"><thead><tr><th>Device</th><th class="num">Qty</th><th class="num">List price</th></tr></thead><tbody id="cart-lines"></tbody></table>
+  <aside class="panel" aria-label="Cart and cell intelligence">
+    <button type="button" id="collapse" class="collapse" aria-label="Show or hide the side panel">⟩</button>
+    <div class="ptabs" role="tablist">
+      <button type="button" role="tab" aria-selected="true" data-pane="pane-cart">Cart <span id="cart-count" class="pill">0</span></button>
+      <button type="button" role="tab" aria-selected="false" data-pane="pane-ai">✦ Cell intelligence</button>
     </div>
-    <div class="total"><span>Total, list prices</span><b id="cart-total">$0</b></div>
-    <p class="muted small" id="cart-quote"></p>
-    <label for="budget" class="budget-l">Budget (USD)</label>
-    <input id="budget" type="number" min="0" step="1000" value="60000">
-    <div class="bbar"><i id="budget-bar"></i></div>
-    <p class="small" id="budget-note"></p>
-    <h3>Layout checks</h3>
-    <ul id="checks" class="checks"></ul>
-    <p class="muted tiny">Platform bodies are approximate shapes at approximate footprints. Check vendor datasheets before you plan a room. Real meshes: the formulation-cell devices, UR e-Series (BSD-3) and UFACTORY Lite 6 (BSD-3).</p>
+    <div id="pane-cart" class="pane">
+      <div class="table-wrap"><table class="lines"><thead><tr><th>#</th><th>Device</th><th class="num">List price</th></tr></thead><tbody id="cart-lines"></tbody></table></div>
+      <div class="total"><span>Total</span><b id="cart-total">$0</b></div>
+      <p class="muted" id="cart-quote"></p>
+      <div class="budget">
+        <label for="budget">Budget (USD)</label><input id="budget" type="number" min="0" step="1000" value="60000">
+        <div class="bbar"><i id="budget-bar"></i></div><p id="budget-note"></p>
+      </div>
+      <p class="fine">Prices are list prices from the review's Tables 2–4 (2026). Platform bodies are approximate shapes at approximate footprints; check vendor datasheets before planning a room.</p>
+    </div>
+    <div id="pane-ai" class="pane" hidden>
+      <h3>Capabilities</h3>
+      <p class="muted">What this cell can do now. Missing steps come with the lowest-priced device that adds them.</p>
+      <ul id="caps" class="caps"></ul>
+      <h3>Layout checks</h3>
+      <ul id="checks" class="checks"></ul>
+      <p class="fine">Reach is measured from each arm's base to the centre of each device's footprint, using manufacturer reach values. Auto-arrange places stations around the arm with the largest reach, facing it, without overlaps.</p>
+    </div>
   </aside>
 </main>
 <div id="toast" class="toast" role="status" hidden></div>

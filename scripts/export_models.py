@@ -42,15 +42,16 @@ def npz_parts(name, prefix=""):
 
 def write(model_id, parts, label):
     """parts: list of (color, vertices Nx3 world, faces Mx3)."""
-    allv = np.concatenate([v for _, v, _ in parts])
+    allv = np.concatenate([p[1] for p in parts])
     lo, hi = allv.min(0), allv.max(0)
     centre = np.array([(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2, lo[2]])
     size = hi - lo
     span = np.maximum(size, 1e-6)
     out = []
-    for color, v, f in parts:
+    for part in parts:
+        color, v, f = part[:3]
         q = np.round((v - lo) / span * 65535).astype("<u2")
-        out.append({"color": color, "v": base64.b64encode(q.tobytes()).decode(), "f": base64.b64encode(f.astype("<u4").tobytes()).decode()})
+        out.append({"color": color, "name": part[3] if len(part) > 3 else "", "v": base64.b64encode(q.tobytes()).decode(), "f": base64.b64encode(f.astype("<u4").tobytes()).decode()})
     doc = {"id": model_id, "label": label, "size": size.round(4).tolist(), "scale": (span / 65535).tolist(),
            "offset": (lo - centre).tolist(), "parts": out}
     p = OUT / f"{model_id}.json"
@@ -75,7 +76,7 @@ def apply(t, v):
 
 
 # ---- devices from the formulation-cell twin
-write("cnc", [(color_for(n), v, f) for n, v, f in npz_parts("cnc")], "CNC dispensing gantry")
+write("cnc", [(color_for(n), v, f, n) for n, v, f in npz_parts("cnc")], "CNC dispensing gantry")
 write("ecopen", [("#c9cfd6" if i else "#3b4048", v, f) for i, (n, v, f) in enumerate(npz_parts("ecopen"))], "eco-PEN volumetric dispenser")
 write("powder", [("#7a5bb5" if i == 0 else "#c9cfd6", v, f) for i, (n, v, f) in enumerate(npz_parts("powder"))], "Powder dispenser")
 write("balance", [(color_for(n, "#d9dde2"), v, f) for n, v, f in npz_parts("scale")], "Analytical balance")
@@ -143,3 +144,56 @@ if LITE6:
         v, f = read_stl(LITE6 / fname)
         parts.append(("#f2f3f4" if "base" not in fname else "#cfd3d8", apply(frame(link) @ vo, v), f))
     write("lite6", parts, "UFACTORY Lite 6")
+
+
+# ---- articulated arms for the Lab Builder animation: link-frame meshes + joint chain + a trajectory
+def write_artic(model_id, label, links, traj):
+    """links: list of {origin 4x4, axis xyz or None, parts [(color, verts in link frame, faces)]}; traj: list of joint vectors."""
+    allv = np.concatenate([v for L in links for _, v, _ in L["parts"]])
+    lo, hi = allv.min(0), allv.max(0); span = np.maximum(hi - lo, 1e-6)
+    out = []
+    for L in links:
+        parts = [{"color": c, "v": base64.b64encode(np.round((v - lo) / span * 65535).astype("<u2").tobytes()).decode(),
+                  "f": base64.b64encode(f.astype("<u4").tobytes()).decode()} for c, v, f in L["parts"]]
+        out.append({"origin": L["origin"].T.flatten().round(6).tolist(), "axis": L["axis"], "parts": parts})
+    doc = {"id": model_id, "label": label, "articulated": True, "scale": (span / 65535).tolist(), "offset": lo.tolist(),
+           "links": out, "traj": [[round(float(x), 4) for x in q] for q in traj]}
+    p = OUT / f"{model_id}_arm.json"; p.write_text(json.dumps(doc, separators=(",", ":")))
+    print(f"{model_id}_arm {p.stat().st_size / 1024:7.0f} KB  links {len(out)}  traj {len(traj)}")
+
+
+TWIN = Path(sys.argv[3]) if len(sys.argv) > 3 else None
+for arm_name in ("ur3e", "ur5e", "ur10e", "ur16e"):
+    arm = load_arm(arm_name)
+    z = np.load(MESH / f"{arm_name}.npz")
+    links = []
+    for i, link in enumerate(LINKS):
+        parts = []
+        for key in z.keys():
+            if key.startswith(link + "/") and key.endswith("/vertices"):
+                b = key[: -len("/vertices")]
+                parts.append(("#8f98a3" if link == "base" else "#dfe3e8", z[key].astype(float), z[b + "/faces"].astype(np.uint32)))
+        links.append({"origin": arm.base_to_inertia if i == 0 else arm.origins[i - 1], "axis": None if i == 0 else [0, 0, 1], "parts": parts})
+    traj = []
+    if TWIN:
+        doc = json.loads((TWIN / f"{arm_name}.json").read_text())
+        for run in doc["runs"]:
+            for seg in run.get("segments", []):
+                traj += seg["joints"][::2]
+    write_artic(arm_name, f"Universal Robots {arm_name.upper()}", links, traj or [READY])
+
+if LITE6:
+    order, link = [], "link_base"
+    child_of = {j.find("parent").get("link"): j for j in root.findall("joint")}
+    links = [{"origin": np.eye(4), "axis": None, "parts": []}]
+    v, f = read_stl(LITE6 / visual["link_base"][0]); links[0]["parts"].append(("#cfd3d8", apply(visual["link_base"][1], v), f))
+    while link in child_of and child_of[link].get("type") == "revolute":
+        j = child_of[link]; o = j.find("origin"); link = j.find("child").get("link")
+        ax = j.find("axis"); a = [float(x) for x in ax.get("xyz").split()] if ax is not None else [0, 0, 1]
+        parts = []
+        if link in visual and "gripper" not in visual[link][0]:
+            v, f = read_stl(LITE6 / visual[link][0]); parts.append(("#f2f3f4", apply(visual[link][1], v), f))
+        links.append({"origin": tf([float(x) for x in o.get("xyz").split()], [float(x) for x in o.get("rpy").split()]), "axis": a, "parts": parts})
+    t = np.linspace(0, 2 * math.pi, 240, endpoint=False)
+    traj = [[0.9 * math.sin(s), 0.5 + 0.35 * math.sin(2 * s), 1.1 + 0.3 * math.cos(s), 0.0, 0.8 + 0.3 * math.sin(s), 1.2 * math.sin(s)] for s in t]
+    write_artic("lite6", "UFACTORY Lite 6", links, traj)
