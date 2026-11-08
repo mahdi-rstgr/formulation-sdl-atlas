@@ -1,4 +1,4 @@
-/* Laboo shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
+/* Labu shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
  * Every page loads it as a module. Paths are resolved from this file, so pages at any depth work. */
 import { CATS, PRODUCTS, byId, parsePrice, vendorOf } from "../data/catalog.js";
 export { CATS, PRODUCTS, byId, parsePrice, vendorOf };
@@ -14,7 +14,7 @@ export const refLinks = s => String(s || "").split(",").map(n => n.trim()).filte
 export const MAT = { liquid: ["Liquids", "var(--liquid)"], paste: ["Pastes & gels", "var(--paste)"], powder: ["Powders", "var(--powder)"], object: ["Objects", "var(--object)"] };
 
 /* ================================================================ cart store (localStorage, shared by every page) */
-const KEY = "laboo-cart-v1";
+const KEY = "labu-cart-v1";
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
 const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch { } window.dispatchEvent(new CustomEvent("bl-cart")); };
 export const cart = {

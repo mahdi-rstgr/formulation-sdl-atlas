@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("labu-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Solutions · Laboo</title>
+<title>Solutions Â· Labu</title>
 <meta name="description" content="Self-driving lab solutions by material (liquids, pastes and gels, powders, objects), design templates to start from, and twenty published closed loops to learn from.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,7 @@
 <main id="main">
 <section class="phero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Laboo</a><span>/</span><span>Solutions</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Labu</a><span>/</span><span>Solutions</span></nav>
     <p class="eyebrow"><span class="tick"></span>Solutions</p>
     <h1 class="h1">Start from what you formulate.</h1>
     <p class="lede">Viscosity, yield stress and powder flowability decide which mechanism doses an ingredient. Pick your material to see the technologies that work there, the parts that implement them and a cell to start from.</p>
@@ -70,7 +70,7 @@
 
 <section class="band night on-night" id="loops" aria-labelledby="lp" style="scroll-margin-top:64px">
   <div class="wrap">
-    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Proven loops</p><h2 id="lp" class="h2">Twenty published ways to sense and act.</h2><p class="lede">Each scenario from the literature, titled by its sense–act sequence. Read them as recipes for the feedback your cell needs (review Fig. 3).</p></div></div>
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Proven loops</p><h2 id="lp" class="h2">Twenty published ways to sense and act.</h2><p class="lede">Each scenario from the literature, titled by its senseâ€“act sequence. Read them as recipes for the feedback your cell needs (review Fig. 3).</p></div></div>
     <div class="lf" id="lf" role="group" aria-label="Filter by material"></div>
     <div class="loops" id="loopgrid"></div>
   </div>
@@ -92,12 +92,12 @@ const SOL = [
 $("#jump").innerHTML = SOL.map(s => `<a class="chip" href="#${s.k}"><i class="dot" style="background:${MAT[s.k][1]}"></i>${s.t}</a>`).join("") + `<a class="chip" href="#templates">Templates</a><a class="chip" href="#loops">Proven loops</a>`;
 $("#sols").innerHTML = SOL.map((s, i) => { const t = TEMPLATES[s.tpl];
   return `<section class="sol" id="${s.k}" aria-labelledby="h-${s.k}">
-    <div><p class="idx"><i class="dot" style="background:${MAT[s.k][1]}"></i>0${i + 1} · ${s.t.toUpperCase()}</p><h2 id="h-${s.k}" class="h2">${s.t}</h2><p style="color:var(--ink-2)">${s.text}</p>
+    <div><p class="idx"><i class="dot" style="background:${MAT[s.k][1]}"></i>0${i + 1} Â· ${s.t.toUpperCase()}</p><h2 id="h-${s.k}" class="h2">${s.t}</h2><p style="color:var(--ink-2)">${s.text}</p>
       <div class="range">${s.rows.map(r => T1[r]).map(r => `<div><div><b>${esc(r.Material)}</b><em>${esc(r["Common Technologies"])}</em></div><span>${esc(r["Viscosity / Particle Size"])}<br>${esc(r["Typical Accuracy"])} accuracy</span></div>`).join("")}</div>
       <p class="fine" style="margin-top:10px">From Table 1 of the review. Watch for: ${s.rows.map(r => esc(T1[r]["Key Challenges"]).toLowerCase()).join("; ")}.</p></div>
     <div><div class="pgrid">${s.ids.map(id => card(byId[id])).join("")}</div>
-      <div class="tplcta"><p><b>${esc(t.name)}</b> · ${esc(t.blurb)}</p><a class="btn btn-ink btn-sm" href="../new-design/?t=${s.tpl}">Open template</a></div>
-      <a class="btn btn-ghost" href="../parts/?mat=${s.k}" style="margin-top:8px">All ${s.t.toLowerCase()} parts <span class="arr">→</span></a></div>
+      <div class="tplcta"><p><b>${esc(t.name)}</b> Â· ${esc(t.blurb)}</p><a class="btn btn-ink btn-sm" href="../new-design/?t=${s.tpl}">Open template</a></div>
+      <a class="btn btn-ghost" href="../parts/?mat=${s.k}" style="margin-top:8px">All ${s.t.toLowerCase()} parts <span class="arr">â†’</span></a></div>
   </section>`; }).join("");
 wireCards($("#sols"));
 
@@ -110,9 +110,9 @@ const CLS = { liquid: ["Liquids", "liquid"], "semi-solid": ["Pastes & gels", "pa
 let lf = "all";
 function loops() {
   const S = R.literature_scenarios;
-  $("#lf").innerHTML = [["all", `All ${S.length}`], ...Object.entries(CLS).map(([k, [n]]) => [k, `${n} · ${S.filter(s => s.material_class === k).length}`])].map(([k, n]) => `<button type="button" class="chip" data-k="${k}" aria-pressed="${lf === k}">${k !== "all" ? `<i class="dot" style="background:${MAT[CLS[k][1]][1]}"></i>` : ""}${n}</button>`).join("");
+  $("#lf").innerHTML = [["all", `All ${S.length}`], ...Object.entries(CLS).map(([k, [n]]) => [k, `${n} Â· ${S.filter(s => s.material_class === k).length}`])].map(([k, n]) => `<button type="button" class="chip" data-k="${k}" aria-pressed="${lf === k}">${k !== "all" ? `<i class="dot" style="background:${MAT[CLS[k][1]][1]}"></i>` : ""}${n}</button>`).join("");
   $("#loopgrid").innerHTML = S.filter(s => lf === "all" || s.material_class === lf).map(s => `<article class="loop"><div class="fig"><span>${esc(s.figure)}</span><span style="display:flex;gap:6px;align-items:center"><i class="dot" style="background:${MAT[CLS[s.material_class]?.[1]]?.[1] || "#999"}"></i>${esc(CLS[s.material_class]?.[0] || s.material_class)}</span></div>
-    <div class="chain">${s.sense_act.split("->").map(w => `<span>${esc(w.trim())}</span>`).join("<i>→</i>")}</div><p>${esc(s.citation.replace(/https?:\/\/\S+/, "").slice(0, 150))}${s.citation.length > 150 ? "…" : ""}</p><a href="${REF(s.ref)}">Reference [${s.ref}]</a></article>`).join("");
+    <div class="chain">${s.sense_act.split("->").map(w => `<span>${esc(w.trim())}</span>`).join("<i>â†’</i>")}</div><p>${esc(s.citation.replace(/https?:\/\/\S+/, "").slice(0, 150))}${s.citation.length > 150 ? "â€¦" : ""}</p><a href="${REF(s.ref)}">Reference [${s.ref}]</a></article>`).join("");
 }
 $("#lf").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) { lf = b.dataset.k; loops(); } });
 loops();
@@ -120,3 +120,4 @@ if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
 </script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-/* Laboo design system. Laboo = lab + لبو (labu, Persian for beetroot).
+/* Labu design system. Labu = lab + "laboratory".
    Direction: a scientific publication in black and beet. Light editorial by default (off-white page, pure-white
    cards, rich-black type, deep beetroot accent) with black header, footer and feature bands; a dark theme (rich
    black, charcoal, vibrant beet) behind the toggle. Figures carry journal-style "Fig. n |" captions.
@@ -240,8 +240,9 @@ p{margin:0 0 1em}
 .fig figcaption{font-size:13.5px;line-height:1.5;color:var(--ink-2);margin-top:12px;max-width:72ch}
 .fig figcaption b{color:var(--ink);font-weight:650}
 .fig figcaption .n{display:inline-block;width:18px;height:18px;border-radius:50%;background:var(--plate-ink);color:#fff;font:600 10.5px/18px var(--mono);text-align:center;margin:0 3px 0 1px;vertical-align:1px}
-.callout{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#121212;color:#fff;font:600 12px/26px var(--mono);text-align:center;box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.25);text-decoration:none;transition:background .15s,transform .15s}
-.callout:hover,.callout:focus-visible{background:var(--accent);transform:translate(-50%,-50%) scale(1.12)}
-.callout .tip{position:absolute;left:34px;top:50%;transform:translateY(-50%);white-space:nowrap;background:#121212;color:#fff;font:500 12.5px/1 var(--body);padding:7px 9px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .15s}
+.callout{position:absolute;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:#121212;color:#fff;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.25);text-decoration:none;transition:background .15s,transform .15s}
+.callout:hover,.callout:focus-visible{background:var(--accent);transform:translate(-50%,-50%) scale(1.5)}
+.callout .tip{position:absolute;left:20px;top:-10px;white-space:nowrap;background:#121212;color:#fff;font:500 12.5px/1 var(--body);padding:6px 8px;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:10}
+.callout::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:2px solid #121212;border-right:2px solid #121212;border-top:6px solid #121212;border-bottom-color:transparent}
 .callout:hover .tip,.callout:focus-visible .tip{opacity:1}
 .secno{font:500 12px/1 var(--mono);color:var(--accent-ink);letter-spacing:.04em}
