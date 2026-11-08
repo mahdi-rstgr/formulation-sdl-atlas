@@ -148,7 +148,7 @@ export function toast(html, href, label) {
 }
 
 /* ================================================================ header + footer */
-const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27.5h26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M22.4 8.6A8.4 8.4 0 1 0 24.4 15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M21.6 12.9l2.9 2.6 2.6-2.9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="15" r="2.6" fill="var(--accent)"/></svg>`;
+const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13.9 6.2v6.3M18.1 6.2v6.3M12.8 6.2h6.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="19.6" r="7.9" fill="#B82E5C"/><path d="M16 27.4c.2 1.4.1 2.6-.4 3.6" fill="none" stroke="#B82E5C" stroke-width="1.6" stroke-linecap="round"/><path d="M11.6 18.2a4.8 4.8 0 0 1 3-3.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4" stroke-linecap="round"/><path d="M16 6c-.9-2.7-3.3-4.2-6.1-3.9.6 2.6 3.1 4.2 6.1 3.9Z" fill="#4E8F4A"/><path d="M16 6c1-2.4 3.2-3.6 5.6-3.2-.7 2.3-2.9 3.5-5.6 3.2Z" fill="#6AAA5C"/></svg>`;
 export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Laboo home">${LOGO}Laboo</a>`;
 
 function menus() {
@@ -209,7 +209,7 @@ export function mountChrome(current = "") {
 
   const f = document.createElement("footer"); f.className = "bl-footer";
   f.innerHTML = `<div class="wrap"><div class="top">
-      <div>${logo()}<p class="tagline">Build the bench. Close the loop.</p><p>Design a self-driving lab from every maker's parts. Buy each one from the people who make it.</p></div>
+      <div>${logo()}<p class="tagline">From root to result.</p><p>Laboo (lab + لبو, Persian for beetroot) is a catalogue and design tool for self-driving laboratories. Laboo sells nothing; each part links to its maker.</p></div>
       <div><h4>Platform</h4><a href="${ROOT}new-design/">New design</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin</a></div>
       <div><h4>Parts</h4>${CATS.slice(0, 6).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}</div>
       <div><h4>Software</h4>${CATS.slice(8).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=structure">Workstations</a></div>

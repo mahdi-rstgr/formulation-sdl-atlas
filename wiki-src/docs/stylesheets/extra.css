@@ -1,5 +1,4 @@
 /* Laboo Learn (the wiki): visual identity matched to the Laboo platform (assets/bl.css) */
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap");
 
 :root {
   --ink: #121212;
@@ -9,7 +8,7 @@
   --mc-semi-solid: #C27A1E;
   --mc-powder: #7A5BB5;
   --mc-object: #23906B;
-  --font-heading: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  --font-heading: "Inter", system-ui, sans-serif;
   --card-bg: #FFFFFF;
   --card-border: #E4E4E7;
   --zebra: rgba(16, 26, 36, 0.035);

@@ -1,8 +1,8 @@
 # Laboo
 
-**Build the bench. Close the loop.**
+**From root to result.**
 
-Laboo is black and beet: a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`, deep berry `#7A1A3B`) by default, and a light editorial theme (off-white `#FAFAFA`, deep beetroot `#8C1D40`) behind the header toggle. Text uses Google Fonts: Bricolage Grotesque, IBM Plex Sans and IBM Plex Mono.
+*Laboo* = **lab** + **لبو** (*labu*, Persian for beetroot). The palette is the colour of a cooked labu: rich black and beetroot. The site is light by default (off-white `#FAFAFA`, black `#121212` header, footer and feature bands, deep beetroot `#8C1D40`) with a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`) behind the header toggle. Text uses plain Google Fonts: Inter, with Roboto Mono for numbers and part codes. The logo is a round-bottom flask whose bulb is a beetroot.
 
 **Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
@@ -12,7 +12,7 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 
 | Path | Page | What it does |
 |---|---|---|
-| `/` | Home | Hero with an exploded example cell and its bill of materials, how it works, start from your material, the self-driving layer, parts categories, design templates, and the referral model |
+| `/` | Home | Fig. 1: a render of the Formulator with numbered callouts; **One cell, every unit operation**: the Formulator in interactive 3D, with tabs that highlight each subsystem (frame, overhead arm, gantry, dispensing tools, balances, mixer) and list matching parts (deep links `#cell-arm`, `#cell-mixer`, …); a render gallery; why the name; method; materials; the self-driving layer; parts categories; templates; sourcing; evidence |
 | [`/new-design/`](new-design/) | New design | The 3D design tool (formerly the Lab Builder). It opens with a start screen (blank, a template, or your saved design) and sends the design to the cart. `?t=<template>` opens a template and `?add=<id,id>` adds parts. |
 | [`/parts/`](parts/) | Parts library | All parts with filters for category, material, type, price and maker; search; sort; a detail drawer for each part (`?cat=`, `?mat=`, `?q=`, `?p=`) |
 | [`/solutions/`](solutions/) | Solutions | Guides by material (liquids, pastes and gels, powders, objects), design templates, and the 20 published sense–act loops |
@@ -32,12 +32,18 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 
 Lab-built devices (the Formulator Pen and the HAPD powder dispenser) and the Matter Lab's self-driving-lab tools (ChemOS 2.0, Atlas, Gryffin, Golem, Chimera, Olympus, Self-Building Labs, ORGANA, El Agente, La Agente Óptima) are listed with the Acceleration Consortium as provider. The cart groups them under one provider block.
 
+### The Formulator, renders and CAD
+
+- `assets/img/formulator/*.webp`: renders of the Acceleration Consortium's Formulator cell, compressed from the original PNGs (268 KB in total).
+- `data/models/lab-formulator.json`: the Formulator assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the design tool as one unit.
+- `data/models/ot2.json`: Opentrons' OT-2 reference model, which replaces the procedural OT-2 in the design tool.
+
 ### McMaster-Carr parts and lab CAD
 
 Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the design tool, along with the lab-built Formulator Pen. These are real CAD:
 
-- `scripts/export_mcmaster.py` tessellates the STEP files in `CAD/` with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/mcm-*.json` and `lab-*.json`.
-- `CAD/` itself is git-ignored. Only the meshes are published.
+- `scripts/export_step.py` tessellates STEP files with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/*.json`. `--groups` tags assembly subsystems; the exact commands for every model are in the script's docstring.
+- Source CAD and render PNGs are not kept in the repository; only the meshes and WebP renders are published.
 - In the design tool, anything dropped onto a workstation, pedestal or slide rests on top and moves with it. The delta robot hangs inside its enclosure.
 - Thumbnails come from `new-design/?thumbs=<id,id>`. The page writes the PNGs as data URLs into `<pre id="thumbs-out">` for headless capture.
 

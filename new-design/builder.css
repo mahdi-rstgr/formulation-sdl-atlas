@@ -4,9 +4,9 @@
   --bg:#0F0F10; --panel:#18181B; --panel-2:#1F1F23; --line:#27272A; --line-2:#3F3F46;
   --ink:#F4F4F5; --ink-2:#C4C4CC; --ink-3:#A1A1AA; --accent:#E0679A; --accent-2:#B82E5C; --mint:#5be3a0; --warn:#ff8a6b; --amber:#f5b453;
   --liquid:#6ea2f0; --semi:#e0a35a; --powder:#a98ce0; --object:#5cc49e;
-  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --display:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,Consolas,monospace;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
