@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Parts library · Benchloop</title>
+<meta name="description" content="Every part a self-driving formulation lab needs, from every maker: dispensers, robot arms, integrated platforms, McMaster-Carr workstations, orchestration software, simulators and optimizers, with published prices and vendor links.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/bl.css">
+<style>
+.lib{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;padding:32px 0 96px}
+.side{position:sticky;top:88px;align-self:start;max-height:calc(100vh - 104px);overflow:auto;padding-right:6px}
+.side h4{font:500 11.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:24px 0 10px}
+.side h4:first-child{margin-top:0}
+.side .opt{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;border:0;background:none;text-align:left;border-radius:var(--r);font-size:14.5px;color:var(--ink-2)}
+.side .opt:hover{background:var(--paper-2)}
+.side .opt[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.side .opt .c{margin-left:auto;font:500 11.5px/1 var(--mono);color:var(--muted)}
+.side .opt[aria-pressed="true"] .c{color:#a9adb3}
+.side .opt .glyph{width:18px;height:18px;flex:none}
+.side .sep{height:1px;background:var(--line);margin:8px 0}
+.side label.chk{display:flex;align-items:center;gap:9px;padding:5px 2px;font-size:14px;color:var(--ink-2);cursor:pointer}
+.side label.chk input{accent-color:var(--ink);width:15px;height:15px}
+.side label.chk .c{margin-left:auto;font:500 11.5px/1 var(--mono);color:var(--muted)}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.search{flex:1;min-width:220px;position:relative}
+.search input{width:100%;padding:12px 14px 12px 40px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card);font-size:15px}
+.search input:focus{outline:none;border-color:var(--ink)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted)}
+select.sort{padding:11px 12px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--card)}
+.count{font:500 13px/1 var(--mono);color:var(--muted)}
+.active{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 18px}
+.active button{display:inline-flex;gap:6px;align-items:center;font:500 12.5px/1 var(--body);padding:6px 10px;border-radius:999px;border:1px solid var(--line-2);background:var(--card)}
+.active button:hover{border-color:var(--ink)}
+.cathead{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:6px 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.cathead h2{font-size:26px;letter-spacing:-.02em}
+.cathead p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+.filt-btn{display:none}
+@media (max-width:900px){
+  .lib{grid-template-columns:1fr}
+  .side{position:fixed;inset:64px 0 0 0;background:var(--card);z-index:60;max-height:none;padding:20px var(--gut) 80px;display:none}
+  .side.open{display:block}
+  .filt-btn{display:inline-flex}
+}
+</style>
+</head>
+<body>
+<main id="main">
+<section class="phero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Benchloop</a><span>/</span><span>Parts library</span></nav>
+    <p class="eyebrow"><span class="tick"></span>Parts library</p>
+    <h1 class="h1">Every part a self-driving lab needs.</h1>
+    <p class="lede" id="intro">Hardware and software from every maker, with published prices, headline specs and the source behind each number. Add parts to your cart, then buy each one from its maker.</p>
+  </div>
+</section>
+<div class="wrap lib">
+  <aside class="side" id="side" aria-label="Filters"></aside>
+  <section aria-label="Results">
+    <div class="toolbar">
+      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><label for="q" class="sr">Search parts</label><input id="q" type="search" placeholder="Search: powder, SCARA, Opentrons, pedestal…" autocomplete="off"></div>
+      <label for="sort" class="sr">Sort</label>
+      <select id="sort" class="sort"><option value="cat">Sort: category</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option><option value="name">Name A–Z</option></select>
+      <button type="button" class="btn btn-sm filt-btn" id="filt">Filters</button>
+    </div>
+    <div class="active" id="active"></div>
+    <div id="results"></div>
+  </section>
+</div>
+</main>
+<script type="module">
+import { mountChrome, PRODUCTS, CATS, byId, card, wireCards, GLYPH, esc, priceOf, openProduct, MAT } from "../assets/bl.js";
+mountChrome("parts");
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const U = new URLSearchParams(location.search);
+const st = { cat: U.get("cat") || "all", mat: new Set(U.getAll("mat")), brand: new Set(), kind: new Set(), price: new Set(), d3: false, q: U.get("q") || "", sort: "cat" };
+$("#q").value = st.q;
+const PRICE = { listed: "Published price", quote: "Quote / see vendor", free: "Open source / free", lab: "Lab-built" };
+const priceKind = p => /open|free/i.test(p.price) ? "free" : /lab-built/i.test(p.price) ? "lab" : priceOf(p) ? "listed" : "quote";
+const brandOf = p => p.brand.split(" (")[0];
+
+function match(p, skip) {
+  if (skip !== "cat" && st.cat !== "all" && p.cat !== st.cat) return false;
+  if (skip !== "mat" && st.mat.size && !p.mat.some(m => st.mat.has(m))) return false;
+  if (skip !== "brand" && st.brand.size && !st.brand.has(brandOf(p))) return false;
+  if (skip !== "kind" && st.kind.size && !st.kind.has(p.kind)) return false;
+  if (skip !== "price" && st.price.size && !st.price.has(priceKind(p))) return false;
+  if (st.d3 && !p.design) return false;
+  if (st.q) { const h = `${p.name} ${p.brand} ${p.sub} ${p.spec} ${p.cat} ${p.mcm || ""} ${p.mat.join(" ")}`.toLowerCase(); if (!st.q.toLowerCase().split(/\s+/).every(w => h.includes(w))) return false; }
+  return true;
+}
+const cnt = (skip, f) => PRODUCTS.filter(p => match(p, skip) && f(p)).length;
+
+function side() {
+  const brands = [...new Set(PRODUCTS.map(brandOf))].sort((a, b) => a.localeCompare(b));
+  $("#side").innerHTML = `<h4>Category</h4>
+    <button type="button" class="opt" data-cat="all" aria-pressed="${st.cat === "all"}">All parts<span class="c">${cnt("cat", () => true)}</span></button><div class="sep"></div>
+    ${CATS.map((c, i) => `${i === 8 ? '<div class="sep"></div>' : ""}<button type="button" class="opt" data-cat="${c.id}" aria-pressed="${st.cat === c.id}">${GLYPH[c.id]}${c.name}<span class="c">${cnt("cat", p => p.cat === c.id)}</span></button>`).join("")}
+    <h4>Material handled</h4>${Object.entries(MAT).map(([k, [n, col]]) => `<label class="chk"><input type="checkbox" data-mat="${k}" ${st.mat.has(k) ? "checked" : ""}><i class="dot" style="background:${col}"></i>${n}<span class="c">${cnt("mat", p => p.mat.includes(k))}</span></label>`).join("")}
+    <h4>Type</h4>${[["hardware", "Hardware"], ["software", "Software"]].map(([k, n]) => `<label class="chk"><input type="checkbox" data-kind="${k}" ${st.kind.has(k) ? "checked" : ""}>${n}<span class="c">${cnt("kind", p => p.kind === k)}</span></label>`).join("")}
+    <label class="chk"><input type="checkbox" id="d3" ${st.d3 ? "checked" : ""}>Placeable in 3D design<span class="c">${cnt(null, p => p.design)}</span></label>
+    <h4>Price</h4>${Object.entries(PRICE).map(([k, n]) => `<label class="chk"><input type="checkbox" data-price="${k}" ${st.price.has(k) ? "checked" : ""}>${n}<span class="c">${cnt("price", p => priceKind(p) === k)}</span></label>`).join("")}
+    <h4>Maker</h4>${brands.map(b => { const n = cnt("brand", p => brandOf(p) === b); return n || st.brand.has(b) ? `<label class="chk"><input type="checkbox" data-brand="${esc(b)}" ${st.brand.has(b) ? "checked" : ""}>${esc(b)}<span class="c">${n}</span></label>` : ""; }).join("")}`;
+}
+function results() {
+  let list = PRODUCTS.filter(p => match(p));
+  const pv = p => priceOf(p)?.lo ?? (st.sort === "lo" ? Infinity : -1);
+  if (st.sort === "lo") list.sort((a, b) => pv(a) - pv(b)); else if (st.sort === "hi") list.sort((a, b) => pv(b) - pv(a)); else if (st.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
+  const chips = [];
+  if (st.cat !== "all") chips.push(["cat", st.cat, CATS.find(c => c.id === st.cat).name]);
+  st.mat.forEach(m => chips.push(["mat", m, MAT[m][0]])); st.kind.forEach(k => chips.push(["kind", k, k[0].toUpperCase() + k.slice(1)]));
+  st.price.forEach(k => chips.push(["price", k, PRICE[k]])); st.brand.forEach(b => chips.push(["brand", b, b])); if (st.d3) chips.push(["d3", 1, "3D"]); if (st.q) chips.push(["q", 1, `“${st.q}”`]);
+  $("#active").innerHTML = chips.map(([t, v, l]) => `<button type="button" data-rm="${t}" data-v="${esc(v)}">${esc(l)} ×</button>`).join("") + (chips.length > 1 ? `<button type="button" data-rm="all">Clear all</button>` : "");
+  const c = CATS.find(c => c.id === st.cat);
+  const head = `<div class="cathead"><div><h2>${c ? c.name : "All parts"}</h2><p>${c ? c.blurb : "Hardware and software for every layer of a self-driving lab."}</p></div><span class="count">${list.length} ${list.length === 1 ? "part" : "parts"}</span></div>`;
+  if (!list.length) { $("#results").innerHTML = head + `<div class="empty">No part matches these filters. <button type="button" class="btn btn-sm" data-rm="all" style="margin-left:8px">Clear filters</button></div>`; return; }
+  if (st.sort === "cat" && st.cat === "all") {
+    $("#results").innerHTML = head + CATS.map(c => { const ps = list.filter(p => p.cat === c.id); return ps.length ? `<h3 class="h3" style="margin:30px 0 14px;display:flex;gap:10px;align-items:baseline">${c.name}<span class="count">${ps.length}</span></h3><div class="pgrid">${ps.map(card).join("")}</div>` : ""; }).join("");
+  } else $("#results").innerHTML = head + `<div class="pgrid">${list.map(card).join("")}</div>`;
+}
+function sync() {
+  const u = new URLSearchParams(); if (st.cat !== "all") u.set("cat", st.cat); st.mat.forEach(m => u.append("mat", m)); if (st.q) u.set("q", st.q);
+  const pp = new URLSearchParams(location.search).get("p"); if (pp) u.set("p", pp);
+  history.replaceState(null, "", u.toString() ? "?" + u : location.pathname);
+}
+function draw() { side(); results(); sync(); }
+$("#side").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (b) { st.cat = b.dataset.cat; draw(); $("#side").classList.remove("open"); window.scrollTo({ top: $(".lib").offsetTop - 70, behavior: "smooth" }); } });
+$("#side").addEventListener("change", e => { const t = e.target, tog = (set, v) => t.checked ? set.add(v) : set.delete(v);
+  if (t.dataset.mat) tog(st.mat, t.dataset.mat); else if (t.dataset.kind) tog(st.kind, t.dataset.kind); else if (t.dataset.price) tog(st.price, t.dataset.price); else if (t.dataset.brand) tog(st.brand, t.dataset.brand); else if (t.id === "d3") st.d3 = t.checked; draw(); });
+document.addEventListener("click", e => { const b = e.target.closest("[data-rm]"); if (!b) return; const t = b.dataset.rm, v = b.dataset.v;
+  if (t === "all") { st.cat = "all"; st.mat.clear(); st.kind.clear(); st.price.clear(); st.brand.clear(); st.d3 = false; st.q = ""; $("#q").value = ""; }
+  else if (t === "cat") st.cat = "all"; else if (t === "d3") st.d3 = false; else if (t === "q") { st.q = ""; $("#q").value = ""; } else st[t].delete(v); draw(); });
+let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { st.q = e.target.value.trim(); draw(); }, 120); });
+$("#sort").addEventListener("change", e => { st.sort = e.target.value; results(); });
+$("#filt").onclick = () => $("#side").classList.toggle("open");
+wireCards($("#results"));
+draw();
+const p0 = U.get("p"); if (p0 && byId[p0]) openProduct(p0, false);
+</script>
+</body>
+</html>

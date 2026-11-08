@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Solutions · Benchloop</title>
+<meta name="description" content="Self-driving lab solutions by material (liquids, pastes and gels, powders, objects), design templates to start from, and twenty published closed loops to learn from.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/bl.css">
+<style>
+.jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
+.sol{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:clamp(28px,4vw,56px);padding:clamp(56px,7vw,96px) 0;border-bottom:1px solid var(--line);scroll-margin-top:72px}
+.sol:last-child{border-bottom:0}
+.sol .idx{font:500 12px/1 var(--mono);color:var(--muted);letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.sol h2{margin:14px 0 12px}
+.sol .range{margin:22px 0 0;border-top:1px solid var(--line)}
+.sol .range>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.sol .range b{font-weight:600}
+.sol .range span{font:500 12.5px/1.4 var(--mono);color:var(--muted);text-align:right}
+.sol .range em{display:block;font-style:normal;font-size:13px;color:var(--ink-2);margin-top:2px}
+.sol .pgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.sol .tplcta{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-top:18px;padding:16px 18px;border:1px dashed var(--line-2);border-radius:var(--r-lg);flex-wrap:wrap}
+.sol .tplcta p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.tpl{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;text-decoration:none;transition:box-shadow .15s,transform .15s}
+.tpl:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.tpl .ph{aspect-ratio:16/9;background-color:var(--paper);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.tpl .ph img{position:absolute;width:30%;height:auto;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}
+.tpl .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.tpl h3{font-size:19px}
+.tpl p{font-size:14px;color:var(--ink-2);margin:0}
+.tpl .ft{display:flex;justify-content:space-between;margin-top:auto;padding-top:10px;font:500 12.5px/1 var(--mono);color:var(--muted)}
+.tpl .ft b{color:var(--ink)}
+.loops{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--night-line);border:1px solid var(--night-line);border-radius:var(--r-lg);overflow:hidden}
+.loop{background:var(--night);padding:20px 20px 18px;display:flex;flex-direction:column;gap:10px}
+.loop .fig{font:500 11.5px/1 var(--mono);color:var(--night-muted);display:flex;justify-content:space-between;letter-spacing:.04em}
+.loop .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.loop .chain span{font:600 15px/1.2 var(--body);color:var(--night-ink)}
+.loop .chain i{font-style:normal;color:var(--accent)}
+.loop p{font-size:13px;color:var(--night-muted);margin:0;line-height:1.45}
+.loop a{color:var(--night-ink);font:500 12px/1 var(--mono)}
+.lf{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.lf .chip{background:transparent;color:var(--night-ink);border-color:var(--night-line)}
+.lf .chip[aria-pressed="true"]{background:var(--night-ink);color:var(--night);border-color:var(--night-ink)}
+@media (max-width:900px){.sol{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main id="main">
+<section class="phero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Benchloop</a><span>/</span><span>Solutions</span></nav>
+    <p class="eyebrow"><span class="tick"></span>Solutions</p>
+    <h1 class="h1">Start from what you formulate.</h1>
+    <p class="lede">Viscosity, yield stress and powder flowability decide which mechanism doses an ingredient. Pick your material to see the technologies that work there, the parts that implement them and a cell to start from.</p>
+    <div class="jump" id="jump"></div>
+  </div>
+</section>
+<div class="wrap" id="sols"></div>
+
+<section class="band alt" id="templates" aria-labelledby="tp" style="scroll-margin-top:64px">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Design templates</p><h2 id="tp" class="h2">Cells you can open, change and buy.</h2></div><a class="btn" href="../new-design/">Start blank</a></div>
+    <div class="tpls" id="tpls"></div>
+  </div>
+</section>
+
+<section class="band night on-night" id="loops" aria-labelledby="lp" style="scroll-margin-top:64px">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Proven loops</p><h2 id="lp" class="h2">Twenty published ways to sense and act.</h2><p class="lede">Each scenario from the literature, titled by its sense–act sequence. Read them as recipes for the feedback your cell needs (review Fig. 3).</p></div></div>
+    <div class="lf" id="lf" role="group" aria-label="Filter by material"></div>
+    <div class="loops" id="loopgrid"></div>
+  </div>
+</section>
+</main>
+<script type="module">
+import { mountChrome, PRODUCTS, byId, card, wireCards, esc, priceOf, money, MAT, REF } from "../assets/bl.js";
+import { TEMPLATES } from "../data/templates.js";
+mountChrome("solutions");
+const $ = s => document.querySelector(s);
+const R = await (await fetch("../data/review.json")).json();
+const T1 = R.table_1.rows;
+const SOL = [
+  { k: "liquid", t: "Liquids", rows: [0, 1, 2], text: "From water-thin solvents to honey-like resins. Air-displacement pipettes lose accuracy as viscosity rises; positive displacement, syringe and peristaltic pumps keep it.", ids: ["flex", "ot2", "rainin-e4", "hamilton-psd4", "qdos20", "masterflex-ls"], tpl: "liquid" },
+  { k: "paste", t: "Pastes & gels", rows: [3, 4], text: "A yield stress means the material will not flow until pushed. Extrusion by air pressure, syringe or auger, mounted on a gantry, is the workhorse.", ids: ["ecopen", "ultimus", "cellink-syringe", "fisnar-pdv1000", "cnc4040", "jubilee"], tpl: "sfl" },
+  { k: "powder", t: "Powders", rows: [5], text: "Cohesive powders bridge, stick and charge. Gravimetric dosing heads close the loop on a balance; screw and vibratory feeders trade precision for throughput.", ids: ["quantos", "mt12", "swile", "vf1", "eriez-hivi", "balance"], tpl: "powder" },
+  { k: "object", t: "Objects", rows: [6], text: "Cups, vials, plates and tablets move between stations. Choose the arm class by reach, repeatability and budget, and mount it at the right height.", ids: ["ur5e", "pf400", "lite6", "fr3", "kmr", "mcm-6333n16"], tpl: "mounted" },
+];
+$("#jump").innerHTML = SOL.map(s => `<a class="chip" href="#${s.k}"><i class="dot" style="background:${MAT[s.k][1]}"></i>${s.t}</a>`).join("") + `<a class="chip" href="#templates">Templates</a><a class="chip" href="#loops">Proven loops</a>`;
+$("#sols").innerHTML = SOL.map((s, i) => { const t = TEMPLATES[s.tpl];
+  return `<section class="sol" id="${s.k}" aria-labelledby="h-${s.k}">
+    <div><p class="idx"><i class="dot" style="background:${MAT[s.k][1]}"></i>0${i + 1} · ${s.t.toUpperCase()}</p><h2 id="h-${s.k}" class="h2">${s.t}</h2><p style="color:var(--ink-2)">${s.text}</p>
+      <div class="range">${s.rows.map(r => T1[r]).map(r => `<div><div><b>${esc(r.Material)}</b><em>${esc(r["Common Technologies"])}</em></div><span>${esc(r["Viscosity / Particle Size"])}<br>${esc(r["Typical Accuracy"])} accuracy</span></div>`).join("")}</div>
+      <p class="fine" style="margin-top:10px">From Table 1 of the review. Watch for: ${s.rows.map(r => esc(T1[r]["Key Challenges"]).toLowerCase()).join("; ")}.</p></div>
+    <div><div class="pgrid">${s.ids.map(id => card(byId[id])).join("")}</div>
+      <div class="tplcta"><p><b>${esc(t.name)}</b> · ${esc(t.blurb)}</p><a class="btn btn-ink btn-sm" href="../new-design/?t=${s.tpl}">Open template</a></div>
+      <a class="btn btn-ghost" href="../parts/?mat=${s.k}" style="margin-top:8px">All ${s.t.toLowerCase()} parts <span class="arr">→</span></a></div>
+  </section>`; }).join("");
+wireCards($("#sols"));
+
+const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
+$("#tpls").innerHTML = Object.entries(TEMPLATES).map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
+  return `<a class="tpl" href="../new-design/?t=${k}"><div class="ph gridpaper">${ids.map((id, i) => `<img src="../new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
+    <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>${t.items.length ? `from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}` : "your choice"}</span></div></div></a>`; }).join("");
+
+const CLS = { liquid: ["Liquids", "liquid"], "semi-solid": ["Pastes & gels", "paste"], powder: ["Powders", "powder"] };
+let lf = "all";
+function loops() {
+  const S = R.literature_scenarios;
+  $("#lf").innerHTML = [["all", `All ${S.length}`], ...Object.entries(CLS).map(([k, [n]]) => [k, `${n} · ${S.filter(s => s.material_class === k).length}`])].map(([k, n]) => `<button type="button" class="chip" data-k="${k}" aria-pressed="${lf === k}">${k !== "all" ? `<i class="dot" style="background:${MAT[CLS[k][1]][1]}"></i>` : ""}${n}</button>`).join("");
+  $("#loopgrid").innerHTML = S.filter(s => lf === "all" || s.material_class === lf).map(s => `<article class="loop"><div class="fig"><span>${esc(s.figure)}</span><span style="display:flex;gap:6px;align-items:center"><i class="dot" style="background:${MAT[CLS[s.material_class]?.[1]]?.[1] || "#999"}"></i>${esc(CLS[s.material_class]?.[0] || s.material_class)}</span></div>
+    <div class="chain">${s.sense_act.split("->").map(w => `<span>${esc(w.trim())}</span>`).join("<i>→</i>")}</div><p>${esc(s.citation.replace(/https?:\/\/\S+/, "").slice(0, 150))}${s.citation.length > 150 ? "…" : ""}</p><a href="${REF(s.ref)}">Reference [${s.ref}]</a></article>`).join("");
+}
+$("#lf").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) { lf = b.dataset.k; loops(); } });
+loops();
+if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+</script>
+</body>
+</html>

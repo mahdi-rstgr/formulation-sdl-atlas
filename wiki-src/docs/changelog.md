@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-08: Benchloop Learn
+
+The wiki is now **Benchloop Learn**, the knowledge base of [Benchloop](https://mahdi-rstgr.github.io/formulation-sdl-atlas/), a platform for designing self-driving labs from every maker's parts.
+
+- The header links back to the platform: home, parts library, self-driving layer, atlas and the design tool.
+- The interactive atlas moved to [`/atlas/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/atlas/) and the Lab Builder to [`/new-design/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/new-design/). Old `/builder/` links redirect.
+- Colours follow the platform: ink header, warm paper background and a reagent-orange accent.
+- The content is unchanged.
+
 ## 2026-11-07 (second update): All figures and a new interface
 
 ### Figures
@@ -53,7 +62,7 @@ The earlier wiki was published at <https://accelerationconsortium.github.io/mate
     - new title and full 8-author citation (manuscript in preparation, 2026), replacing the earlier placeholder citation;
     - seven-step map;
     - graphical abstract;
-    - link to the <a href="../../">interactive atlas</a>.
+    - link to the <a href="../../atlas/">interactive atlas</a>.
 - **[References](references.md):** rebuilt with all 178 references of the review, each with an anchor (`#ref-1` … `#ref-178`). Citations of the form [n] across the wiki link to them.
 - **Material Properties, Material Spectrum, the seven strategy pages, the AI Infrastructure pages, and Safety and Future Directions:**
     - added a box summarizing the corresponding V3 content, with citations;

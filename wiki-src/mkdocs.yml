@@ -1,4 +1,4 @@
-site_name: Formulation SDL Wiki
+site_name: Benchloop Learn
 site_description: >-
   Companion wiki to the review "Self-Driving Laboratories for Formulation: Handling Liquids,
   Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents".
@@ -16,6 +16,8 @@ copyright: >-
 theme:
   name: material
   custom_dir: overrides
+  logo: assets/benchloop.svg
+  favicon: assets/benchloop.svg
   language: en
   font:
     text: IBM Plex Sans
@@ -95,8 +97,11 @@ extra_css:
 extra:
   generator: false
   social:
-    - icon: material/map-outline
+    - icon: material/home-outline
       link: https://mahdi-rstgr.github.io/formulation-sdl-atlas/
+      name: Benchloop
+    - icon: material/map-outline
+      link: https://mahdi-rstgr.github.io/formulation-sdl-atlas/atlas/
       name: Interactive atlas
     - icon: fontawesome/brands/github
       link: https://github.com/mahdi-rstgr/formulation-sdl-atlas

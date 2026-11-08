@@ -1,19 +1,41 @@
-# Formulation SDL Atlas
+# Benchloop
 
-**Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/ · **Wiki:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/wiki/
+**Build the bench. Close the loop.**
 
-This repository is the public home of a project from the [Acceleration Consortium](https://acceleration.utoronto.ca/), University of Toronto. The project's goal is a laboratory that can design itself for formulation. Handed a budget, a set of ingredients and a room, it should propose the equipment and layout, show the cell as a digital twin, and keep its knowledge of commercial hardware up to date.
+**Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
-The project has four parts:
+Benchloop is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Benchloop sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
 
-| Part | What it is | Status |
+The structure follows [vention.com](https://vention.com), which does the same for factory automation but sells its own parts.
+
+| Path | Page | What it does |
 |---|---|---|
-| **Review** | *Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents*: 8 authors, 178 references, 7 comparison tables, 9 figures | Complete (manuscript in preparation for submission) |
-| **Wiki** | Living directory of materials, handling strategies, robots, dispensers, platforms, prices, simulation tools and agents, rebuilt from the final manuscript | Updated to V3 ([`wiki/`](wiki/), source in [`wiki-src/`](wiki-src/)) |
-| **Library agent** | Watches vendor releases and proposes new or changed catalogue entries, each with its source and date, for a person to approve | Designed ([spec](docs/library-agent.md)) |
-| **Self-Formulating Lab (SFL) agent + twin** | Talks with a user about budget, materials and space, proposes a cell, shows it in a 3D twin with collision-checked robot motions, and lets the user swap products | Prototype ([spec](docs/sfl-agent.md)); the twin and the selection step run on the live site |
+| `/` | Home | Hero with an exploded example cell and its bill of materials, how it works, start from your material, the self-driving layer, parts categories, design templates, and the referral model |
+| [`/new-design/`](new-design/) | New design | The 3D design tool (formerly the Lab Builder). It opens with a start screen (blank, a template, or your saved design) and sends the design to the cart. `?t=<template>` opens a template and `?add=<id,id>` adds parts. |
+| [`/parts/`](parts/) | Parts library | All parts with filters for category, material, type, price and maker; search; sort; a detail drawer for each part (`?cat=`, `?mat=`, `?q=`, `?p=`) |
+| [`/solutions/`](solutions/) | Solutions | Guides by material (liquids, pastes and gels, powders, objects), design templates, and the 20 published sense–act loops |
+| [`/self-driving/`](self-driving/) | Self-driving layer | Architecture (L1–L4); an orchestration picker built on Supplementary Table S1 that ranks the eight open-source systems by the functions you tick; the simulation fidelity ladder (Table 6); AI agent roles (Table 7) and optimizers |
+| [`/cart/`](cart/) | Cart | Grouped by vendor with "order or quote" links and a contacted checklist; totals; a self-driving readiness check (act, sense, decide and run) that suggests the lowest-priced part for each missing step; share link (`?c=id:qty,…`); CSV; import from the current design |
+| [`/atlas/`](atlas/) | Atlas | The original interactive review atlas with the live digital twin |
+| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Benchloop Learn |
+| `/builder/` | | Redirects to `/new-design/` so old share links keep working |
 
-## The atlas (this site)
+### Shared code
+
+- `data/catalog.js`: the single parts catalogue. It holds 79 parts (57 hardware, 22 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
+- `data/templates.js`: the design templates used by the home page, Solutions and the design tool.
+- `assets/bl.css`, `assets/bl.js`: the design system and the shared runtime: header with mega menus, footer, a cart stored in `localStorage` and shared by every page, product cards and the product drawer.
+
+### McMaster-Carr parts and lab CAD
+
+Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the design tool, along with the lab-built Formulator Pen. These are real CAD:
+
+- `scripts/export_mcmaster.py` tessellates the STEP files in `CAD/` with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/mcm-*.json` and `lab-*.json`.
+- `CAD/` itself is git-ignored. Only the meshes are published.
+- In the design tool, anything dropped onto a workstation, pedestal or slide rests on top and moves with it. The delta robot hangs inside its enclosure.
+- Thumbnails come from `new-design/?thumbs=<id,id>`. The page writes the PNGs as data URLs into `<pre id="thumbs-out">` for headless capture.
+
+## The atlas (`/atlas/`)
 
 The landing page is one static page with no build step. It follows a premix cup through the seven questions the review is organized around. A sticky 3D twin of a formulation cell moves its camera to the part of the cell each step is about.
 
@@ -45,9 +67,9 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 `data/twin/<arm>.json` holds the meshes (base64), the kinematics and the planned trajectories. The page runs forward kinematics in the browser. Nothing is simulated beyond kinematics and clearance: there are no forces and no material physics (level 2 of the review's fidelity hierarchy).
 
-## The Lab Builder
+## The design tool (`/new-design/`, formerly the Lab Builder)
 
-[`builder/`](builder/) is a 3D lab-design tool. A device banner sits under the top bar, and the workstation fills the rest of the screen.
+[`new-design/`](new-design/) is a 3D lab-design tool. A device banner sits under the top bar, and the workstation fills the rest of the screen.
 
 - **Device banner:** six categories of devices, each with a rendered thumbnail and its list price:
   - **Material handlers:** liquid, paste and powder dispensers
@@ -72,26 +94,30 @@ The twin is the Self-Formulating Lab cell exported as static data:
   - per-arm reach lists
   - auto-arrange around the arm with the longest reach
   - live metrics: reach coverage, floor used, budget used, issues
-- **Templates, sharing and export:** five templates, share links that store the full 6-DOF layout in the URL, a CSV parts list with positions, and autosave in the browser.
+- **Templates, sharing and export:** six templates (including one on McMaster-Carr structure), share links that store the full 6-DOF layout in the URL, a CSV parts list with positions, and autosave in the browser.
 - **Models:**
   - Real meshes: the formulation-cell devices and articulated UR e-Series and Lite 6 arms (`data/models/`, from `scripts/export_models.py`).
   - Everything else is procedural and drawn at approximate footprints (`builder/catalog.js`).
-  - Thumbnails are rendered by opening `builder/?thumbs=1`.
+  - Thumbnails are rendered by opening `new-design/?thumbs=1`.
 
 ## Repository layout
 
 | Path | Content |
 |---|---|
-| `index.html`, `assets/` | The atlas page (three.js 0.160 from unpkg, plain ES modules, no build) |
+| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Benchloop pages (plain HTML and ES modules, no build) |
+| `assets/bl.css`, `assets/bl.js` | Benchloop design system and shared runtime |
+| `data/catalog.js`, `data/templates.js` | Parts catalogue and design templates |
+| `atlas/`, `assets/app.js`, `assets/style.css` | The atlas page (three.js 0.160 from unpkg) |
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1–7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |
 | `data/twin/*.json` | Twin scenes and planned transfers per arm |
 | `data/models/*.json` | Real device meshes and articulated arms (`*_arm.json`: link meshes, joint chain, trajectory) for the Lab Builder |
-| `builder/` | Lab Builder: `catalog.js` (devices, animated procedural models), `builder.js` (app), `thumbs/` (rendered card images) |
+| `new-design/` | Design tool: `catalog.js` (3D models, animated procedural models), `builder.js` (app), `thumbs/` (rendered card images) |
+| `builder/` | Redirect to `new-design/` |
 | `figures/` | Review figures used on the site (Figs. 1, 3, 4, 7, 8, 9 and the graphical abstract) |
 | `wiki-src/` | MkDocs Material source of the wiki |
 | `wiki/` | Built wiki, served at `/wiki/` |
 | `docs/` | Specs for the library agent and the SFL agent, data guide, roadmap |
-| `scripts/` | Scripts that regenerate `data/` from the manuscript and the SFL code |
+| `scripts/` | Scripts that regenerate `data/` from the manuscript, the SFL code and the CAD in `CAD/` |
 
 ## Run locally
 
@@ -144,7 +170,8 @@ Mohammad M. Rastegardoost<sup>a,*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a
 
 ## Licence
 
-- **Code** (`index.html`, `assets/`, `scripts/`): MIT, see [LICENSE](LICENSE).
+- **Code** (pages, `assets/`, `data/*.js`, `new-design/`, `scripts/`): MIT, see [LICENSE](LICENSE).
+- **McMaster-Carr meshes (`data/models/mcm-*.json`):** tessellated from CAD that McMaster-Carr provides for its catalogue parts. They are used only to visualize those parts. McMaster-Carr is a trademark of McMaster-Carr Supply Company.
 - **Review text, tables, figures and wiki content:** © the authors, all rights reserved until the review is published.
 - **UR e-Series meshes and kinematics in `data/twin/` and `data/models/ur*.json`:** BSD-3-Clause, Universal Robots ([data/twin/LICENSE-UR](data/twin/LICENSE-UR)).
 - **UFACTORY Lite 6 mesh (`data/models/lite6.json`):** BSD-3-Clause, UFACTORY Inc., via hygradme/lite6_urdf ([data/models/LICENSE-Lite6](data/models/LICENSE-Lite6)).

@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Source CAD (McMaster-Carr STEP downloads, lab CAD). Only the tessellated meshes in data/models/ are published.
+CAD/

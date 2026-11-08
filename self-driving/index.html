@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Self-driving layer · Benchloop</title>
+<meta name="description" content="Make a lab cell decide for itself: compare eight open-source orchestration systems by the functions you need, choose simulators on a four-level fidelity ladder, and pick optimizers and AI agent roles with human checkpoints.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/bl.css">
+<style>
+.phero.night{border-bottom:0}
+.lnav{position:sticky;top:64px;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.lnav .wrap{display:flex;gap:4px;overflow-x:auto}
+.lnav a{padding:14px 16px;text-decoration:none;font:600 14.5px/1 var(--body);color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;display:flex;gap:8px;align-items:center}
+.lnav a span{font:500 11px/1 var(--mono)}
+.lnav a.cur,.lnav a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.layer{scroll-margin-top:120px}
+.arch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,56px);align-items:start}
+.arch>div{position:sticky;top:130px}@media (max-width:900px){.arch>div{position:static}}
+.arch figure{margin:0;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:#fff}
+.arch figcaption{font:500 12px/1.4 var(--mono);color:var(--muted);padding:10px 14px;border-top:1px solid var(--line);background:var(--card)}
+.stack{list-style:none;padding:0;margin:24px 0 0}
+.stack li{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+.stack .L{font:600 12px/1.5 var(--mono);color:var(--muted)}
+.stack b{display:block}
+.stack span{font-size:14.5px;color:var(--ink-2)}
+@media (max-width:900px){.arch{grid-template-columns:1fr}}
+
+/* orchestration picker */
+.rank{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 24px}
+.rk{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px;display:flex;flex-direction:column;gap:8px;position:relative}
+.rk.top{border-color:var(--ink);box-shadow:var(--shadow)}
+.rk .pos{font:500 11.5px/1 var(--mono);color:var(--muted)}
+.rk b{font:700 19px/1.1 var(--display);letter-spacing:-.01em}
+.rk .bar{height:5px;background:var(--paper-2);border-radius:3px;overflow:hidden}
+.rk .bar i{display:block;height:100%;background:var(--ink);transition:width .35s}
+.rk.top .bar i{background:var(--accent)}
+.rk .sc{font:500 12px/1 var(--mono);color:var(--ink-2)}
+.rk .add{position:absolute;right:12px;top:12px;border:1px solid var(--line-2);background:var(--card);border-radius:var(--r);padding:4px 8px;font:600 12px/1 var(--body)}
+.rk .add:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (max-width:900px){.rank{grid-template-columns:1fr 1fr}}
+.mx th.sys{writing-mode:vertical-rl;transform:rotate(180deg);text-transform:none;font:600 13px/1 var(--body);letter-spacing:0;color:var(--ink);padding:12px 8px;text-align:left;height:120px}
+.mx td.v{text-align:center;padding:10px 6px}
+.mx td.v i{display:inline-block;width:14px;height:14px;border-radius:50%;border:1.6px solid var(--ink)}
+.mx td.v i.p{background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
+.mx td.v i.f{background:var(--ink)}
+.mx td.v i.n{border-color:var(--line-2)}
+.mx tr.grp td{background:var(--paper);font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--muted);padding:9px 14px;text-transform:uppercase}
+.mx td.fn{min-width:240px}
+.mx td.fn label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.mx td.fn input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px;flex:none}
+.mx tr.need td{background:#fdf3ec}
+.mx tr.need td.fn{font-weight:600}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:14px 0 0;align-items:center}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);vertical-align:-2px;margin-right:6px}
+.presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+
+/* fidelity ladder */
+.ladder{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;background:var(--card)}
+.rung{padding:22px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.rung:last-child{border-right:0}
+.rung .lv{display:flex;align-items:baseline;gap:10px}
+.rung .lv b{font:800 44px/1 var(--display);letter-spacing:-.03em}
+.rung .lv span{font:500 12px/1.3 var(--mono);color:var(--muted)}
+.rung h3{font-size:18px}
+.rung p{font-size:14px;color:var(--ink-2);margin:0}
+.tool{border-top:1px solid var(--line);padding-top:10px;font-size:13.5px}
+.tool b{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:600}
+.tool b button{border:1px solid var(--line-2);background:none;border-radius:4px;font:600 11.5px/1 var(--body);padding:4px 7px}
+.tool b button:hover{background:var(--ink);color:var(--paper)}
+.tool span{color:var(--muted);display:block;margin-top:3px;font-size:12.5px}
+.rung .fill{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--ink) var(--w),var(--paper-2) var(--w))}
+@media (max-width:1000px){.ladder{grid-template-columns:1fr 1fr}.rung:nth-child(2){border-right:0}.rung{border-bottom:1px solid var(--line)}}
+@media (max-width:600px){.ladder{grid-template-columns:1fr}.rung{border-right:0}}
+
+/* agents */
+.agents{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--night-line);border:1px solid var(--night-line);border-radius:var(--r-lg);overflow:hidden}
+.agent{background:var(--night);padding:20px;display:flex;flex-direction:column;gap:10px}
+.agent h3{font-size:19px}
+.agent .au{display:flex;gap:4px}
+.agent .au i{flex:1;height:5px;border-radius:2px;background:var(--night-line)}
+.agent .au i.on{background:var(--night-ink)}
+.agent .au i.on.hi{background:var(--accent)}
+.agent dl{margin:0;font-size:13.5px}
+.agent dt{font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--night-muted);margin-top:10px}
+.agent dd{margin:4px 0 0;color:var(--night-ink)}
+.optz{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:40px}
+</style>
+</head>
+<body>
+<main id="main">
+<section class="phero night on-night gridpaper dark" style="padding:72px 0 64px">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb" style="color:var(--night-muted)"><a href="../">Benchloop</a><span>/</span><span>Self-driving layer</span></nav>
+    <p class="eyebrow"><span class="tick"></span>Platform · Self-driving layer</p>
+    <h1 class="display" style="max-width:13ch">Make the cell decide for itself.</h1>
+    <p class="lede">A self-driving lab is hardware plus a closed loop: devices integrated into one workflow, rehearsed in a twin, and steered by models that choose the next experiment. Choose each layer here and add it to the same cart as your hardware.</p>
+  </div>
+</section>
+<nav class="lnav" aria-label="Layers"><div class="wrap">
+  <a href="#architecture"><span>00</span>Architecture</a><a href="#orchestrate"><span>L2–L3</span>Orchestrate</a><a href="#rehearse"><span>TWIN</span>Rehearse</a><a href="#decide"><span>L4</span>Decide</a>
+</div></nav>
+
+<section class="band layer" id="architecture" aria-labelledby="h0">
+  <div class="wrap arch">
+    <div>
+      <p class="eyebrow"><span class="tick"></span>Architecture</p>
+      <h2 id="h0" class="h2">Four layers between a goal and a dose.</h2>
+      <p class="lede">The review organizes formulation SDL software into functional layers. Every part in the library maps onto one of them, so you can see what your cart still lacks.</p>
+      <ul class="stack">
+        <li><span class="L">L4</span><div><b>Decision making</b><span>Select the next conditions; accept goals from people and agents.</span></div></li>
+        <li><span class="L">L3</span><div><b>Workflow orchestration</b><span>Order steps, branch on results, schedule concurrent workflows, track resources.</span></div></li>
+        <li><span class="L">L2</span><div><b>Device integration</b><span>Register device operations (SiLA 2, REST, ROS 2, MCP) and return status and data.</span></div></li>
+        <li><span class="L">L1</span><div><b>Devices</b><span>Dispensers, arms, balances and characterizers from the parts library.</span></div></li>
+      </ul>
+    </div>
+    <figure><img src="../figures/figure_08.jpg" alt="Figure 8: architecture of a formulation SDL with execution and equipment hierarchies, functional layers of orchestration software and functions of eight open-source systems." width="1800" height="1563" loading="lazy"><figcaption>Fig. 8 · Architecture of a formulation SDL</figcaption></figure>
+  </div>
+</section>
+
+<section class="band alt layer" id="orchestrate" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>L2–L3 · Orchestrate</p><h2 id="h1" class="h2">Which orchestration system fits your workflow?</h2>
+      <p class="lede">No system provides every function. Tick what your workflow needs as standard; the eight open-source systems that met the review's criteria rank themselves. A full dot counts 1, a half dot 0.5.</p></div></div>
+    <div class="presets" id="presets" role="group" aria-label="Presets"></div>
+    <div class="rank" id="rank" aria-live="polite"></div>
+    <div class="tbl-wrap"><table class="tbl mx" id="mx"></table></div>
+    <div class="legend"><span><i style="background:var(--ink)"></i>Provided through standard mechanisms</span><span><i style="background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)"></i>Partial</span><span><i style="border-color:var(--line-2)"></i>Not provided in the inspected version</span>
+      <span>Source: Supplementary Table S1 · <a href="../wiki/orchestration/open-source/">full table with notes</a></span></div>
+  </div>
+</section>
+
+<section class="band layer" id="rehearse" aria-labelledby="h2">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Twin · Rehearse</p><h2 id="h2" class="h2">Climb the fidelity ladder only as far as you need.</h2>
+      <p class="lede">Rehearse a cell before buying it. Level 1 checks timing, level 2 geometry and collisions, level 3 contact dynamics, level 4 the material itself. Higher levels cost hours per case.</p></div>
+      <a class="btn btn-ink" href="../atlas/#rehearse">See a level-2 twin running</a></div>
+    <div class="ladder" id="ladder"></div>
+  </div>
+</section>
+
+<section class="band night on-night layer" id="decide" aria-labelledby="h3">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>L4 · Decide</p><h2 id="h3" class="h2">Agents that help, with a person at every checkpoint.</h2>
+      <p class="lede">Five agent roles from the review, ordered by how much they may do on their own. Bars show autonomy: inform, draft, act digitally, submit in approved campaigns.</p></div></div>
+    <div class="agents" id="agents"></div>
+    <h3 class="h3" style="margin-top:56px">Optimizers and protocols</h3>
+    <div class="optz" id="optz"></div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="h4">
+  <div class="wrap" style="display:flex;justify-content:space-between;gap:24px;align-items:end;flex-wrap:wrap">
+    <div><p class="eyebrow"><span class="tick"></span>Check your loop</p><h2 id="h4" class="h2" style="max-width:20ch">Your cart shows which layers are still missing.</h2></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-accent" href="../cart/">Open the readiness check</a><a class="btn" href="../new-design/">Design the hardware</a></div>
+  </div>
+</section>
+</main>
+<script type="module">
+import { mountChrome, byId, card, wireCards, esc, cart, toast, REF } from "../assets/bl.js";
+mountChrome("platform");
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const R = await (await fetch("../data/review.json")).json();
+
+/* ---------------- Supplementary Table S1 (2 = standard, 1 = partial, 0 = not provided) */
+const SYS = ["madsci", "alabos", "eos", "helao", "ivoryos", "unilabos", "nimo", "ares"];
+const F = [
+  ["L4 · Decision making"],
+  ["Select the next experimental conditions", [0, 0, 2, 0, 2, 0, 2, 1]],
+  ["Accept execution requests from L4", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["L3 · Workflow orchestration"],
+  ["Manage step order and dependencies", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["Switch later steps based on results", [1, 2, 2, 2, 2, 1, 0, 2]],
+  ["Issue device operations in order", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["Pick an executable step among concurrent workflows", [2, 2, 2, 1, 1, 2, 0, 0]],
+  ["L2 · Device integration"],
+  ["Register and invoke device operations", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["Return device status, results and errors", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["Resources and locations"],
+  ["Prevent reassignment of devices and locations in use", [1, 2, 2, 1, 1, 1, 1, 1]],
+  ["Hold shared resources across steps", [1, 2, 2, 0, 1, 1, 1, 1]],
+  ["Track tool mounting and container location (parent–child)", [2, 1, 1, 1, 0, 2, 0, 0]],
+  ["Track remaining material quantities", [2, 1, 1, 1, 0, 2, 0, 0]],
+  ["Data, errors and people"],
+  ["Link runs, steps, samples and results", [2, 2, 2, 2, 2, 2, 2, 2]],
+  ["Pause at step boundaries and retry failed steps", [2, 2, 1, 2, 2, 2, 0, 2]],
+  ["Alert people through external channels", [2, 2, 1, 2, 1, 1, 1, 1]],
+  ["Include human checks and manual steps", [1, 2, 1, 2, 2, 2, 1, 2]],
+  ["Run and query from external programs", [2, 2, 2, 2, 2, 2, 2, 2]],
+];
+const rows = F.map((r, i) => ({ i, r })).filter(x => x.r[1]);
+const PRESETS = {
+  "Formulation cell": ["Switch later steps based on results", "Track tool mounting and container location (parent–child)", "Track remaining material quantities", "Pause at step boundaries and retry failed steps", "Include human checks and manual steps"],
+  "Closed-loop optimization": ["Select the next experimental conditions", "Switch later steps based on results", "Link runs, steps, samples and results"],
+  "Shared multi-user facility": ["Pick an executable step among concurrent workflows", "Prevent reassignment of devices and locations in use", "Hold shared resources across steps", "Alert people through external channels"],
+};
+let need = new Set(PRESETS["Formulation cell"]);
+function drawMx() {
+  $("#presets").innerHTML = Object.keys(PRESETS).map(k => `<button type="button" class="chip" data-pre="${k}" aria-pressed="${PRESETS[k].length === need.size && PRESETS[k].every(f => need.has(f))}">${k}</button>`).join("") + `<button type="button" class="chip" data-pre="" aria-pressed="false">Clear</button>`;
+  $("#mx").innerHTML = `<thead><tr><th>Function · tick what you need</th>${SYS.map(s => `<th class="sys" scope="col">${esc(byId[s].name.replace(" 2.0", ""))}</th>`).join("")}</tr></thead><tbody>` +
+    F.map(r => r[1] ? `<tr class="${need.has(r[0]) ? "need" : ""}"><td class="fn"><label><input type="checkbox" data-fn="${esc(r[0])}" ${need.has(r[0]) ? "checked" : ""}>${esc(r[0])}</label></td>${r[1].map(v => `<td class="v"><i class="${["n", "p", "f"][v]}" title="${["not provided", "partial", "standard"][v]}"></i></td>`).join("")}</tr>`
+      : `<tr class="grp"><td colspan="${SYS.length + 1}">${esc(r[0])}</td></tr>`).join("") + "</tbody>";
+  const N = rows.filter(x => need.has(x.r[0])), max = N.length || 1;
+  const sc = SYS.map((s, j) => ({ s, v: N.reduce((t, x) => t + x.r[1][j] / 2, 0) })).sort((a, b) => b.v - a.v);
+  $("#rank").innerHTML = sc.slice(0, 4).map((x, k) => `<div class="rk ${k === 0 && N.length ? "top" : ""}"><span class="pos">#${k + 1}${k === 0 && N.length ? " · best fit" : ""}</span><b>${esc(byId[x.s].name)}</b><div class="bar"><i style="width:${N.length ? 100 * x.v / max : 0}%"></i></div><span class="sc">${N.length ? `${x.v} of ${N.length} needs` : "tick a need"} · ${refLinkShort(byId[x.s].ref)}</span><button type="button" class="add" data-add="${x.s}">+ Cart</button></div>`).join("");
+}
+const refLinkShort = r => r ? `<a href="${REF(r)}">[${r}]</a>` : "";
+document.addEventListener("change", e => { const c = e.target.closest("[data-fn]"); if (c) { c.checked ? need.add(c.dataset.fn) : need.delete(c.dataset.fn); drawMx(); } });
+$("#presets").addEventListener("click", e => { const b = e.target.closest("[data-pre]"); if (b) { need = new Set(PRESETS[b.dataset.pre] || []); drawMx(); } });
+drawMx();
+
+/* ---------------- fidelity ladder (Table 6) */
+const T6 = R.table_6.rows;
+const TOOLID = { "Discrete-event simulation (e.g. SimPy)": "simpy", "Device emulators, SiLA 2 mocks": "sila2", "MoveIt 2 with RViz": "moveit2", "Vendor offline programming (URSim, RoboDK)": "robodk", "Gazebo": "gazebo", "MuJoCo": "mujoco", "PyBullet": "pybullet", "NVIDIA Isaac Sim": "isaacsim", "Isaac Lab": "isaaclab" };
+const LV = [["1", "Logic & timing", "Queues, device states and protocols. No geometry."], ["2", "Geometry & motion", "Kinematics, reach and collision checks. Benchloop's twin lives here."], ["3", "Contact dynamics", "Rigid bodies, grasping, sensors and learning."], ["4", "Material physics", "Fluids, granular flow and pastes. Hours per case."]];
+$("#ladder").innerHTML = LV.map(([n, h, p]) => { const tools = T6.filter(t => String(t.Level).trim().startsWith(n) || (n === "4" && /\+4|3–4/.test(t.Level)));
+  return `<div class="rung"><div class="lv"><b>${n}</b><span>LEVEL</span></div><div class="fill" style="--w:${25 * +n}%"></div><h3>${h}</h3><p>${p}</p>
+    ${tools.map(t => { const id = TOOLID[t["Tool or class"]]; return `<div class="tool"><b>${esc(t["Tool or class"])}${id ? `<button type="button" data-add="${id}" aria-label="Add ${esc(t["Tool or class"])} to cart">+ Cart</button>` : ""}</b><span>${esc(t["Best SDL use"])} · <i>${esc(t["Main constraint"])}</i></span></div>`; }).join("")}</div>`; }).join("");
+
+/* ---------------- agents (Table 7) */
+const AUT = { "Inform": 1, "Draft": 2, "Act digitally": 3 };
+$("#agents").innerHTML = R.table_7.rows.map(a => { const lvl = /submit/i.test(a.Autonomy) ? 4 : AUT[a.Autonomy] || 2;
+  return `<article class="agent"><h3>${esc(a.Agent)}</h3><div class="au" title="Autonomy ${lvl} of 4">${[1, 2, 3, 4].map(k => `<i class="${k <= lvl ? "on" : ""} ${k === lvl && lvl >= 3 ? "hi" : ""}"></i>`).join("")}</div>
+    <dl><dt>Assists</dt><dd>${esc(a.Assists)}</dd><dt>Does</dt><dd>${esc(a["Example tasks"])}</dd><dt>Autonomy</dt><dd>${esc(a.Autonomy)}</dd><dt>Human checkpoint</dt><dd>${esc(a["Human checkpoint"])}</dd><dt>Seen in</dt><dd>${esc(a["SDL examples"]).replace(/\[(\d+)\]/g, (_, n) => `<a href="${REF(n)}" style="color:inherit">[${n}]</a>`)}</dd></dl></article>`; }).join("");
+$("#optz").innerHTML = ["ax", "baybe", "physbo", "mcp"].map(id => card(byId[id])).join("");
+wireCards(document.body);
+
+/* section highlight */
+const links = $$(".lnav a"), io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("cur", a.getAttribute("href") === "#" + e.target.id)); }), { rootMargin: "-40% 0px -55% 0px" });
+$$(".layer").forEach(s => io.observe(s));
+</script>
+</body>
+</html>

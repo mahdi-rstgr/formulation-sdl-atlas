@@ -13,6 +13,7 @@ export const CATEGORIES = [
   { id: "mixer", name: "Mixers", color: "var(--powder)" },
   { id: "station", name: "Balances & stations", color: "var(--ink-3)" },
   { id: "platform", name: "Integrated platforms", color: "var(--accent)" },
+  { id: "structure", name: "Workstations & mounting", color: "#c9a45c" },
 ];
 
 /* capability each device provides (used by the cell intelligence panel) */
@@ -33,6 +34,7 @@ export const ITEMS = [
   { id: "quantos", cat: "handler", sub: "Powder dispensers", name: "Mettler-Toledo Quantos", model: "quantos", dims: [0.33, 0.46, 0.64], src: ["table_3", "Quantos"], caps: ["powders", "weigh"], color: "#2F6FD6" },
   { id: "mt12", cat: "handler", sub: "Powder dispensers", name: "Coperion K-Tron MT12 micro-feeder", model: "screwFeeder", dims: [0.46, 0.26, 0.52], src: ["table_3", "MT12"], caps: ["powders"], color: "#7A5BB5" },
   { id: "vf1", cat: "handler", sub: "Powder dispensers", name: "3P Innovation VF1 vibratory feeder", model: "vibratory", dims: [0.32, 0.2, 0.36], src: ["table_3", "VF1"], caps: ["powders"], color: "#7A5BB5" },
+  { id: "lab-formulator-pen-assembly", cat: "handler", sub: "Liquid dispensers", name: "Formulator Pen (lab-built)", model: "mesh:lab-formulator-pen-assembly", price: "Lab-built", tool: true, caps: ["liquids"], note: "Lab-made liquid-dispensing tool, tessellated from its CAD assembly. Drop it near a CNC dock slot." },
   // motion providers
   { id: "cnc4040", cat: "motion", sub: "Gantry + tool dock", name: "Genmitsu 4040-PRO CNC + tool dock", model: "mesh:cnc", dock: true, src: ["table_2", "4040-PRO"], note: "Real mesh from the formulation-cell twin with a three-slot tool dock in front. Drop a pen, powder dispenser or pipette near a slot to dock it." },
   { id: "jubilee", cat: "motion", sub: "Tool-changer", name: "Jubilee tool-changer", model: "jubilee", dims: [0.56, 0.56, 0.62], src: ["table_2", "Jubilee"], color: "#C27A1E" },
@@ -48,6 +50,7 @@ export const ITEMS = [
   { id: "lite6", cat: "arm", sub: "6-DOF articulated", name: "UFACTORY Lite 6", model: "arm:lite6", src: ["table_2", "Lite 6"], reach: 0.44, caps: ["move"], note: "Real UFACTORY Lite 6 mesh (BSD-3)." },
   { id: "fr3", cat: "arm", sub: "7-DOF collaborative", name: "Franka Research 3", model: "arm7", dims: [0.25, 0.25, 0.95], src: ["table_2", "Franka Research 3"], reach: 0.855, caps: ["move"], color: "#F4F4F4" },
   { id: "gen3", cat: "arm", sub: "7-DOF collaborative", name: "Kinova Gen3", model: "arm7", dims: [0.2, 0.2, 0.95], src: ["table_2", "Gen3"], reach: 0.902, caps: ["move"], color: "#4A4F57" },
+  { id: "mcm-9198n23", cat: "arm", sub: "Delta robot", name: "McMaster-Carr delta robot (9198N23)", model: "mesh:mcm-9198n23", price: "See vendor", reach: 0.5, caps: ["move"], overhead: true, note: "Real McMaster-Carr CAD. Mount it in the 9198N17 safety enclosure: drop it onto the enclosure and it sits on top." },
   { id: "kmr", cat: "arm", sub: "Mobile manipulator", name: "KUKA KMR iiwa", model: "mobile", dims: [1.08, 0.63, 1.4], src: ["table_2", "KMR iiwa"], reach: 0.82, caps: ["move"], color: "#F28C28" },
   // mixers
   { id: "thinky", cat: "mixer", sub: "Planetary", name: "Planetary centrifugal mixer", model: "mesh:mixer", price: "Not in review", caps: ["mix"], note: "Real mesh of the formulation cell's planetary mixer." },
@@ -67,6 +70,15 @@ export const ITEMS = [
   { id: "echo", cat: "platform", sub: "Acoustic & drop dispensing", name: "Beckman Coulter Echo 525", model: "benchBox", dims: [0.75, 0.7, 0.55], style: { body: 0xe6e8eb, accent: 0xc8102e }, src: ["table_4", "Echo"], caps: ["liquids"] },
   { id: "idot", cat: "platform", sub: "Acoustic & drop dispensing", name: "Dispendix I.DOT", model: "benchBox", dims: [0.55, 0.5, 0.45], style: { body: 0xeef0f2, accent: 0x1f8a70 }, src: ["table_4", "I.DOT"], caps: ["liquids"] },
   { id: "chemspeed", cat: "platform", sub: "Formulation workstation", name: "Chemspeed workstation with SWILE / GDU-P", model: "liquidHandler", dims: [1.5, 0.85, 1.05], style: { body: 0xeceeef, frame: 0x2b2f35, accent: 0xe30613, cols: 6, rows: 3, ch: 1, screen: true, powder: true, vials: true }, src: ["table_3", "SWILE"], caps: ["powders", "liquids"], note: "Workstation body is illustrative; the review lists Chemspeed's SWILE / GDU-P powder dosing (quote only)." },
+  // workstations & mounting: real McMaster-Carr CAD (scripts/export_mcmaster.py). Anything dropped on them rests on top.
+  { id: "mcm-5204n11", cat: "structure", sub: "Workstation", name: "Robot workstation (McMaster 5204N11)", model: "mesh:mcm-5204n11", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD. Drop an arm or stations on it." },
+  { id: "mcm-5206n15", cat: "structure", sub: "Workstation", name: "High-capacity robot workstation (McMaster 5206N15)", model: "mesh:mcm-5206n15", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD." },
+  { id: "mcm-9351n11", cat: "structure", sub: "Workstation", name: "T-slotted robot workstation (McMaster 9351N11)", model: "mesh:mcm-9351n11", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD." },
+  { id: "mcm-6333n16", cat: "structure", sub: "Pedestal", name: "Robot pedestal (McMaster 6333N16)", model: "mesh:mcm-6333n16", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD. 0.61 m column; drop an arm on top." },
+  { id: "mcm-6333n117", cat: "structure", sub: "Pedestal", name: "Low robot riser (McMaster 6333N117)", model: "mesh:mcm-6333n117", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD." },
+  { id: "mcm-3814n21", cat: "structure", sub: "Pedestal", name: "Telescoping robot pedestal (McMaster 3814N21)", model: "mesh:mcm-3814n21", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD." },
+  { id: "mcm-3813n14", cat: "structure", sub: "Linear track", name: "Electric slide for UR arms (McMaster 3813N14)", model: "mesh:mcm-3813n14", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD. A 2.1 m seventh axis; drop a UR arm on the carriage." },
+  { id: "mcm-9198n17", cat: "structure", sub: "Enclosure", name: "Delta robot safety enclosure (McMaster 9198N17)", model: "mesh:mcm-9198n17", price: "See vendor", mount: true, frame: true, caps: ["mount"], note: "Real McMaster-Carr CAD. Drop the delta robot on it to hang it from the frame." },
 ];
 
 /* ============================================================== materials & primitives */

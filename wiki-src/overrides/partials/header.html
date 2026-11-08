@@ -1,4 +1,4 @@
-{#- Override of Material 9.8.1 partials/header.html: adds a "Back to atlas" link. -#}
+{#- Override of Material 9.8.1 partials/header.html: adds links back into the Benchloop platform. -#}
 {% set class = "md-header" %}
 {% if "navigation.tabs.sticky" in features %}
   {% set class = class ~ " md-header--shadow md-header--lifted" %}
@@ -32,10 +32,13 @@
         </div>
       </div>
     </div>
-    <a class="md-header__atlas" href="{{ base_url }}/../" title="Back to the interactive atlas" data-md-component="atlas-link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      <span>Atlas</span>
-    </a>
+    <nav class="md-header__bl" aria-label="Benchloop">
+      <a href="{{ base_url }}/../">Home</a>
+      <a href="{{ base_url }}/../parts/">Parts</a>
+      <a href="{{ base_url }}/../self-driving/">Self-driving</a>
+      <a href="{{ base_url }}/../atlas/">Atlas</a>
+      <a class="md-header__bl-cta" href="{{ base_url }}/../new-design/">Start designing</a>
+    </nav>
     {% if config.theme.palette %}
       {% if not config.theme.palette is mapping %}
         {% include "partials/palette.html" %}

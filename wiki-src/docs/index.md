@@ -14,7 +14,7 @@ hide:
 <p class="hero__pitch">How a self-driving lab doses liquids, pastes and powders, moves the containers that hold them, rehearses each step in a digital twin, and decides what to make next.</p>
 
 <div class="hero__actions" markdown>
-<a class="md-button md-button--primary" href="../">Open the atlas</a>
+<a class="md-button md-button--primary" href="../atlas/">Open the atlas</a>
 [Seven-step map](steps.md){ .md-button }
 [Figures](figures.md){ .md-button }
 </div>

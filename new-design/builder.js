@@ -3,6 +3,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { CATEGORIES, ITEMS, CAPS, buildModel, addDock } from "./catalog.js";
+import { TEMPLATES } from "../data/templates.js";
+import { cart as blCart, byId as P } from "../assets/bl.js";
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -35,20 +37,22 @@ const byId = Object.fromEntries(ITEMS.map(i => [i.id, i]));
 const money = (v, cur = "$") => cur + Math.round(v).toLocaleString("en-US");
 const fmt = p => p ? (p.lo === p.hi ? money(p.lo, p.cur) : `${money(p.lo, p.cur)}–${Math.round(p.hi).toLocaleString("en-US")}`) : "";
 
-/* ================================================================ thumbnails mode (used once to render builder/thumbs/*.png) */
+/* ================================================================ thumbnails mode: ?thumbs=1 renders all, ?thumbs=id,id renders some; results land in <pre id="thumbs-out"> for headless capture */
 if (new URLSearchParams(location.search).has("thumbs")) {
   const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setSize(320, 240); r.toneMapping = THREE.ACESFilmicToneMapping;
   const sc = new THREE.Scene(); sc.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), .04).texture;
   sc.add(new THREE.HemisphereLight(0xffffff, 0x445566, .8)); const l = new THREE.DirectionalLight(0xffffff, 1.6); l.position.set(2, -3, 4); sc.add(l);
   const cam = new THREE.PerspectiveCamera(30, 4 / 3, .01, 50); cam.up.set(0, 0, 1);
   window.__thumbs = {};
-  for (const it of ITEMS) {
+  const only = (new URLSearchParams(location.search).get("thumbs") || "").split(",").filter(x => x && x !== "1");
+  for (const it of ITEMS.filter(i => !only.length || only.includes(i.id))) {
     const m = await buildModel(it); m.userData.tick?.(1.3, .016); sc.add(m);
     const b = new THREE.Box3().setFromObject(m), c = b.getCenter(new THREE.Vector3()), s = b.getSize(new THREE.Vector3()).length();
     cam.position.set(c.x + s * .95, c.y - s * 1.35, c.z + s * .7); cam.lookAt(c); r.render(sc, cam);
     window.__thumbs[it.id] = r.domElement.toDataURL("image/png"); sc.remove(m);
   }
   window.__thumbsDone = true;
+  const out = document.createElement("pre"); out.id = "thumbs-out"; out.textContent = JSON.stringify(window.__thumbs); document.body.append(out); // read by headless --dump-dom
   throw new Error("thumbnail mode finished");
 }
 
@@ -118,7 +122,7 @@ async function add(id, x = null, y = null, opts = {}) {
     const disc = new THREE.Mesh(new THREE.CircleGeometry(it.reach, 96), new THREE.MeshBasicMaterial({ color: 0x5be3a0, transparent: true, opacity: .05, depthWrite: false })); disc.position.z = .0035; disc.userData.helper = true; group.add(disc); }
   const lab = document.createElement("div"); lab.className = "tag"; lab.innerHTML = `<b>${obj.no}</b><span>${esc(short(it.name))}</span>`; labelsEl.appendChild(lab); obj.label = lab;
   lab.addEventListener("click", () => select(obj));
-  if (it.tool) trySnap(obj); if (it.stack) rest(obj);
+  if (it.tool) { if (!trySnap(obj)) rest(obj); } else if (!opts.z) rest(obj);
   if (!opts.silent) { select(obj); refresh(); pulse(obj); }
   return obj;
 }
@@ -136,11 +140,18 @@ function trySnap(obj) {
       if (Math.hypot(w.x - obj.group.position.x, w.y - obj.group.position.y) < .14 && !placed.some(o => o !== obj && o.dockedTo === host && o.slot === k)) { obj.group.position.copy(w); obj.dockedTo = host; obj.slot = k; return true; } } }
   if (obj.group.position.z < .05) obj.group.position.z = 0; return false;
 }
-function rest(obj) { obj.group.position.z = 0; let top = 0; const p = obj.group.position;
-  for (const o of placed) { if (o === obj || byId[o.id].stack) continue; const b = boxOf(o); if (p.x > b.min.x && p.x < b.max.x && p.y > b.min.y && p.y < b.max.y) top = Math.max(top, b.max.z); }
-  obj.group.position.z = top; }
+function rest(obj) { const it = byId[obj.id], p = obj.group.position; let top = 0, on = null;
+  if (it.mount) { obj.onMount = null; return; }
+  for (const o of placed) { if (o === obj || o.dockedTo || byId[o.id].stack) continue; const io = byId[o.id];
+    if (!it.stack && !io.mount) continue;                       // devices stand on mounts; the cup stands on anything
+    const b = boxOf(o); if (p.x > b.min.x && p.x < b.max.x && p.y > b.min.y && p.y < b.max.y) {
+      let z = b.max.z; if (it.overhead && io.frame) { const h = boxOf(obj); z = b.max.z - (h.max.z - h.min.z) - .03; }
+      if (z > top) { top = z; on = o; } } }
+  if (!it.stack && !on && !obj.onMount) return;                 // keep a hand-set height unless it left a mount
+  p.z = top; obj.onMount = on; }
+function riders(host) { return placed.filter(o => o.onMount === host); }
 function boxOf(o) { const b = new THREE.Box3(); o.group.updateMatrixWorld(true); o.group.traverse(m => { if (m.isMesh && !m.userData.helper && m.geometry) { m.geometry.computeBoundingBox(); b.union(m.geometry.boundingBox.clone().applyMatrix4(m.matrixWorld)); } }); return b; }
-function afterMove(obj) { const it = byId[obj.id]; if (it.tool) trySnap(obj); if (it.stack) rest(obj); followDock(obj); refresh(); syncInspector(); }
+function afterMove(obj) { const it = byId[obj.id]; if (it.tool) { if (!trySnap(obj)) rest(obj); } else rest(obj); followDock(obj); for (const o of placed) if (o !== obj && (byId[o.id].stack || o.onMount)) rest(o); refresh(); syncInspector(); }
 function freeSpot(obj) {
   const others = placed.map(rect);
   for (let r = 0; r < Math.max(areaW, areaD) * 1.6; r += .1) for (let a = 0; a < 6.283; a += r ? .1 / r : 7) {
@@ -158,9 +169,9 @@ const snap = v => Math.round(v / .05) * .05;
 function analyse() {
   const Rr = placed.map(o => ({ o, r: rect(o), b: boxOf(o) })), out = { overlaps: [], outside: [], reach: [], covered: new Set(), footprint: 0 };
   for (let i = 0; i < Rr.length; i++) for (let j = i + 1; j < Rr.length; j++) { const a = Rr[i].o, b = Rr[j].o;
-    if (a.dockedTo === b || b.dockedTo === a || (a.dockedTo && a.dockedTo === b.dockedTo) || byId[a.id].stack || byId[b.id].stack) continue;
+    if (a.dockedTo === b || b.dockedTo === a || (a.dockedTo && a.dockedTo === b.dockedTo) || byId[a.id].stack || byId[b.id].stack || a.onMount === b || b.onMount === a || (a.onMount || null) !== (b.onMount || null)) continue; // different levels
     if (overlap(Rr[i].r, Rr[j].r)) out.overlaps.push([a, b]); }
-  for (const { o, r, b } of Rr) { if (r.some(p => Math.abs(p.x) > areaW / 2 + 1e-3 || Math.abs(p.y) > areaD / 2 + 1e-3)) out.outside.push(o); if (!o.dockedTo && !byId[o.id].stack) out.footprint += (b.max.x - b.min.x) * (b.max.y - b.min.y); }
+  for (const { o, r, b } of Rr) { if (r.some(p => Math.abs(p.x) > areaW / 2 + 1e-3 || Math.abs(p.y) > areaD / 2 + 1e-3)) out.outside.push(o); if (!o.dockedTo && !byId[o.id].stack && !o.onMount) out.footprint += (b.max.x - b.min.x) * (b.max.y - b.min.y); }
   const targets = Rr.filter(x => byId[x.o.id].cat !== "arm");
   for (const { o } of Rr) { const it = byId[o.id]; if (!it.reach) continue; const base = o.group.position, inR = [], outR = [];
     for (const { o: t, b } of targets) { const c = b.getCenter(new THREE.Vector3()); (Math.hypot(c.x - base.x, c.y - base.y) <= it.reach ? (inR.push(t), out.covered.add(t)) : outR.push(t)); }
@@ -236,11 +247,11 @@ if (renderer) {
   el.addEventListener("pointerdown", ev => {
     if (gizmo.axis) return;                                    // the gizmo handles its own drag
     const obj = pick(ev); if (!obj) { if (ev.button === 0) select(null); return; }
-    select(obj); const p = floorAt(ev); drag = { obj, dx: obj.group.position.x - p.x, dy: obj.group.position.y - p.y, moved: false };
+    select(obj); const p = floorAt(ev); drag = { obj, dx: obj.group.position.x - p.x, dy: obj.group.position.y - p.y, moved: false, riders: riders(obj).map(o => [o, o.group.position.x - obj.group.position.x, o.group.position.y - obj.group.position.y]) };
     controls.enabled = false; el.setPointerCapture(ev.pointerId);
   });
   el.addEventListener("pointermove", ev => {
-    if (drag) { const p = floorAt(ev); if (!p) return; const g = drag.obj.group; g.position.x = snap(p.x + drag.dx); g.position.y = snap(p.y + drag.dy); drag.moved = true; followDock(drag.obj); syncInspector(); tip.hidden = true; return; }
+    if (drag) { const p = floorAt(ev); if (!p) return; const g = drag.obj.group; g.position.x = snap(p.x + drag.dx); g.position.y = snap(p.y + drag.dy); drag.moved = true; followDock(drag.obj); for (const [o, rx, ry] of drag.riders) { o.group.position.x = g.position.x + rx; o.group.position.y = g.position.y + ry; followDock(o); } syncInspector(); tip.hidden = true; return; }
     const obj = gizmo.dragging ? null : pick(ev); setHover(obj);
     if (obj) { const it = byId[obj.id], r = view.getBoundingClientRect(); tip.hidden = false; tip.style.left = (ev.clientX - r.left + 14) + "px"; tip.style.top = (ev.clientY - r.top + 14) + "px";
       tip.innerHTML = `<b>#${obj.no} ${esc(it.name)}</b><span>${esc(it.sub)} · ${esc(it.price ? fmt(it.price) : it.priceRaw)}${it.reach ? ` · reach ${it.reach} m` : ""}</span>`; }
@@ -297,7 +308,7 @@ function refresh() {
   const tot = {}; let quote = 0;
   for (const o of rows) { const it = byId[o.id]; if (it.price) { const c = it.price.cur; tot[c] ??= { lo: 0, hi: 0 }; tot[c].lo += it.price.lo; tot[c].hi += it.price.hi; } else quote++; }
   $("#cart-lines").innerHTML = rows.length ? rows.map(o => { const it = byId[o.id]; return `<tr data-no="${o.no}" class="${selected === o ? "sel" : ""}">
-      <td class="no">${o.no}</td><td><span class="sw" style="background:${CATEGORIES.find(c => c.id === it.cat).color}"></span>${esc(short(it.name))}<div class="sub">${esc(it.sub)} ${linkRefs(it.ref)}${o.dockedTo ? ` · on #${o.dockedTo.no}` : ""}</div></td>
+      <td class="no">${o.no}</td><td><span class="sw" style="background:${CATEGORIES.find(c => c.id === it.cat).color}"></span>${esc(short(it.name))}<div class="sub">${esc(it.sub)} ${linkRefs(it.ref)}${o.dockedTo ? ` · on #${o.dockedTo.no}` : ""}${o.onMount ? ` · on #${o.onMount.no}` : ""}${P[it.id]?.url ? ` · <a href="${P[it.id].url}" target="_blank" rel="noopener">vendor</a>` : ""}</div></td>
       <td class="num">${it.price ? fmt(it.price) : `<span class="q">${esc(it.priceRaw)}</span>`}</td></tr>`; }).join("")
     : `<tr><td colspan="3" class="empty">Drag devices from the banner into the workstation. The cart prices them as you go.</td></tr>`;
   $$("#cart-lines tr[data-no]").forEach(r => { const o = placed.find(p => p.no === +r.dataset.no);
@@ -354,13 +365,6 @@ $("#scrollL").onclick = () => $("#cards").scrollBy({ left: -600, behavior: "smoo
 $("#scrollR").onclick = () => $("#cards").scrollBy({ left: 600, behavior: "smooth" });
 
 /* ================================================================ layouts */
-const TEMPLATES = {
-  sfl: { w: 3, d: 2, items: [["cnc4040", .6, .3, 0, 0, 0, 0], ["ecopen", 0, 0, 0, 0, 0, 0, "dock0"], ["powder-hapd", 0, 0, 0, 0, 0, 0, "dock1"], ["balance", .55, -.55, 0, 0, 0, 0], ["ur5e", -.1, -.15, 0, 0, 0, 0], ["thinky", -.75, .3, 0, 0, 0, 0], ["characterizer", -.8, -.55, 0, 0, 0, 0], ["cup", .55, -.55, 0, 0, 0, 0]] },
-  liquid: { w: 3.5, d: 2, items: [["flex", -.95, .35, 0, 0, 0, 0], ["ur5e", .1, 0, 0, 0, 0, 0], ["balance", .75, -.45, 0, 0, 0, 0], ["vortex", .7, .45, 0, 0, 0, 0], ["characterizer", 1.25, .1, 0, 0, 0, 0], ["hamilton-psd4", -.3, -.7, 0, 0, 0, 0]] },
-  powder: { w: 3, d: 2, items: [["quantos", -.85, .45, 0, 0, 0, 0], ["mt12", -.9, -.45, 0, 0, 0, 0], ["ultimus", .85, .45, 0, 0, 0, 0], ["lite6", 0, 0, 0, 0, 0, 0], ["thinky", .85, -.45, 0, 0, 0, 0], ["characterizer", .1, .7, 0, 0, 0, 0]] },
-  platforms: { w: 6, d: 3, items: [["star", -1.7, .7, 0, 0, 0, 0], ["fluent", 1.4, .8, 0, 0, 0, 0], ["kmr", 0, -.4, 0, 0, 0, 0], ["chemspeed", -1.6, -.85, 0, 0, 0, 0], ["bravo", 1.0, -.9, 0, 0, 0, 0], ["echo", 2.2, -.9, 0, 0, 0, 0]] },
-  empty: { w: 3, d: 2, items: [] },
-};
 async function load(layout) {
   for (const o of [...placed]) { scene.remove(o.group); o.label.remove(); } placed = []; nextNo = 1; select(null);
   areaW = layout.w || 3; areaD = layout.d || 2; $("#aw").value = areaW; $("#ad").value = areaD; drawArea();
@@ -369,7 +373,7 @@ async function load(layout) {
   const cnc = placed.find(o => byId[o.id].dock);
   for (const [o, dock] of made) if (dock && cnc) { const k = +dock.slice(4); o.dockedTo = cnc; o.slot = k; }
   for (const o of placed) followDock(o);
-  for (const o of placed) if (byId[o.id].stack) rest(o);
+  for (const o of placed) if (!byId[o.id].mount && !o.dockedTo) rest(o);
   if (layout.budget) $("#budget").value = layout.budget;
   refresh(); setView("iso");
 }
@@ -419,7 +423,36 @@ function loop() {
 
 /* ================================================================ boot */
 drawArea(); resize(); banner(); loop();
-let start = TEMPLATES.sfl;
-const h = location.hash.match(/#l=([A-Za-z0-9+/]+)/);
-if (h) { try { start = JSON.parse(atob(h[1])); } catch { } } else { const s = store.get("sfl-builder-v2"); if (s) { try { const j = JSON.parse(s); if (j.items?.length) start = j; } catch { } } }
-await load(start);
+const Q = new URLSearchParams(location.search), h = location.hash.match(/#l=([A-Za-z0-9+/]+)/);
+let saved = null; { const s = store.get("sfl-builder-v2"); if (s) { try { const j = JSON.parse(s); if (j.items?.length) saved = j; } catch { } } }
+$("#template").innerHTML = `<option value="">Load a template…</option>` + Object.entries(TEMPLATES).map(([k, t]) => `<option value="${k}">${esc(t.name)}</option>`).join("");
+if (Q.get("t") && TEMPLATES[Q.get("t")]) await load(TEMPLATES[Q.get("t")]);
+else if (h) { let L = TEMPLATES.sfl; try { L = JSON.parse(atob(h[1])); } catch { } await load(L); }
+else if (Q.get("add")) { await load(Q.has("fresh") || !saved ? TEMPLATES.empty : saved); for (const id of Q.get("add").split(",")) if (byId[id]) await add(id); toast("Added from the parts library. Drag it where it belongs."); }
+else { await load(saved || TEMPLATES.sfl); startScreen(!!saved); }
+if (Q.toString()) history.replaceState(null, "", location.pathname + location.hash);
+
+/* ================================================================ start screen (like a "new design" chooser) */
+function startScreen(hasSaved) {
+  const el = document.createElement("div"); el.className = "start"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Start a design");
+  const total = t => { let lo = 0; for (const [id] of t.items) { const it = byId[id]; if (it?.price && it.price.cur === "$") lo += it.price.lo; } return lo; };
+  el.innerHTML = `<div class="start-in"><div class="start-h"><div><p class="k">New design</p><h2>How do you want to start?</h2></div><button type="button" class="x" aria-label="Close">✕</button></div>
+    <div class="start-g">
+      ${hasSaved ? `<button type="button" class="opt hl" data-k="__saved"><b>Continue your design</b><span>${saved.items.length} parts, saved in this browser</span></button>` : ""}
+      <button type="button" class="opt" data-k="empty"><b>Blank workstation</b><span>A 3 × 2 m floor and the whole library</span></button>
+      ${Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => `<button type="button" class="opt" data-k="${k}"><div class="ims">${[...new Set(t.items.map(i => i[0]))].slice(0, 3).map(id => `<img src="thumbs/${id}.png" alt="" onerror="this.remove()">`).join("")}</div><b>${esc(t.name)}</b><span>${t.items.length} parts · from ${money(total(t))}</span></button>`).join("")}
+    </div><p class="fine">Every template is a starting point. Swap any part, check the cell, then send it to your cart.</p></div>`;
+  document.body.append(el);
+  const close = () => el.remove();
+  el.addEventListener("click", async e => { if (e.target === el || e.target.closest(".x")) return close(); const b = e.target.closest("[data-k]"); if (!b) return;
+    close(); if (b.dataset.k !== "__saved") await load(TEMPLATES[b.dataset.k]); });
+  addEventListener("keydown", function k(e) { if (e.key === "Escape") { close(); removeEventListener("keydown", k); } });
+  el.querySelector(".opt").focus();
+}
+
+/* ================================================================ send the design to the shared Benchloop cart */
+$("#tocart").addEventListener("click", () => {
+  const counts = {}; for (const o of placed) if (P[o.id]) counts[o.id] = (counts[o.id] || 0) + 1;
+  if (!Object.keys(counts).length) { toast("Place a few parts first."); return; }
+  blCart.replace(counts); location.href = "../cart/";
+});

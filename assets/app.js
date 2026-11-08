@@ -3,7 +3,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const REFS = "wiki/references/#ref-";
+const REFS = "../wiki/references/#ref-";
 const linkRefs = s => esc(s).replace(/\[([\d,\s–-]+)\]/g, (_, list) =>
   "[" + list.split(",").map(n => n.trim()).map(n => /^\d+$/.test(n) ? `<a class="ref" href="${REFS}${n}">${n}</a>` : n).join(", ") + "]");
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -29,7 +29,7 @@ function parseRep(s) {
   return n.length ? Math.max(...n.filter(x => x < 5).slice(0, 2)) : null;
 }
 
-const R = await (await fetch("data/review.json")).json();
+const R = await (await fetch("../data/review.json")).json();
 
 /* ================================================================ twin */
 const view = $("#view");
@@ -70,7 +70,7 @@ let segs = [], segIndex = [], showBoxes = false, focusName = "overview", camGoal
 const cache = {};
 async function loadArm(arm) {
   $("#hud-meta").textContent = "Loading " + arm.toUpperCase() + "…";
-  S = cache[arm] ??= await (await fetch(`data/twin/${arm}.json`)).json();
+  S = cache[arm] ??= await (await fetch(`../data/twin/${arm}.json`)).json();
   if (world) scene3.remove(world);
   world = new THREE.Group(); scene3.add(world); devGroups = {}; boxHelpers = [];
   for (const d of S.devices) {

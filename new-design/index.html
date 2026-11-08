@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Formulation Lab Builder</title>
-<meta name="description" content="Design a self-driving formulation lab in 3D: drag dispensers, gantries, robot arms, mixers and platforms into a workstation, watch them run, check reach and capabilities, and price the cart with list prices from the review.">
+<title>New design · Benchloop</title>
+<meta name="description" content="Benchloop New design: lay out a self-driving lab in 3D from every maker's parts, including McMaster-Carr workstations, watch it run, check reach and capabilities, and send the parts list to a cart that refers you to each vendor.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,23 +14,18 @@
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="../"><span class="logo" aria-hidden="true"></span>Formulation SDL Atlas</a>
+  <a class="brand" href="../" aria-label="Benchloop home"><svg class="bl-logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27.5h26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M22.4 8.6A8.4 8.4 0 1 0 24.4 15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M21.6 12.9l2.9 2.6 2.6-2.9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="15" r="2.6" fill="#e4531b"/></svg>Benchloop</a>
   <span class="slash">/</span>
-  <h1>Lab Builder</h1>
+  <h1>New design</h1>
   <span class="live"><i></i>Live simulation</span>
   <div class="bar-tools">
     <label for="template" class="sr">Load a template</label>
-    <select id="template">
-      <option value="">Load a template…</option>
-      <option value="sfl">Self-Formulating Lab cell</option>
-      <option value="liquid">Liquid-handling bench (Flex + UR5e)</option>
-      <option value="powder">Powder &amp; paste station</option>
-      <option value="platforms">Platform hall (STAR, Fluent, KMR)</option>
-      <option value="empty">Empty workstation</option>
-    </select>
+    <select id="template"></select>
     <button type="button" id="share">Share link</button>
     <button type="button" id="csv">Parts list CSV</button>
-    <a href="../wiki/" class="lnk">Wiki</a>
+    <a href="../parts/" class="lnk">Parts library</a>
+    <a href="../self-driving/" class="lnk">Self-driving layer</a>
+    <button type="button" id="tocart" class="tocart">Send to cart →</button>
   </div>
 </header>
 
@@ -38,7 +33,7 @@
   <div class="banner-top">
     <div id="cats" class="cats" role="group" aria-label="Device categories"></div>
     <label for="search" class="sr">Search devices</label>
-    <input id="search" type="search" placeholder="Search: powder, SCARA, Opentrons…">
+    <input id="search" type="search" placeholder="Search: powder, SCARA, Opentrons, pedestal…">
   </div>
   <div class="banner-row">
     <button type="button" class="scr" id="scrollL" aria-label="Scroll devices left">‹</button>
@@ -86,7 +81,7 @@
     <button type="button" id="collapse" class="collapse" aria-label="Show or hide the side panel">⟩</button>
     <div class="ptabs" role="tablist">
       <button type="button" role="tab" aria-selected="true" data-pane="pane-cart">Cart <span id="cart-count" class="pill">0</span></button>
-      <button type="button" role="tab" aria-selected="false" data-pane="pane-ai">✦ Cell intelligence</button>
+      <button type="button" role="tab" aria-selected="false" data-pane="pane-ai" id="intelligence">✦ Cell intelligence</button>
     </div>
     <div id="pane-cart" class="pane">
       <div class="table-wrap"><table class="lines"><thead><tr><th>#</th><th>Device</th><th class="num">List price</th></tr></thead><tbody id="cart-lines"></tbody></table></div>
@@ -96,7 +91,7 @@
         <label for="budget">Budget (USD)</label><input id="budget" type="number" min="0" step="1000" value="60000">
         <div class="bbar"><i id="budget-bar"></i></div><p id="budget-note"></p>
       </div>
-      <p class="fine">Prices are list prices from the review's Tables 2–4 (2026). Platform bodies are approximate shapes at approximate footprints; check vendor datasheets before planning a room.</p>
+      <p class="fine">Prices are list prices from the review's Tables 2–4 (2026). Platform bodies are approximate shapes at approximate footprints; McMaster-Carr parts and the Formulator Pen are real CAD. Check vendor datasheets before planning a room. <b>Send to cart</b> groups these parts by vendor with links to buy.</p>
     </div>
     <div id="pane-ai" class="pane" hidden>
       <h3>Capabilities</h3>
