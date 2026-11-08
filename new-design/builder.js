@@ -64,14 +64,14 @@ try {
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   view.appendChild(renderer.domElement);
 } catch { view.innerHTML = '<p class="nogl">The 3D workstation needs WebGL, which is turned off in this browser.</p>'; }
-const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0b0f14);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0F0F10);
 if (renderer) scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
 const camera = new THREE.PerspectiveCamera(36, 1, .02, 80); camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer?.domElement ?? view); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * .49; controls.minDistance = .4; controls.maxDistance = 14;
 scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x1a2230, .55));
 const key = new THREE.DirectionalLight(0xffffff, 1.9); key.position.set(2.5, -3.5, 5); key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: .5, far: 20 }); key.shadow.bias = -.0004; scene.add(key);
-const rim = new THREE.DirectionalLight(0x7ea8f2, .6); rim.position.set(-3, 4, 2.5); scene.add(rim);
+const rim = new THREE.DirectionalLight(0xE0679A, .5); rim.position.set(-3, 4, 2.5); scene.add(rim);
 
 // floor: shadow catcher, radial glow, rings, fine grid, workstation outline
 const floorPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
@@ -183,7 +183,7 @@ function analyse() {
 let selBox = null, hovBox = null;
 function select(obj) {
   selected = obj; if (selBox) { scene.remove(selBox); selBox = null; }
-  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0x7ea8f2); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
+  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0xE0679A); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
   $$(".tag").forEach(t => t.classList.toggle("sel", obj && t === obj.label));
   $$("#cart-lines tr[data-no]").forEach(r => r.classList.toggle("sel", obj && +r.dataset.no === obj.no));
   renderInspector();
@@ -450,7 +450,7 @@ function startScreen(hasSaved) {
   el.querySelector(".opt").focus();
 }
 
-/* ================================================================ send the design to the shared Benchloop cart */
+/* ================================================================ send the design to the shared Laboo cart */
 $("#tocart").addEventListener("click", () => {
   const counts = {}; for (const o of placed) if (P[o.id]) counts[o.id] = (counts[o.id] || 0) + 1;
   if (!Object.keys(counts).length) { toast("Place a few parts first."); return; }

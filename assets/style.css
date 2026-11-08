@@ -1,8 +1,8 @@
 /* Layout: a scroll story — text chapters on the left, a sticky digital-twin stage on the right;
    material classes keep one colour everywhere (liquid blue, semi-solid ochre, powder violet, object green). */
 :root{
-  --bg:#F4F6F8; --surface:#FFFFFF; --ink:#101A24; --ink-2:#44515E; --ink-3:#7B8794; --line:#DCE2E8;
-  --accent:#1F5FBF; --accent-ink:#FFFFFF; --stage:#E9EEF3;
+  --bg:#FAFAFA; --surface:#FFFFFF; --ink:#121212; --ink-2:#4A4A4A; --ink-3:#6B6B72; --line:#E4E4E7;
+  --accent:#8C1D40; --accent-ink:#FFFFFF; --stage:#E9EEF3;
   --liquid:#2C6FD1; --semi:#C27A1E; --powder:#7A5BB5; --object:#23906B;
   --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -10,12 +10,12 @@
   --r:6px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0D1218; --surface:#141B23; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#77838F; --line:#25303B;
-  --accent:#7EA8F2; --accent-ink:#0D1218; --stage:#0F161E;
+  --bg:#0F0F10; --surface:#18181B; --ink:#F4F4F5; --ink-2:#D4D4D8; --ink-3:#A1A1AA; --line:#27272A;
+  --accent:#E0679A; --accent-ink:#0F0F10; --stage:#141416;
   --liquid:#6EA2F0; --semi:#E0A35A; --powder:#A98CE0; --object:#5CC49E; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0D1218; --surface:#141B23; --ink:#E6ECF2; --ink-2:#AAB6C2; --ink-3:#77838F; --line:#25303B;
-  --accent:#7EA8F2; --accent-ink:#0D1218; --stage:#0F161E;
+  --bg:#0F0F10; --surface:#18181B; --ink:#F4F4F5; --ink-2:#D4D4D8; --ink-3:#A1A1AA; --line:#27272A;
+  --accent:#E0679A; --accent-ink:#0F0F10; --stage:#141416;
   --liquid:#6EA2F0; --semi:#E0A35A; --powder:#A98CE0; --object:#5CC49E; color-scheme:dark}
 
 *{box-sizing:border-box}

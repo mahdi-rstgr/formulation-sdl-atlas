@@ -1,10 +1,12 @@
-# Benchloop
+# Laboo
 
 **Build the bench. Close the loop.**
 
+Laboo is black and beet: a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`, deep berry `#7A1A3B`) by default, and a light editorial theme (off-white `#FAFAFA`, deep beetroot `#8C1D40`) behind the header toggle. Text uses Google Fonts: Bricolage Grotesque, IBM Plex Sans and IBM Plex Mono.
+
 **Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
-Benchloop is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Benchloop sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
+Laboo is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Laboo sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
 
 The structure follows [vention.com](https://vention.com), which does the same for factory automation but sells its own parts.
 
@@ -17,14 +19,18 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 | [`/self-driving/`](self-driving/) | Self-driving layer | Architecture (L1–L4); an orchestration picker built on Supplementary Table S1 that ranks the eight open-source systems by the functions you tick; the simulation fidelity ladder (Table 6); AI agent roles (Table 7) and optimizers |
 | [`/cart/`](cart/) | Cart | Grouped by vendor with "order or quote" links and a contacted checklist; totals; a self-driving readiness check (act, sense, decide and run) that suggests the lowest-priced part for each missing step; share link (`?c=id:qty,…`); CSV; import from the current design |
 | [`/atlas/`](atlas/) | Atlas | The original interactive review atlas with the live digital twin |
-| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Benchloop Learn |
+| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Laboo Learn |
 | `/builder/` | | Redirects to `/new-design/` so old share links keep working |
 
 ### Shared code
 
-- `data/catalog.js`: the single parts catalogue. It holds 79 parts (57 hardware, 22 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
+- `data/catalog.js`: the single parts catalogue. It holds 89 parts (57 hardware, 32 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
 - `data/templates.js`: the design templates used by the home page, Solutions and the design tool.
 - `assets/bl.css`, `assets/bl.js`: the design system and the shared runtime: header with mega menus, footer, a cart stored in `localStorage` and shared by every page, product cards and the product drawer.
+
+### Acceleration Consortium
+
+Lab-built devices (the Formulator Pen and the HAPD powder dispenser) and the Matter Lab's self-driving-lab tools (ChemOS 2.0, Atlas, Gryffin, Golem, Chimera, Olympus, Self-Building Labs, ORGANA, El Agente, La Agente Óptima) are listed with the Acceleration Consortium as provider. The cart groups them under one provider block.
 
 ### McMaster-Carr parts and lab CAD
 
@@ -104,8 +110,8 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 | Path | Content |
 |---|---|
-| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Benchloop pages (plain HTML and ES modules, no build) |
-| `assets/bl.css`, `assets/bl.js` | Benchloop design system and shared runtime |
+| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Laboo pages (plain HTML and ES modules, no build) |
+| `assets/bl.css`, `assets/bl.js` | Laboo design system and shared runtime |
 | `data/catalog.js`, `data/templates.js` | Parts catalogue and design templates |
 | `atlas/`, `assets/app.js`, `assets/style.css` | The atlas page (three.js 0.160 from unpkg) |
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1–7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |

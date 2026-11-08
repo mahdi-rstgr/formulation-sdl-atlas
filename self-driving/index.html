@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Self-driving layer · Benchloop</title>
+<title>Self-driving layer · Laboo</title>
 <meta name="description" content="Make a lab cell decide for itself: compare eight open-source orchestration systems by the functions you need, choose simulators on a four-level fidelity ladder, and pick optimizers and AI agent roles with human checkpoints.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,7 +52,7 @@
 .mx td.fn{min-width:240px}
 .mx td.fn label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .mx td.fn input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px;flex:none}
-.mx tr.need td{background:#fdf3ec}
+.mx tr.need td{background:var(--accent-soft)}
 .mx tr.need td.fn{font-weight:600}
 .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:14px 0 0;align-items:center}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink);vertical-align:-2px;margin-right:6px}
@@ -82,7 +83,7 @@
 .agent .au{display:flex;gap:4px}
 .agent .au i{flex:1;height:5px;border-radius:2px;background:var(--night-line)}
 .agent .au i.on{background:var(--night-ink)}
-.agent .au i.on.hi{background:var(--accent)}
+.agent .au i.on.hi{background:var(--night-accent)}
 .agent dl{margin:0;font-size:13.5px}
 .agent dt{font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--night-muted);margin-top:10px}
 .agent dd{margin:4px 0 0;color:var(--night-ink)}
@@ -93,7 +94,7 @@
 <main id="main">
 <section class="phero night on-night gridpaper dark" style="padding:72px 0 64px">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb" style="color:var(--night-muted)"><a href="../">Benchloop</a><span>/</span><span>Self-driving layer</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb" style="color:var(--night-muted)"><a href="../">Laboo</a><span>/</span><span>Self-driving layer</span></nav>
     <p class="eyebrow"><span class="tick"></span>Platform · Self-driving layer</p>
     <h1 class="display" style="max-width:13ch">Make the cell decide for itself.</h1>
     <p class="lede">A self-driving lab is hardware plus a closed loop: devices integrated into one workflow, rehearsed in a twin, and steered by models that choose the next experiment. Choose each layer here and add it to the same cart as your hardware.</p>
@@ -214,7 +215,7 @@ drawMx();
 /* ---------------- fidelity ladder (Table 6) */
 const T6 = R.table_6.rows;
 const TOOLID = { "Discrete-event simulation (e.g. SimPy)": "simpy", "Device emulators, SiLA 2 mocks": "sila2", "MoveIt 2 with RViz": "moveit2", "Vendor offline programming (URSim, RoboDK)": "robodk", "Gazebo": "gazebo", "MuJoCo": "mujoco", "PyBullet": "pybullet", "NVIDIA Isaac Sim": "isaacsim", "Isaac Lab": "isaaclab" };
-const LV = [["1", "Logic & timing", "Queues, device states and protocols. No geometry."], ["2", "Geometry & motion", "Kinematics, reach and collision checks. Benchloop's twin lives here."], ["3", "Contact dynamics", "Rigid bodies, grasping, sensors and learning."], ["4", "Material physics", "Fluids, granular flow and pastes. Hours per case."]];
+const LV = [["1", "Logic & timing", "Queues, device states and protocols. No geometry."], ["2", "Geometry & motion", "Kinematics, reach and collision checks. Laboo's twin lives here."], ["3", "Contact dynamics", "Rigid bodies, grasping, sensors and learning."], ["4", "Material physics", "Fluids, granular flow and pastes. Hours per case."]];
 $("#ladder").innerHTML = LV.map(([n, h, p]) => { const tools = T6.filter(t => String(t.Level).trim().startsWith(n) || (n === "4" && /\+4|3–4/.test(t.Level)));
   return `<div class="rung"><div class="lv"><b>${n}</b><span>LEVEL</span></div><div class="fill" style="--w:${25 * +n}%"></div><h3>${h}</h3><p>${p}</p>
     ${tools.map(t => { const id = TOOLID[t["Tool or class"]]; return `<div class="tool"><b>${esc(t["Tool or class"])}${id ? `<button type="button" data-add="${id}" aria-label="Add ${esc(t["Tool or class"])} to cart">+ Cart</button>` : ""}</b><span>${esc(t["Best SDL use"])} · <i>${esc(t["Main constraint"])}</i></span></div>`; }).join("")}</div>`; }).join("");

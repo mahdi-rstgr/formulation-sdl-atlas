@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cart · Benchloop</title>
-<meta name="description" content="Your Benchloop cart, split by vendor. Each maker gets its own block with a link to order or request a quote.">
+<title>Cart · Laboo</title>
+<meta name="description" content="Your Laboo cart, split by vendor. Each maker gets its own block with a link to order or request a quote.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -12,7 +13,7 @@
 <style>
 .cartgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;padding:36px 0 96px;align-items:start}
 .vend{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);margin-bottom:16px;overflow:hidden}
-.vend.done{border-color:#bcd9c8}
+.vend.done{border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
 .vend .vh{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .vend .vh .step{width:28px;height:28px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font:600 12px/1 var(--mono);flex:none}
 .vend.done .vh .step{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -23,7 +24,7 @@
 .vend .vh label input{accent-color:var(--ok);width:15px;height:15px}
 .line{display:grid;grid-template-columns:64px minmax(0,1fr) auto auto auto;gap:16px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line)}
 .line:last-child{border-bottom:0}
-.line .im{width:64px;height:52px;background:var(--paper);border-radius:6px;display:grid;place-items:center;overflow:hidden}
+.line .im{width:64px;height:52px;background:var(--plate);border-radius:6px;display:grid;place-items:center;overflow:hidden}
 .line .im img{max-width:90%;max-height:90%;object-fit:contain}
 .line .im .glyph{width:60%;height:60%;color:var(--line-2)}
 .line .nm b{display:block;font-weight:600}
@@ -52,17 +53,15 @@
 .ready li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--line);font-size:14px;list-style:none}
 .ready ul{padding:0;margin:0}
 .ready .ck{width:20px;height:20px;border-radius:50%;flex:none;display:grid;place-items:center;font:600 11px/1 var(--mono);margin-top:1px}
-.ready .ok .ck{background:#e3efe8;color:var(--ok)}
+.ready .ok .ck{background:var(--ok-soft);color:var(--ok)}
 .ready .miss .ck{background:var(--accent-soft);color:var(--accent-ink)}
 .ready .miss a{font-size:13px;font-weight:600;margin-left:auto;white-space:nowrap}
 .ready .grp{font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--muted);margin:14px 0 4px;text-transform:uppercase}
 .acts{display:flex;flex-direction:column;gap:8px}
 .acts .btn{justify-content:center}
-.imp{display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--ink);color:var(--paper);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;flex-wrap:wrap}
-.imp p{margin:0;color:#c9ccd0;font-size:14px}
-.imp b{color:var(--paper)}
-.imp .btn{border-color:var(--paper);color:var(--paper)}
-.imp .btn:hover{background:var(--paper);color:var(--ink)}
+.imp{display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--accent-soft);border:1px solid var(--accent);color:var(--ink);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;flex-wrap:wrap}
+.imp p{margin:0;color:var(--ink-2);font-size:14px}
+.imp b{color:var(--ink)}
 @media (max-width:980px){.cartgrid{grid-template-columns:1fr}.summary{position:static}}
 </style>
 </head>
@@ -70,10 +69,10 @@
 <main id="main">
 <section class="phero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Benchloop</a><span>/</span><span>Cart</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Laboo</a><span>/</span><span>Cart</span></nav>
     <p class="eyebrow"><span class="tick"></span>Your cart</p>
     <h1 class="h1">One cart. Each maker, one by one.</h1>
-    <p class="lede">Benchloop does not sell parts. Your cart is split by vendor: open each maker's page to order or request a quote, then tick it off. Published list prices are a guide; the vendor's quote is the price.</p>
+    <p class="lede">Laboo does not sell parts. Your cart is split by vendor: open each maker's page to order or request a quote, then tick it off. Published list prices are a guide; the vendor's quote is the price.</p>
   </div>
 </section>
 <div class="wrap cartgrid">
@@ -98,7 +97,7 @@
 import { mountChrome, cart, byId, PRODUCTS, CATS, esc, priceOf, fmtPrice, money, vendorOf, ICON, GLYPH, imgHTML, toast, ROOT } from "../assets/bl.js";
 mountChrome();
 const $ = s => document.querySelector(s);
-const DONE = "benchloop-contacted-v1";
+const DONE = "laboo-contacted-v1";
 const done = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE)) || []); } catch { return new Set(); } };
 const setDone = s => { try { localStorage.setItem(DONE, JSON.stringify([...s])); } catch { } };
 
@@ -122,7 +121,8 @@ function drawImport() {
 
 function groups() {
   const g = {};
-  for (const l of cart.all()) { const host = vendorOf(l.p), v = !host ? "~none" : /^(github\.com|pypi\.org)$/.test(host) ? `${host}/${l.p.id}` : host; (g[v] ??= { v, host, lines: [], brand: l.p.brand.split(" (")[0], url: l.p.url }).lines.push(l); }
+  for (const l of cart.all()) { const host = vendorOf(l.p), v = !host ? "~none" : l.p.vendor ? `v:${l.p.vendor}` : /^(github\.com|pypi\.org)$/.test(host) ? `${host}/${l.p.id}` : host;
+    const G = (g[v] ??= { v, hosts: new Set(), lines: [], brand: l.p.vendor || l.p.brand.split(" (")[0], url: l.p.url }); G.lines.push(l); if (host) G.hosts.add(host); }
   return Object.values(g).sort((a, b) => (a.v === "~none") - (b.v === "~none") || b.lines.length - a.lines.length || a.brand.localeCompare(b.brand));
 }
 function draw() {
@@ -137,7 +137,7 @@ function draw() {
       g.lines.forEach(l => { const v = priceOf(l.p); if (v) { lo += v.lo * l.qty; hi += v.hi * l.qty; cur = v.cur; } else q++; });
       const multi = new Set(g.lines.map(l => l.p.url)).size > 1;
       return `<article class="vend ${isDone ? "done" : ""}" data-v="${esc(g.v)}">
-        <div class="vh"><span class="step">${none ? "–" : isDone ? "✓" : k}</span><div><h3>${none ? "Lab-built &amp; generic" : esc(g.brand)}</h3><div class="dom">${none ? "No vendor link. Build or source locally." : esc(g.host)}</div></div>
+        <div class="vh"><span class="step">${none ? "–" : isDone ? "✓" : k}</span><div><h3>${none ? "Generic parts" : esc(g.brand)}</h3><div class="dom">${none ? "No vendor link. Build or source locally." : esc([...g.hosts].join(" · "))}</div></div>
           <div class="go">${none ? "" : `<label><input type="checkbox" data-done="${esc(g.v)}" ${isDone ? "checked" : ""}>Contacted</label><a class="btn btn-sm ${isDone ? "" : "btn-ink"}" href="${esc(g.lines[0].p.url)}" target="_blank" rel="noopener" data-visit="${esc(g.v)}">${multi ? "Open first page" : "Order or quote"} ${ICON.out}</a>`}</div></div>
         ${g.lines.map(l => { const v = priceOf(l.p);
           return `<div class="line"><div class="im">${imgHTML(l.p)}</div>
@@ -171,7 +171,7 @@ function draw() {
 }
 document.addEventListener("click", e => {
   const q = e.target.closest("[data-q]"); if (q) { cart.set(q.dataset.q, cart.qty(q.dataset.q) + +q.dataset.d); return; }
-  const r = e.target.closest("[data-rm]"); if (r) { const id = r.dataset.rm, n = cart.qty(id); cart.remove(id); toast(`Removed <b>${esc(byId[id].name)}</b> <button type="button" id="undo" style="background:none;border:0;color:#fff;text-decoration:underline;font-weight:600">Undo</button>`); $("#undo")?.addEventListener("click", () => cart.set(id, n)); return; }
+  const r = e.target.closest("[data-rm]"); if (r) { const id = r.dataset.rm, n = cart.qty(id); cart.remove(id); toast(`Removed <b>${esc(byId[id].name)}</b> <button type="button" id="undo" style="background:none;border:0;color:inherit;text-decoration:underline;font-weight:600">Undo</button>`); $("#undo")?.addEventListener("click", () => cart.set(id, n)); return; }
   const s = e.target.closest("[data-sugg]"); if (s) { e.preventDefault(); cart.add(s.dataset.sugg); toast(`Added <b>${esc(byId[s.dataset.sugg].name)}</b>`); return; }
   const v = e.target.closest("[data-visit]"); if (v) { const D = done(); D.add(v.dataset.visit); setDone(D); setTimeout(draw, 50); }
 });
@@ -182,11 +182,11 @@ $("#csv").onclick = () => {
   const rows = [["SKU", "Part", "Maker", "Category", "Qty", "List price (published)", "Vendor page", "Review refs"]];
   for (const l of cart.all()) rows.push([l.p.sku, l.p.name, l.p.brand, CATS.find(c => c.id === l.p.cat)?.name, l.qty, l.p.price, l.p.url, l.p.ref]);
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
-  a.download = "benchloop-cart.csv"; a.click(); toast("Parts list downloaded.");
+  a.download = "laboo-cart.csv"; a.click(); toast("Parts list downloaded.");
 };
 $("#toDesign").onclick = e => { const ids = cart.all().filter(l => l.p.design).flatMap(l => Array(l.qty).fill(l.p.id)); if (ids.length) { e.preventDefault(); location.href = `../new-design/?add=${ids.join(",")}&fresh=1`; } };
 $("#clear").onclick = () => { if (!cart.count()) return; const prev = Object.fromEntries(cart.all().map(l => [l.p.id, l.qty])); cart.clear();
-  toast(`Cart emptied <button type="button" id="undo" style="background:none;border:0;color:#fff;text-decoration:underline;font-weight:600">Undo</button>`); $("#undo")?.addEventListener("click", () => cart.replace(prev)); };
+  toast(`Cart emptied <button type="button" id="undo" style="background:none;border:0;color:inherit;text-decoration:underline;font-weight:600">Undo</button>`); $("#undo")?.addEventListener("click", () => cart.replace(prev)); };
 window.addEventListener("bl-cart", draw);
 draw();
 </script>

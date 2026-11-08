@@ -1,17 +1,17 @@
-/* Benchloop Learn (the wiki): visual identity matched to the Benchloop platform (assets/bl.css) */
+/* Laboo Learn (the wiki): visual identity matched to the Laboo platform (assets/bl.css) */
 @import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap");
 
 :root {
-  --ink: #141619;
-  --ink-2: #363A40;
-  --accent: #B8400F;
+  --ink: #121212;
+  --ink-2: #1F1F23;
+  --accent: #8C1D40;
   --mc-liquid: #2C6FD1;
   --mc-semi-solid: #C27A1E;
   --mc-powder: #7A5BB5;
   --mc-object: #23906B;
   --font-heading: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
   --card-bg: #FFFFFF;
-  --card-border: #DCD8CD;
+  --card-border: #E4E4E7;
   --zebra: rgba(16, 26, 36, 0.035);
   --muted: #5A6878;
 }
@@ -26,18 +26,19 @@
 }
 [data-md-color-accent="custom"] {
   --md-accent-fg-color: var(--accent);
-  --md-accent-fg-color--transparent: rgba(228, 83, 27, 0.1);
+  --md-accent-fg-color--transparent: rgba(140, 29, 64, 0.1);
   --md-accent-bg-color: #FFFFFF;
 }
 [data-md-color-scheme="default"] {
   --md-typeset-a-color: var(--accent);
-  --md-default-bg-color: #F7F5F0;
+  --md-default-bg-color: #FAFAFA;
 }
 [data-md-color-scheme="slate"] {
-  --accent: #F08A5D;
-  --md-typeset-a-color: #F08A5D;
-  --md-accent-fg-color: #F08A5D;
-  --md-accent-fg-color--transparent: rgba(240, 138, 93, 0.12);
+  --accent: #E0679A;
+  --md-typeset-a-color: #E0679A;
+  --md-accent-fg-color: #E0679A;
+  --md-accent-fg-color--transparent: rgba(224, 103, 154, 0.12);
+  --md-default-bg-color: #0F0F10;
   --md-default-bg-color: #0E151D;
   --md-default-bg-color--light: #131C26;
   --md-code-bg-color: #16212C;
@@ -223,11 +224,11 @@
   .md-typeset .step-cards { grid-template-columns: 1fr; }
 }
 
-/* Benchloop platform links in the header */
+/* Laboo platform links in the header */
 .md-header__bl { display: flex; align-items: center; gap: 0.1rem; margin: 0 0.4rem; }
 .md-header__bl a { color: rgba(255, 255, 255, 0.82); font-size: 0.66rem; font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 0.2rem; white-space: nowrap; }
 .md-header__bl a:hover, .md-header__bl a:focus { color: #fff; background: rgba(255, 255, 255, 0.1); }
-.md-header__bl .md-header__bl-cta { background: #E4531B; color: #fff; font-weight: 600; margin-left: 0.3rem; }
-.md-header__bl .md-header__bl-cta:hover { background: #B8400F; }
+.md-header__bl .md-header__bl-cta { background: #B82E5C; color: #fff; font-weight: 600; margin-left: 0.3rem; }
+.md-header__bl .md-header__bl-cta:hover { background: #7A1A3B; }
 @media screen and (max-width: 76.24em) { .md-header__bl a:not(.md-header__bl-cta) { display: none; } }
 @media screen and (max-width: 30em) { .md-header__bl { display: none; } }

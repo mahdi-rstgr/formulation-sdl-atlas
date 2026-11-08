@@ -1,5 +1,5 @@
-/* Benchloop catalogue: every part a scientist can put in a self-driving lab, with the vendor page we refer them to.
- * Benchloop sells nothing. The cart groups parts by vendor and links out, one vendor at a time.
+/* Laboo catalogue: every part a scientist can put in a self-driving lab, with the vendor page we refer them to.
+ * Laboo sells nothing. The cart groups parts by vendor and links out, one vendor at a time.
  *
  * Fields
  *   id      stable id; equals the 3D-model id in new-design/catalog.js when `design` is true
@@ -8,6 +8,7 @@
  *   price   list price string as published (review Tables 2-4, 2026) or "Quote" / "Open source" / "See vendor"
  *   spec    headline accuracy / repeatability / scope
  *   url     the vendor or project page the cart refers to
+ *   vendor  optional: groups parts in the cart under one provider when their links live on different hosts
  *   ref     reference numbers in the review (wiki/references/#ref-N)
  *   design  true if the part can be placed in the 3D design tool
  *   caps    capabilities it adds to a cell: liquids pastes powders weigh move mix characterize mount orchestrate simulate decide
@@ -37,7 +38,7 @@ export const PRODUCTS = [
   T({ id: "gilson-microman", name: "MICROMAN E M1000E", brand: "Gilson", cat: "liquid", sub: "Positive-displacement pipette", mat: ["liquid"], price: "$524–527", spec: "±3–8% accuracy; ≤0.5–4% imprecision", url: "https://www.gilson.com", ref: "61", caps: ["liquids"] }),
   T({ id: "hamilton-psd4", name: "PSD/4 syringe pump", brand: "Hamilton", cat: "liquid", sub: "Positive-displacement pump", mat: ["liquid"], price: "$400–500", spec: "±1% accuracy; ≤0.05% repeatability", url: "https://www.hamiltoncompany.com/knowledge-base/spec-sheet/psd-4-specification-sheet", ref: "62", design: true, caps: ["liquids"] }),
   T({ id: "qdos20", name: "Qdos 20 metering pump", brand: "Watson-Marlow", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "$4,248", spec: "±1% dosing accuracy; ±0.5% repeatability", url: "https://www.wmfts.com/en-us/brands/watson-marlow-peristaltic-pumps/cased-pumps/qdos-accurate-versatile-chemical-dosing-pumps/", ref: "63", design: true, caps: ["liquids"] }),
-  T({ id: "lab-formulator-pen-assembly", name: "Formulator Pen (lab-built)", brand: "Acceleration Consortium", cat: "liquid", sub: "Lab-built dispenser · CNC tool", mat: ["liquid"], price: "Lab-built", spec: "Liquid-dispensing tool for the CNC dock; real CAD", url: "", ref: "", design: true, caps: ["liquids"], note: "Lab-made tool from the formulation cell. Not sold; build files on request." }),
+  T({ id: "lab-formulator-pen-assembly", name: "Formulator Pen", brand: "Acceleration Consortium", cat: "liquid", sub: "Lab-built dispenser · CNC tool", mat: ["liquid"], price: "Lab-built", spec: "Liquid-dispensing tool for the CNC dock; real CAD", url: "https://acceleration.utoronto.ca/", vendor: "Acceleration Consortium", ref: "", design: true, caps: ["liquids"], note: "Built by the Acceleration Consortium for its formulation cell. Contact them about build files or collaboration." }),
   T({ id: "masterflex-ls", name: "Masterflex L/S Digital", brand: "Cole-Parmer / Avantor", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "$9,000", spec: "±0.1–0.25% speed-control accuracy", url: "https://www.fishersci.com/shop/products/masterflex-l-s-digital-precision-pump-systems-open-head-sensor-easy-load-head-4/11747346", ref: "64", caps: ["liquids"] }),
 
   // ---------------------------------------------------------------- paste & gel (Table 3)
@@ -54,7 +55,7 @@ export const PRODUCTS = [
   T({ id: "swile", name: "SWILE / GDU-P powder dosing", brand: "Chemspeed", cat: "powder", sub: "Screw / gravimetric dosing", mat: ["powder"], price: "Quote", spec: "±10 µg resolution", url: "https://www.chemspeed.com/crystal-swile/", ref: "71", caps: ["powders"] }),
   T({ id: "vf1", name: "VF1 vibratory feeder", brand: "3P Innovation", cat: "powder", sub: "Vibratory feeder", mat: ["powder"], price: "Quote", spec: "±1 mg dose accuracy", url: "https://www.3pinnovation.com/pharma-equipment/discover-range/vibratory-feeder", ref: "73", design: true, caps: ["powders"] }),
   T({ id: "eriez-hivi", name: "Hi-Vi Volumatic feeder", brand: "Eriez", cat: "powder", sub: "Vibratory feeder", mat: ["powder"], price: "Quote", spec: "Volumetric vibratory feeding", url: "https://www.eriez.com/Products/Sample-Preparation/Vibratory-Feeders/Volumatic-Feeder-Machine", ref: "74", caps: ["powders"] }),
-  T({ id: "powder-hapd", name: "HAPD powder dispenser (lab-built)", brand: "Acceleration Consortium", cat: "powder", sub: "Lab-built tool", mat: ["powder"], price: "Lab-built", spec: "Tool for the CNC dock of the formulation cell", url: "", ref: "", design: true, caps: ["powders"], note: "Not a commercial product. Shown so the reference cell is complete." }),
+  T({ id: "powder-hapd", name: "HAPD powder dispenser", brand: "Acceleration Consortium", cat: "powder", sub: "Lab-built tool", mat: ["powder"], price: "Lab-built", spec: "Tool for the CNC dock of the formulation cell", url: "https://acceleration.utoronto.ca/", vendor: "Acceleration Consortium", ref: "", design: true, caps: ["powders"], note: "Built by the Acceleration Consortium for its formulation cell. Contact them about build files or collaboration." }),
 
   // ---------------------------------------------------------------- robot arms (Table 2)
   T({ id: "drylin", name: "drylin XYZ gantry", brand: "igus", cat: "arm", sub: "Cartesian gantry", mat: ["object"], price: "$2,461", spec: "0.3–0.5 mm repeatability", url: "https://www.igus.com/automation/xyz-gantry", ref: "47", design: true, caps: ["move"] }),
@@ -131,8 +132,18 @@ export const PRODUCTS = [
   S({ id: "baybe", name: "BayBE", brand: "Merck KGaA (open source)", cat: "ai", sub: "Bayesian optimization", spec: "Chemistry-aware encodings and transfer learning", url: "https://github.com/emdgroup/baybe", ref: "", caps: ["decide"] }),
   S({ id: "physbo", name: "PHYSBO", brand: "ISSP, U. Tokyo (open source)", cat: "ai", sub: "Bayesian optimization", spec: "Fast Bayesian optimization used by NIMO", url: "https://github.com/issp-center-dev/PHYSBO", ref: "", caps: ["decide"] }),
   S({ id: "mcp", name: "Model Context Protocol", brand: "Open standard", cat: "ai", sub: "Agent ↔ device protocol", price: "Open standard", spec: "Lets AI agents call lab tools with human checkpoints", url: "https://modelcontextprotocol.io", ref: "171", caps: ["decide"] }),
+  // ---------------------------------------------------------------- Acceleration Consortium · Matter Lab (U of T) tools for self-driving labs
+  S({ id: "ac-chemos2", name: "ChemOS 2.0", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "orchestration", sub: "Orchestration architecture", price: "Research (paper)", spec: "Matter Lab orchestration architecture for chemical self-driving labs", url: "https://doi.org/10.1016/j.matt.2024.04.022", ref: "144", caps: ["orchestrate"], note: "The review left ChemOS 2.0 out of its comparison because it is a configuration that accompanies a publication rather than a general package. The original ChemOS code is at github.com/the-matter-lab/ChemOS." }),
+  S({ id: "ac-atlas", name: "Atlas", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Bayesian optimization", spec: "Matter Lab's experiment planner, built as “a brain for self-driving laboratories”", url: "https://github.com/the-matter-lab/atlas", ref: "", caps: ["decide"] }),
+  S({ id: "ac-gryffin", name: "Gryffin", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Bayesian optimization", spec: "Optimizes categorical choices such as which solvent or ligand", url: "https://github.com/the-matter-lab/gryffin", ref: "", caps: ["decide"] }),
+  S({ id: "ac-golem", name: "Golem", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Robust optimization", spec: "Finds conditions that stay good when inputs are noisy", url: "https://github.com/the-matter-lab/golem", ref: "", caps: ["decide"] }),
+  S({ id: "ac-chimera", name: "Chimera", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Multi-objective optimization", spec: "Ranks objectives by priority instead of weighting them", url: "https://github.com/the-matter-lab/chimera", ref: "", caps: ["decide"] }),
+  S({ id: "ac-olympus", name: "Olympus", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "simulation", sub: "Benchmarking", spec: "Benchmarks optimizers and experiment planners on noisy, realistic tasks", url: "https://github.com/the-matter-lab/olympus", ref: "", caps: ["simulate", "decide"] }),
+  S({ id: "ac-self-building-labs", name: "Self-Building Labs", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "simulation", sub: "Lab design · twin · skills", price: "Research (paper)", spec: "Builds the layout, digital twin, robot skills and workflows a scientific goal needs", url: "https://self-building-labs.github.io/", ref: "", caps: ["simulate"], note: "Works one step after Laboo's design tool: Laboo helps choose and buy the parts, Self-Building Labs turns a goal into a running cell." }),
+  S({ id: "ac-organa", name: "ORGANA", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Laboratory copilot", price: "Research (paper)", spec: "Robotic assistant that runs and characterizes chemistry experiments by conversation", url: "https://doi.org/10.1016/j.matt.2024.10.015", ref: "172", caps: ["decide"] }),
+  S({ id: "ac-el-agente", name: "El Agente", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "AI agent", price: "Research (paper)", spec: "Autonomous agent that plans and runs quantum-chemistry calculations", url: "https://doi.org/10.1016/j.matt.2025.102263", ref: "173", caps: ["decide"] }),
+  S({ id: "ac-optima", name: "La Agente Óptima", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Agentic SDL · recovery advisor", price: "Research (paper)", spec: "Agents for self-driving labs; gathers fault context and ranks recovery options", url: "https://doi.org/10.48550/arXiv.2609.04564", ref: "174", caps: ["decide"], note: "Benchmark data and audits: github.com/the-matter-lab/La-Agente-Optima-artifacts." }),
 ];
-
 /* ---------------------------------------------------------------- helpers shared by every page */
 export const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 PRODUCTS.forEach((p, i) => { p.sku = "BL-" + String(1001 + i); });

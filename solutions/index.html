@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Solutions · Benchloop</title>
+<title>Solutions · Laboo</title>
 <meta name="description" content="Self-driving lab solutions by material (liquids, pastes and gels, powders, objects), design templates to start from, and twenty published closed loops to learn from.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +27,7 @@
 .tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .tpl{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;text-decoration:none;transition:box-shadow .15s,transform .15s}
 .tpl:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.tpl .ph{aspect-ratio:16/9;background-color:var(--paper);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.tpl .ph{aspect-ratio:16/9;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .tpl .ph img{position:absolute;width:30%;height:auto;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}
 .tpl .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .tpl h3{font-size:19px}
@@ -38,7 +39,7 @@
 .loop .fig{font:500 11.5px/1 var(--mono);color:var(--night-muted);display:flex;justify-content:space-between;letter-spacing:.04em}
 .loop .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .loop .chain span{font:600 15px/1.2 var(--body);color:var(--night-ink)}
-.loop .chain i{font-style:normal;color:var(--accent)}
+.loop .chain i{font-style:normal;color:var(--night-accent)}
 .loop p{font-size:13px;color:var(--night-muted);margin:0;line-height:1.45}
 .loop a{color:var(--night-ink);font:500 12px/1 var(--mono)}
 .lf{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
@@ -51,7 +52,7 @@
 <main id="main">
 <section class="phero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Benchloop</a><span>/</span><span>Solutions</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Laboo</a><span>/</span><span>Solutions</span></nav>
     <p class="eyebrow"><span class="tick"></span>Solutions</p>
     <h1 class="h1">Start from what you formulate.</h1>
     <p class="lede">Viscosity, yield stress and powder flowability decide which mechanism doses an ingredient. Pick your material to see the technologies that work there, the parts that implement them and a cell to start from.</p>
@@ -102,7 +103,7 @@ wireCards($("#sols"));
 
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = Object.entries(TEMPLATES).map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-  return `<a class="tpl" href="../new-design/?t=${k}"><div class="ph gridpaper">${ids.map((id, i) => `<img src="../new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
+  return `<a class="tpl" href="../new-design/?t=${k}"><div class="ph gridpaper plate">${ids.map((id, i) => `<img src="../new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
     <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>${t.items.length ? `from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}` : "your choice"}</span></div></div></a>`; }).join("");
 
 const CLS = { liquid: ["Liquids", "liquid"], "semi-solid": ["Pastes & gels", "paste"], powder: ["Powders", "powder"] };

@@ -1,12 +1,12 @@
 # Changelog
 
-## 2026-11-08: Benchloop Learn
+## 2026-11-08: Laboo Learn
 
-The wiki is now **Benchloop Learn**, the knowledge base of [Benchloop](https://mahdi-rstgr.github.io/formulation-sdl-atlas/), a platform for designing self-driving labs from every maker's parts.
+The wiki is now **Laboo Learn**, the knowledge base of [Laboo](https://mahdi-rstgr.github.io/formulation-sdl-atlas/), a platform for designing self-driving labs from every maker's parts.
 
 - The header links back to the platform: home, parts library, self-driving layer, atlas and the design tool.
 - The interactive atlas moved to [`/atlas/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/atlas/) and the Lab Builder to [`/new-design/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/new-design/). Old `/builder/` links redirect.
-- Colours follow the platform: ink header, warm paper background and a reagent-orange accent.
+- Colours follow the platform: a black header and beet accents (deep beetroot in light mode, vibrant beet in dark mode).
 - The content is unchanged.
 
 ## 2026-11-07 (second update): All figures and a new interface

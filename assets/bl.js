@@ -1,4 +1,4 @@
-/* Benchloop shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
+/* Laboo shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
  * Every page loads it as a module. Paths are resolved from this file, so pages at any depth work. */
 import { CATS, PRODUCTS, byId, parsePrice, vendorOf } from "../data/catalog.js";
 export { CATS, PRODUCTS, byId, parsePrice, vendorOf };
@@ -14,7 +14,7 @@ export const refLinks = s => String(s || "").split(",").map(n => n.trim()).filte
 export const MAT = { liquid: ["Liquids", "var(--liquid)"], paste: ["Pastes & gels", "var(--paste)"], powder: ["Powders", "var(--powder)"], object: ["Objects", "var(--object)"] };
 
 /* ================================================================ cart store (localStorage, shared by every page) */
-const KEY = "benchloop-cart-v1";
+const KEY = "laboo-cart-v1";
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
 const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch { } window.dispatchEvent(new CustomEvent("bl-cart")); };
 export const cart = {
@@ -113,7 +113,7 @@ export function openProduct(id, push = true) {
         <tr><th>Type</th><td>${esc(p.sub)}</td></tr>
         <tr><th>Headline spec</th><td>${esc(p.spec)}</td></tr>
         <tr><th>List price</th><td>${priceTag(p)}${priceOf(p) ? ' <span class="fine">as published, 2026</span>' : ""}</td></tr>
-        <tr><th>Sold by</th><td>${v ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(v)}</a>` : "Not sold. Lab-built or generic."}</td></tr>
+        <tr><th>${p.kind === "software" ? "Provided by" : "Sold by"}</th><td>${p.vendor ? `${esc(p.vendor)} · ` : ""}${v ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(v)}</a>` : "Not sold. Generic part."}</td></tr>
         ${p.ref ? `<tr><th>Evidence</th><td>${refLinks(p.ref)}</td></tr>` : ""}
         ${p.mcm ? `<tr><th>McMaster part</th><td class="mono">${p.mcm} <span class="fine">· 3D model from McMaster-Carr CAD</span></td></tr>` : ""}
       </table>
@@ -123,7 +123,7 @@ export function openProduct(id, push = true) {
         ${p.design ? `<a class="btn" href="${ROOT}new-design/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
         ${p.url ? `<a class="btn btn-ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Vendor page ${ICON.out}</a>` : ""}
       </div>
-      <p class="fine" style="margin-top:22px">Benchloop does not sell this part. The cart sends you to ${v ? esc(v) : "the maker"} to buy it or request a quote.</p>
+      <p class="fine" style="margin-top:22px">Laboo does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
     </div>`;
   document.body.append(scrim, d);
   const close = () => closeDrawer();
@@ -149,7 +149,7 @@ export function toast(html, href, label) {
 
 /* ================================================================ header + footer */
 const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 27.5h26" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M22.4 8.6A8.4 8.4 0 1 0 24.4 15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M21.6 12.9l2.9 2.6 2.6-2.9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="15" r="2.6" fill="var(--accent)"/></svg>`;
-export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Benchloop home">${LOGO}Benchloop</a>`;
+export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Laboo home">${LOGO}Laboo</a>`;
 
 function menus() {
   const R = ROOT;
@@ -171,7 +171,7 @@ function menus() {
       { feature: true, h: "New: McMaster-Carr structure", links: [[`${R}parts/?cat=structure`, "Workstations, pedestals & slides", "Real CAD you can drop into a design"]] },
     ] },
     { id: "learn", label: "Learn", cols: [
-      { h: "Knowledge base", links: [[`${R}wiki/`, "SDL wiki", "Materials, hardware, simulation, AI"], [`${R}wiki/hardware/`, "Hardware guides", "Dispensers, platforms, cost vs. accuracy"], [`${R}wiki/references/`, "178 references", "Every number on Benchloop is cited"]] },
+      { h: "Knowledge base", links: [[`${R}wiki/`, "SDL wiki", "Materials, hardware, simulation, AI"], [`${R}wiki/hardware/`, "Hardware guides", "Dispensers, platforms, cost vs. accuracy"], [`${R}wiki/references/`, "178 references", "Every number on Laboo is cited"]] },
       { h: "Research", links: [[`${R}atlas/`, "The atlas", "Seven questions, one live twin"], [`${R}wiki/orchestration/open-source/`, "Orchestration comparison", "Supplementary Table S1"], [`${R}#model`, "Why we don't sell parts", "How the cart refers you to makers"]] },
     ] },
   ];
@@ -187,6 +187,7 @@ export function mountChrome(current = "") {
         <div class="mega" id="mega-${m.id}"><div class="wrap cols">${m.cols.map(c => `<div class="${c.feature ? "feature" : ""}"><h4>${c.h}</h4>${c.links.map(([href, b, s]) => `<a href="${href}"><b>${esc(b)}</b><span>${esc(s)}</span></a>`).join("")}</div>`).join("")}</div></div></div>`).join("")}
     </nav>
     <div class="right">
+      <button type="button" class="themebtn" id="bl-theme" aria-label="Switch theme"></button>
       <a class="cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="lbl">Cart</span><span class="n" id="bl-cart-n">0</span></a>
       <a class="btn btn-accent btn-sm" href="${ROOT}new-design/">Start designing</a>
       <button type="button" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="bl-nav">${ICON.menu}</button>
@@ -216,6 +217,12 @@ export function mountChrome(current = "") {
     </div>
     <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (Acceleration Consortium, University of Toronto, 2026).</span><span>Product names are trademarks of their owners. Prices are published list prices; vendors quote the final price.</span></div></div>`;
   document.body.append(f);
+
+  // theme: dark (black + vibrant beet) by default, light editorial on request; remembered per browser
+  const tb = $("#bl-theme", h), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
+  const paint = () => { const t = document.documentElement.dataset.theme || "dark"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
+  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("laboo-theme", t); } catch { } paint(); };
+  paint();
 
   const upd = () => { const n = cart.count(), el = $("#bl-cart-n"); if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };
   window.addEventListener("bl-cart", upd); window.addEventListener("storage", e => { if (e.key === KEY) { upd(); window.dispatchEvent(new CustomEvent("bl-cart")); } }); upd();

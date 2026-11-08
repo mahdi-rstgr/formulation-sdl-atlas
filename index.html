@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Benchloop · Design your self-driving lab</title>
-<meta name="description" content="Benchloop is where scientists design self-driving labs: explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, then buy each part from the people who make it.">
-<meta property="og:title" content="Benchloop · Build the bench. Close the loop.">
+<title>Laboo · Design your self-driving lab</title>
+<meta name="description" content="Laboo is where scientists design self-driving labs: explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, then buy each part from the people who make it.">
+<meta property="og:title" content="Laboo · Build the bench. Close the loop.">
 <meta property="og:description" content="Design a self-driving lab from every maker's parts, then buy each one straight from its maker.">
 <meta property="og:image" content="figures/graphical_abstract.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -25,14 +26,14 @@
 .hero .meta b{font:700 28px/1 var(--display);letter-spacing:-.02em}
 .hero .meta span{font:500 12px/1.2 var(--mono);color:var(--muted);letter-spacing:.02em}
 /* exploded bench */
-.bench{position:relative;aspect-ratio:1/0.86;border:1px solid var(--line);border-radius:14px;background-color:var(--card);margin-bottom:40px}
-.bench .plate{position:absolute;inset:auto 5% 12% 5%;height:30%;transform:skewX(-14deg);border:1px solid var(--line-2);border-radius:6px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(235,232,223,.6))}
+.bench{position:relative;aspect-ratio:1/0.86;border:1px solid var(--line);border-radius:14px;background-color:var(--plate);--line:var(--plate-line);margin-bottom:40px}
+.bench .plate{position:absolute;inset:auto 5% 12% 5%;height:30%;transform:skewX(-14deg);border:1px solid rgba(18,18,18,.12);border-radius:6px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(235,232,223,.6))}
 .bench .it{position:absolute;display:block;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
 .bench .it img{width:100%;height:auto;filter:drop-shadow(0 14px 14px rgba(20,22,25,.14))}
-.bench .it .no{position:absolute;top:2%;left:4%;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font:600 11.5px/24px var(--mono);text-align:center;box-shadow:0 0 0 3px var(--card)}
+.bench .it .no{position:absolute;top:2%;left:4%;width:24px;height:24px;border-radius:50%;background:#121212;color:#fff;font:600 11.5px/24px var(--mono);text-align:center;box-shadow:0 0 0 3px var(--plate)}
 .bench .it:hover{transform:translateY(-6px)}
 .bench .it:hover .no{background:var(--accent)}
-.bench .bom{position:absolute;right:-18px;bottom:-40px;width:min(42%,240px);z-index:3;background:var(--card);border:1px solid var(--line-2);border-radius:10px;padding:12px 12px 10px;box-shadow:var(--shadow);font-size:12.5px}
+.bench .bom{--line:color-mix(in srgb,var(--ink) 14%,transparent);color:var(--ink);position:absolute;right:-18px;bottom:-40px;width:min(42%,240px);z-index:3;background:var(--card);border:1px solid var(--line-2);border-radius:10px;padding:12px 12px 10px;box-shadow:var(--shadow);font-size:12.5px}
 .bench .bom h4{font:500 10.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;justify-content:space-between}
 .bench .bom ol{list-style:none;margin:0;padding:0}
 .bench .bom li{display:grid;grid-template-columns:18px 1fr auto;gap:6px;padding:4px 0;border-top:1px solid var(--line);align-items:baseline}
@@ -40,7 +41,7 @@
 .bench .bom li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bench .bom li b{font:500 11px/1 var(--mono);color:var(--ink-2)}
 .bench .bom .tot{display:flex;justify-content:space-between;border-top:1px solid var(--ink);padding-top:7px;margin-top:4px;font:600 12px/1 var(--mono)}
-.bench .badge{position:absolute;left:3.5%;bottom:4%;z-index:3;display:flex;align-items:center;gap:8px;font:500 11.5px/1 var(--mono);color:var(--ink-2);background:var(--card);border:1px solid var(--line-2);padding:7px 10px;border-radius:999px}
+.bench .badge{background:#fff!important;color:#121212!important;border-color:rgba(18,18,18,.15)!important;position:absolute;left:3.5%;bottom:4%;z-index:3;display:flex;align-items:center;gap:8px;font:500 11.5px/1 var(--mono);color:var(--ink-2);background:var(--card);border:1px solid var(--line-2);padding:7px 10px;border-radius:999px}
 .bench .badge i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(46,138,95,.18);animation:pulse 1.8s infinite}
 @keyframes pulse{50%{opacity:.35}}
 @media (max-width:900px){.hero .grid{grid-template-columns:minmax(0,1fr)}.bench{max-width:620px}}
@@ -108,10 +109,10 @@
 .cats a b{font:700 19px/1.15 var(--display);letter-spacing:-.01em;margin-top:auto}
 .cats a span{font-size:13.5px;color:var(--muted);line-height:1.4}
 .cats a .n{position:absolute;right:18px;top:20px;font:500 12px/1 var(--mono);color:var(--muted)}
-.cats a.hl{background:var(--ink);color:var(--paper)}
-.cats a.hl .glyph,.cats a.hl b{color:var(--paper)}
-.cats a.hl span,.cats a.hl .n{color:#a9adb3}
-.cats a.hl:hover{background:var(--ink-2)}
+.cats a.hl{background:var(--accent);color:#fff}
+.cats a.hl .glyph,.cats a.hl b{color:#fff}
+.cats a.hl span,.cats a.hl .n{color:rgba(255,255,255,.8)}
+.cats a.hl:hover{background:var(--berry)}
 @media (max-width:1000px){.cats{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:700px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
@@ -119,7 +120,7 @@
 .tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:16px}
 .tpl{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;text-decoration:none;transition:box-shadow .15s,transform .15s}
 .tpl:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
-.tpl .ph{aspect-ratio:16/9;background-color:var(--paper);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.tpl .ph{aspect-ratio:16/9;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .tpl .ph img{position:absolute;width:30%;height:auto;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}
 .tpl .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .tpl h3{font-size:19px;letter-spacing:-.01em}
@@ -165,7 +166,7 @@
     <div>
       <p class="eyebrow"><span class="tick"></span>The self-driving lab configurator</p>
       <h1 id="h" class="display">Build the bench.<br><em>Close the loop.</em></h1>
-      <p class="lede">Benchloop is where scientists design self-driving labs. Pick robots, dispensers, platforms and open-source software from every maker, lay the cell out in 3D, check that it works, then buy each part straight from the people who make it.</p>
+      <p class="lede">Laboo is where scientists design self-driving labs. Pick robots, dispensers, platforms and open-source software from every maker, lay the cell out in 3D, check that it works, then buy each part straight from the people who make it.</p>
       <div class="cta">
         <a class="btn btn-accent" href="new-design/">Start a new design <span class="arr" aria-hidden="true">→</span></a>
         <a class="btn" href="parts/">Browse the parts library</a>
@@ -186,7 +187,7 @@
 <section class="band" aria-labelledby="how">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div><p class="eyebrow"><span class="tick"></span>How Benchloop works</p><h2 id="how" class="h2">From an empty room to a running loop.</h2></div>
+      <div><p class="eyebrow"><span class="tick"></span>How Laboo works</p><h2 id="how" class="h2">From an empty room to a running loop.</h2></div>
       <p class="lede" style="max-width:46ch">Four steps, one workspace. Nothing here asks you to commit to a vendor until you click through to buy.</p>
     </div>
     <ol class="steps reveal" style="padding:0;margin:0">
@@ -217,7 +218,7 @@
       <div class="reveal">
         <p class="eyebrow"><span class="tick"></span>The self-driving layer</p>
         <h2 id="sdl" class="h2">Hardware is half a lab. The loop is the other half.</h2>
-        <p class="lede">Vendor configurators stop at the bill of materials. Benchloop carries on to the software that makes a cell decide for itself, organized by the layers of a self-driving lab.</p>
+        <p class="lede">Vendor configurators stop at the bill of materials. Laboo carries on to the software that makes a cell decide for itself, organized by the layers of a self-driving lab.</p>
         <ul class="layers">
           <li><span class="L">L4</span><div><b>Decide</b><br><span>Bayesian optimizers and AI agents with human checkpoints</span></div><a href="self-driving/#decide">5 agent roles →</a></li>
           <li><span class="L">L3</span><div><b>Orchestrate</b><br><span>Workflows, scheduling, resources and alerts</span></div><a href="self-driving/#orchestrate">8 systems compared →</a></li>
@@ -227,11 +228,11 @@
         <div class="cta" style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap"><a class="btn btn-accent" href="self-driving/">Explore the self-driving layer</a><a class="btn" href="atlas/">Open the live twin</a></div>
       </div>
       <svg class="loopsvg reveal" viewBox="-50 -10 500 420" role="img" aria-label="The closed loop of a self-driving lab: design, dose, move, measure, learn, decide, and back to design.">
-        <defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 8 5 0 9" fill="none" stroke="#eceae4" stroke-width="1.6"/></marker></defs>
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 8 5 0 9" fill="none" style="stroke:var(--night-ink)" stroke-width="1.6"/></marker></defs>
         <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="28"/>
-        <circle id="loopArc" cx="200" cy="200" r="150" fill="none" stroke="#eceae4" stroke-width="1.6" stroke-dasharray="4 7"/>
+        <circle id="loopArc" cx="200" cy="200" r="150" fill="none" style="stroke:var(--night-ink)" stroke-width="1.6" stroke-dasharray="4 7"/>
         <g id="loopNodes"></g>
-        <circle r="6" fill="#e4531b"><animateMotion dur="9s" repeatCount="indefinite" path="M200,50 a150,150 0 1,1 -0.1,0"/></circle>
+        <circle r="6" style="fill:var(--night-accent)"><animateMotion dur="9s" repeatCount="indefinite" path="M200,50 a150,150 0 1,1 -0.1,0"/></circle>
         <text x="200" y="192" text-anchor="middle" class="big">closed loop</text>
         <text x="200" y="214" text-anchor="middle">SENSE · DECIDE · ACT</text>
       </svg>
@@ -268,7 +269,7 @@
     <div class="reveal">
       <p class="eyebrow"><span class="tick"></span>Never a reseller</p>
       <h2 id="md" class="h2">We help you choose. The makers sell.</h2>
-      <p class="lede">A lab is assembled from many companies, and the best cell rarely comes from one catalogue. Benchloop stays neutral: no stock, no markup, no preferred brand.</p>
+      <p class="lede">A lab is assembled from many companies, and the best cell rarely comes from one catalogue. Laboo stays neutral: no stock, no markup, no preferred brand.</p>
       <ol>
         <li><div><b>Your cart splits by vendor</b><span>Each maker gets its own block with the parts, quantities and published price.</span></div></li>
         <li><div><b>One click per maker</b><span>Open the vendor's own product page to order, or to request a quote where prices are not public.</span></div></li>
@@ -287,7 +288,7 @@
     <div class="reveal">
       <p class="eyebrow"><span class="tick"></span>Grounded in research</p>
       <h2 id="rs" class="h2">Every number is cited.</h2>
-      <p class="lede">Benchloop's catalogue grew out of a review from the Acceleration Consortium at the University of Toronto: 8 authors, 178 references and 7 comparison tables on handling liquids, pastes, powders and objects. Prices, accuracies and comparisons link back to their source.</p>
+      <p class="lede">Laboo's catalogue grew out of a review from the Acceleration Consortium at the University of Toronto: 8 authors, 178 references and 7 comparison tables on handling liquids, pastes, powders and objects. Prices, accuracies and comparisons link back to their source.</p>
       <div class="links"><a class="btn btn-ink" href="atlas/">Read the interactive atlas</a><a class="btn" href="wiki/">Open the wiki</a></div>
     </div>
   </div>
@@ -324,7 +325,7 @@ const BENCH = [["cnc4040", 0, 8, 42], ["ur5e", 40, 2, 15], ["flex", 58, 6, 40], 
 const bench = $("#bench");
 let tot = 0, q = 0;
 BENCH.forEach(([id, x, y, w], i) => { const p = byId[id];
-  bench.insertAdjacentHTML("beforeend", `<a class="it" href="parts/?p=${id}" style="left:${x}%;top:${y}%;width:${w}%;animation:rise .7s ${.08 * i}s both cubic-bezier(.2,.7,.2,1)" title="${esc(p.brand + " " + p.name)}"><img src="${ROOT}new-design/thumbs/${id}.png" alt="${esc(p.name)}"><span class="no">${i + 1}</span></a>`);
+  bench.insertAdjacentHTML("beforeend", `<a class="it" href="parts/?p=${id}" style="left:${x}%;top:${y}%;width:${w}%;animation:rise .7s ${.08 * i}s both cubic-bezier(.2,.7,.2,1)" title="${esc(p.brand + " " + p.name)}"><img src="${ROOT}new-design/thumbs/${id}.png" alt="${esc(p.name)}" onerror="this.style.visibility='hidden'"><span class="no">${i + 1}</span></a>`);
   const v = priceOf(p); if (v && v.cur === "$") tot += v.hi; else q++; });
 bench.insertAdjacentHTML("beforeend", `<div class="bom"><h4><span>Bill of materials</span><span>${BENCH.length}</span></h4><ol>${BENCH.map(([id], i) => { const p = byId[id], v = priceOf(p);
   return `<li><i>${i + 1}</i><span>${esc(p.name)}</span><b>${v ? fmtPrice(v).replace(/–.*/, "+") : esc(p.price)}</b></li>`; }).join("")}</ol><div class="tot"><span>List</span><span>${money(tot)} + ${q} quotes</span></div></div>`);
@@ -356,7 +357,7 @@ drawM(); wireCards($("#mpanel"));
 const NODES = ["Design", "Dose", "Move", "Measure", "Learn", "Decide"];
 $("#loopNodes").innerHTML = NODES.map((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / NODES.length, x = 200 + 150 * Math.cos(a), y = 200 + 150 * Math.sin(a);
   const tx = 200 + 186 * Math.cos(a), ty = 200 + 186 * Math.sin(a) + 4;
-  return `<circle cx="${x}" cy="${y}" r="9" fill="#111315" stroke="#eceae4" stroke-width="1.6"/><text x="${tx}" y="${ty}" text-anchor="${Math.abs(Math.cos(a)) < .2 ? "middle" : Math.cos(a) > 0 ? "start" : "end"}" style="fill:#eceae4;font-size:12px">${n.toUpperCase()}</text>`; }).join("");
+  return `<circle cx="${x}" cy="${y}" r="9" style="fill:var(--night);stroke:var(--night-ink)" stroke-width="1.6"/><text x="${tx}" y="${ty}" text-anchor="${Math.abs(Math.cos(a)) < .2 ? "middle" : Math.cos(a) > 0 ? "start" : "end"}" style="fill:var(--night-ink);font-size:12px">${n.toUpperCase()}</text>`; }).join("");
 $("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").length, "orchestration and integration tools"], [PRODUCTS.filter(p => p.cat === "simulation").length, "simulators across 4 fidelity levels"], [5, "AI agent roles with human checkpoints"], [20, "published loops to learn from"]]
   .map(([n, l]) => `<div><b class="num">${n}</b><span>${l}</span></div>`).join("");
 
@@ -367,14 +368,14 @@ $("#cats").innerHTML = CATS.map(c => `<a href="parts/?cat=${c.id}" class="${c.id
 /* templates */
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-  return `<a class="tpl" href="new-design/?t=${k}"><div class="ph gridpaper">${ids.map((id, i) => `<img src="new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
+  return `<a class="tpl" href="new-design/?t=${k}"><div class="ph gridpaper plate">${ids.map((id, i) => `<img src="new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
     <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}</span></div></div></a>`; }).join("");
 
 /* example receipt: SFL cell split by vendor */
 const groups = {};
 for (const [id] of TEMPLATES.sfl.items) { const p = byId[id], v = vendorOf(p) || "not-sold"; (groups[v] ??= []).push(p); }
 $("#receipt").innerHTML = `<div class="vh" style="border-bottom:1px solid var(--line);padding-bottom:14px"><span class="mono fine">EXAMPLE CART · ${esc(TEMPLATES.sfl.name)}</span><span class="mono fine">${Object.keys(groups).length} vendors</span></div>` +
-  Object.entries(groups).sort((a, b) => a[0] === "not-sold" ? 1 : b[0] === "not-sold" ? -1 : 0).map(([v, ps], gi) => `${gi ? "<hr>" : ""}<div class="vh"><b>${v === "not-sold" ? "Lab-built &amp; generic" : esc(ps[0].brand.split(" (")[0])}</b>${v === "not-sold" ? '<span class="tag quote">no vendor</span>' : `<a href="${esc(ps[0].url)}" target="_blank" rel="noopener">${esc(v)} ${ICON.out}</a>`}</div>` +
+  Object.entries(groups).sort((a, b) => a[0] === "not-sold" ? 1 : b[0] === "not-sold" ? -1 : 0).map(([v, ps], gi) => `${gi ? "<hr>" : ""}<div class="vh"><b>${v === "not-sold" ? "Generic parts" : esc(ps[0].brand.split(" (")[0])}</b>${v === "not-sold" ? '<span class="tag quote">no vendor</span>' : `<a href="${esc(ps[0].url)}" target="_blank" rel="noopener">${esc(v)} ${ICON.out}</a>`}</div>` +
     ps.map(p => `<div class="ln"><span>${esc(p.name)}</span><b>${priceOf(p) ? fmtPrice(priceOf(p)) : esc(p.price)}</b></div>`).join("")).join("");
 </script>
 </body>
