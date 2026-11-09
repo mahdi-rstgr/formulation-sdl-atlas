@@ -450,7 +450,7 @@ function startScreen(hasSaved) {
   el.querySelector(".opt").focus();
 }
 
-/* ================================================================ send the design to the shared Laboo cart */
+/* ================================================================ send the design to the shared Labu cart */
 $("#tocart").addEventListener("click", () => {
   const counts = {}; for (const o of placed) if (P[o.id]) counts[o.id] = (counts[o.id] || 0) + 1;
   if (!Object.keys(counts).length) { toast("Place a few parts first."); return; }

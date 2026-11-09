@@ -1,25 +1,25 @@
-# Laboo
+# Labu
 
 **From root to result.**
 
-*Laboo* = **lab** + **Ù„Ø¨Ùˆ** (*labu*, Persian for beetroot). The palette is the colour of a cooked labu: rich black and beetroot. The site is light by default (off-white `#FAFAFA`, black `#121212` header, footer and feature bands, deep beetroot `#8C1D40`) with a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`) behind the header toggle. Text uses plain Google Fonts: Inter, with Roboto Mono for numbers and part codes. The logo is a round-bottom flask whose bulb is a beetroot.
+Labu is black and beetroot. The site is light by default (off-white `#FAFAFA`, black `#121212` header, footer and feature bands, deep beetroot `#8C1D40`) with a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`) behind the header toggle. Text uses plain Google Fonts: Inter, with Roboto Mono for numbers and part codes. The logo (vector files in `assets/brand/`, built by `scripts/build_brand.py`) is a beet whose left half is a flask holding liquid (the experiment) and whose right half is a circuit whose nodes trace the beet's outline (data, models and agents), under one leaf.
 
 **Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
-Labu is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Laboo sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
+Labu is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Labu sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
 
 The structure follows [vention.com](https://vention.com), which does the same for factory automation but sells its own parts.
 
 | Path | Page | What it does |
 |---|---|---|
-| `/` | Home | Fig. 1: a render of the Formulator with numbered callouts; **One cell, every unit operation**: the Formulator in interactive 3D, with tabs that highlight each subsystem (frame, overhead arm, gantry, dispensing tools, balances, mixer) and list matching parts (deep links `#cell-arm`, `#cell-mixer`, â€¦); a render gallery; why the name; method; materials; the self-driving layer; parts categories; templates; sourcing; evidence |
+| `/` | Home | An interactive render of the Formulator (hover or tap a component to name it); **One cell, every unit operation**: the whole self-driving lab in 13 stages from the review, in 3D around the Formulator's CAD, with hardware, digital twin, orchestration, data centre, models, agents and safety appearing stage by stage and animated connections between them (content in `data/sdl-workflow.js`, scene in `assets/sdl-scene.js`, deep links `#sdl-twin`, `#sdl-agents`, …); method; materials; the self-driving layer; parts categories; templates; sourcing; evidence |
 | [`/new-design/`](new-design/) | New design | The 3D design tool (formerly the Lab Builder). It opens with a start screen (blank, a template, or your saved design) and sends the design to the cart. `?t=<template>` opens a template and `?add=<id,id>` adds parts. |
 | [`/parts/`](parts/) | Parts library | All parts with filters for category, material, type, price and maker; search; sort; a detail drawer for each part (`?cat=`, `?mat=`, `?q=`, `?p=`) |
 | [`/solutions/`](solutions/) | Solutions | Guides by material (liquids, pastes and gels, powders, objects), design templates, and the 20 published senseâ€“act loops |
 | [`/self-driving/`](self-driving/) | Self-driving layer | Architecture (L1â€“L4); an orchestration picker built on Supplementary Table S1 that ranks the eight open-source systems by the functions you tick; the simulation fidelity ladder (Table 6); AI agent roles (Table 7) and optimizers |
 | [`/cart/`](cart/) | Cart | Grouped by vendor with "order or quote" links and a contacted checklist; totals; a self-driving readiness check (act, sense, decide and run) that suggests the lowest-priced part for each missing step; share link (`?c=id:qty,â€¦`); CSV; import from the current design |
 | [`/atlas/`](atlas/) | Atlas | The original interactive review atlas with the live digital twin |
-| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Laboo Learn |
+| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Labu Learn |
 | `/builder/` | | Redirects to `/new-design/` so old share links keep working |
 
 ### Shared code
@@ -34,7 +34,7 @@ Lab-built devices (the Formulator Pen and the HAPD powder dispenser) and the Mat
 
 ### The Formulator, renders and CAD
 
-- `assets/img/formulator/*.webp`: renders of the Acceleration Consortium's Formulator cell, compressed from the original PNGs (268 KB in total).
+- `assets/img/formulator/*.webp`: two renders of the Acceleration Consortium's Formulator cell (hero figure and template card), compressed from the original PNGs.
 - `data/models/lab-formulator.json`: the Formulator assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the design tool as one unit.
 - `data/models/ot2.json`: Opentrons' OT-2 reference model, which replaces the procedural OT-2 in the design tool.
 
@@ -116,8 +116,8 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 | Path | Content |
 |---|---|
-| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Laboo pages (plain HTML and ES modules, no build) |
-| `assets/bl.css`, `assets/bl.js` | Laboo design system and shared runtime |
+| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Labu pages (plain HTML and ES modules, no build) |
+| `assets/bl.css`, `assets/bl.js` | Labu design system and shared runtime |
 | `data/catalog.js`, `data/templates.js` | Parts catalogue and design templates |
 | `atlas/`, `assets/app.js`, `assets/style.css` | The atlas page (three.js 0.160 from unpkg) |
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1â€“7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |

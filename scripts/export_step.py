@@ -1,4 +1,4 @@
-"""Tessellate STEP CAD into the compact mesh JSON that Laboo's 3D views load.
+"""Tessellate STEP CAD into the compact mesh JSON that Labu's 3D views load.
 
     pip install cadquery-ocp numpy
     python scripts/export_step.py CAD_DIR data/models            # every *.STEP in a folder (McMaster downloads, lab parts)

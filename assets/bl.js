@@ -1,4 +1,4 @@
-/* Laboo shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
+/* Labu shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
  * Every page loads it as a module. Paths are resolved from this file, so pages at any depth work. */
 import { CATS, PRODUCTS, byId, parsePrice, vendorOf } from "../data/catalog.js";
 export { CATS, PRODUCTS, byId, parsePrice, vendorOf };
@@ -14,7 +14,11 @@ export const refLinks = s => String(s || "").split(",").map(n => n.trim()).filte
 export const MAT = { liquid: ["Liquids", "var(--liquid)"], paste: ["Pastes & gels", "var(--paste)"], powder: ["Powders", "var(--powder)"], object: ["Objects", "var(--object)"] };
 
 /* ================================================================ cart store (localStorage, shared by every page) */
-const KEY = "laboo-cart-v1";
+const KEY = "labu-cart-v1";
+try {   // carry over carts and preferences saved under the earlier name
+  for (const [o, n] of [["laboo-cart-v1", KEY], ["laboo-contacted-v1", "labu-contacted-v1"], ["laboo-theme", "labu-theme"]])
+    if (localStorage.getItem(o) != null && localStorage.getItem(n) == null) { localStorage.setItem(n, localStorage.getItem(o)); localStorage.removeItem(o); }
+} catch { }
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
 const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch { } window.dispatchEvent(new CustomEvent("bl-cart")); };
 export const cart = {
@@ -123,7 +127,7 @@ export function openProduct(id, push = true) {
         ${p.design ? `<a class="btn" href="${ROOT}new-design/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
         ${p.url ? `<a class="btn btn-ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Vendor page ${ICON.out}</a>` : ""}
       </div>
-      <p class="fine" style="margin-top:22px">Laboo does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
+      <p class="fine" style="margin-top:22px">Labu does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
     </div>`;
   document.body.append(scrim, d);
   const close = () => closeDrawer();
@@ -148,8 +152,8 @@ export function toast(html, href, label) {
 }
 
 /* ================================================================ header + footer */
-const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M13.9 6.2v6.3M18.1 6.2v6.3M12.8 6.2h6.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="19.6" r="7.9" fill="#B82E5C"/><path d="M16 27.4c.2 1.4.1 2.6-.4 3.6" fill="none" stroke="#B82E5C" stroke-width="1.6" stroke-linecap="round"/><path d="M11.6 18.2a4.8 4.8 0 0 1 3-3.6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.4" stroke-linecap="round"/><path d="M16 6c-.9-2.7-3.3-4.2-6.1-3.9.6 2.6 3.1 4.2 6.1 3.9Z" fill="#4E8F4A"/><path d="M16 6c1-2.4 3.2-3.6 5.6-3.2-.7 2.3-2.9 3.5-5.6 3.2Z" fill="#6AAA5C"/></svg>`;
-export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Laboo home">${LOGO}Laboo</a>`;
+const LOGO = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32.2 11.4C31.6 5.6 36.4 1.4 45.6 1 46 8.8 40.4 12.6 32.2 11.4Z" fill="#6DB24A"/><path d="M33.6 10.4 42 4.2" stroke="#121212" stroke-width="1.4" stroke-linecap="round"/><path d="M32 33.6H15.5C16.4 44.4 24.4 51.6 32 61.2Z" fill="#D24A7E"/><path d="M32 61.2C24.4 51.6 15.4 44.6 15.4 33.4 15.4 26.4 20 21.6 25 19.4V13.2M22.4 13.2H25M32 12.2V61.2" fill="none" stroke="#D24A7E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 24H39.6L42.4 21.2M32 33.6H45.4M32 43.6H38.8L41.6 46.4" fill="none" stroke="#D24A7E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44.8" cy="18.8" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/><circle cx="48.8" cy="33.6" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/><circle cx="44.2" cy="49" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/></svg>`;
+export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Labu home">${LOGO}Labu</a>`;
 
 function menus() {
   const R = ROOT;
@@ -171,7 +175,7 @@ function menus() {
       { feature: true, h: "New: McMaster-Carr structure", links: [[`${R}parts/?cat=structure`, "Workstations, pedestals & slides", "Real CAD you can drop into a design"]] },
     ] },
     { id: "learn", label: "Learn", cols: [
-      { h: "Knowledge base", links: [[`${R}wiki/`, "SDL wiki", "Materials, hardware, simulation, AI"], [`${R}wiki/hardware/`, "Hardware guides", "Dispensers, platforms, cost vs. accuracy"], [`${R}wiki/references/`, "178 references", "Every number on Laboo is cited"]] },
+      { h: "Knowledge base", links: [[`${R}wiki/`, "SDL wiki", "Materials, hardware, simulation, AI"], [`${R}wiki/hardware/`, "Hardware guides", "Dispensers, platforms, cost vs. accuracy"], [`${R}wiki/references/`, "178 references", "Every number on Labu is cited"]] },
       { h: "Research", links: [[`${R}atlas/`, "The atlas", "Seven questions, one live twin"], [`${R}wiki/orchestration/open-source/`, "Orchestration comparison", "Supplementary Table S1"], [`${R}#model`, "Why we don't sell parts", "How the cart refers you to makers"]] },
     ] },
   ];
@@ -209,7 +213,7 @@ export function mountChrome(current = "") {
 
   const f = document.createElement("footer"); f.className = "bl-footer";
   f.innerHTML = `<div class="wrap"><div class="top">
-      <div>${logo()}<p class="tagline">From root to result.</p><p>Laboo (lab + لبو, Persian for beetroot) is a catalogue and design tool for self-driving laboratories. Laboo sells nothing; each part links to its maker.</p></div>
+      <div>${logo()}<p class="tagline">From root to result.</p><p>Labu is a catalogue and design tool for self-driving laboratories. Labu sells nothing; each part links to its maker.</p></div>
       <div><h4>Platform</h4><a href="${ROOT}new-design/">New design</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin</a></div>
       <div><h4>Parts</h4>${CATS.slice(0, 6).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}</div>
       <div><h4>Software</h4>${CATS.slice(8).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=structure">Workstations</a></div>
@@ -221,7 +225,7 @@ export function mountChrome(current = "") {
   // theme: dark (black + vibrant beet) by default, light editorial on request; remembered per browser
   const tb = $("#bl-theme", h), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
   const paint = () => { const t = document.documentElement.dataset.theme || "dark"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
-  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("laboo-theme", t); } catch { } paint(); };
+  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("labu-theme", t); } catch { } paint(); };
   paint();
 
   const upd = () => { const n = cart.count(), el = $("#bl-cart-n"); if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };

@@ -35,8 +35,11 @@ export const ITEMS = [
   { id: "mt12", cat: "handler", sub: "Powder dispensers", name: "Coperion K-Tron MT12 micro-feeder", model: "screwFeeder", dims: [0.46, 0.26, 0.52], src: ["table_3", "MT12"], caps: ["powders"], color: "#7A5BB5" },
   { id: "vf1", cat: "handler", sub: "Powder dispensers", name: "3P Innovation VF1 vibratory feeder", model: "vibratory", dims: [0.32, 0.2, 0.36], src: ["table_3", "VF1"], caps: ["powders"], color: "#7A5BB5" },
   { id: "lab-formulator-pen-assembly", cat: "handler", sub: "Liquid dispensers", name: "Formulator Pen (Acceleration Consortium)", model: "mesh:lab-formulator-pen-assembly", price: "Lab-built", tool: true, caps: ["liquids"], note: "Lab-built by the Acceleration Consortium; real CAD. Drop it near a CNC dock slot." },
+  { id: "peristaltic-pump", cat: "handler", sub: "Liquid dispensers", name: "Peristaltic pump (cell module)", model: "mesh:peristaltic-pump", price: "See vendor", caps: ["liquids"], note: "Real CAD from the Acceleration Consortium's cell." },
+  { id: "reciprocating-pump", cat: "handler", sub: "Liquid dispensers", name: "Reciprocating pump (cell module)", model: "mesh:reciprocating-pump", price: "See vendor", caps: ["liquids"], note: "Real CAD: piston pump for viscous liquids." },
   // motion providers
   { id: "cnc4040", cat: "motion", sub: "Gantry + tool dock", name: "Genmitsu 4040-PRO CNC + tool dock", model: "mesh:cnc", dock: true, src: ["table_2", "4040-PRO"], note: "Real mesh from the formulation-cell twin with a three-slot tool dock in front. Drop a pen, powder dispenser or pipette near a slot to dock it." },
+  { id: "cnc3030", cat: "motion", sub: "Gantry", name: "Genmitsu 3030 CNC gantry", model: "mesh:cnc3030", price: "See vendor", note: "Real CAD: a compact three-axis gantry." },
   { id: "jubilee", cat: "motion", sub: "Tool-changer", name: "Jubilee tool-changer", model: "jubilee", dims: [0.56, 0.56, 0.62], src: ["table_2", "Jubilee"], color: "#C27A1E" },
   // robot arms: the review's five classes
   { id: "drylin", cat: "arm", sub: "Cartesian gantry", name: "igus drylin XYZ gantry", model: "cartesian", dims: [0.9, 0.7, 0.62], src: ["table_2", "drylin"], caps: ["move"], color: "#F5A623" },
@@ -56,6 +59,9 @@ export const ITEMS = [
   { id: "thinky", cat: "mixer", sub: "Planetary", name: "Planetary centrifugal mixer", model: "mesh:mixer", price: "Not in review", caps: ["mix"], note: "Real mesh of the formulation cell's planetary mixer." },
   { id: "vortex", cat: "mixer", sub: "Vortex", name: "Vortex mixer (generic)", model: "vortex", dims: [0.13, 0.16, 0.17], price: "Not in review", caps: ["mix"], color: "#3B4048" },
   // stations
+  { id: "lab-cnc-viscometer", cat: "station", sub: "Characterization", name: "Gantry viscometer (Acceleration Consortium)", model: "mesh:lab-cnc-viscometer", price: "Lab-built", caps: ["characterize"], note: "Real CAD: a viscometer carried by a gantry to each cup." },
+  { id: "lab-inline-viscometer", cat: "station", sub: "Characterization", name: "Inline viscometer (Acceleration Consortium)", model: "mesh:lab-inline-viscometer", price: "Lab-built", caps: ["characterize"], note: "Real CAD: measures viscosity in the liquid line." },
+  { id: "sensirion-slf3s", cat: "station", sub: "Sensors", name: "Sensirion SLF3S-1300F flow sensor", model: "mesh:sensirion-slf3s", price: "See vendor", caps: ["characterize"], note: "Real CAD: liquid flow sensor." },
   { id: "balance", cat: "station", sub: "Balance", name: "Analytical balance", model: "mesh:balance", price: "Not in review", caps: ["weigh"], note: "Real mesh from the formulation-cell twin." },
   { id: "characterizer", cat: "station", sub: "Characterization", name: "Characterizer (rheometer-type)", model: "characterizer", dims: [0.34, 0.3, 0.46], price: "Not in review", caps: ["characterize"], color: "#2F6FD6" },
   { id: "cup", cat: "station", sub: "Labware", name: "Premix cup", model: "mesh:cup", price: "Not in review", stack: true, note: "Drop it on a balance, mixer or characterizer and it rests on top." },
