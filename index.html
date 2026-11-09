@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("labu-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Labu · Configure a self-driving laboratory</title>
-<meta name="description" content="Labu is a catalogue and design tool for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
-<meta property="og:title" content="Labu · Configure a self-driving laboratory">
+<title>Laboo · Configure a self-driving laboratory</title>
+<meta name="description" content="Laboo is a catalogue and design tool for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
+<meta property="og:title" content="Laboo · Configure a self-driving laboratory">
 <meta property="og:description" content="Compare instruments and software with citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:image" content="assets/img/formulator/cell-perspective.webp">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -204,7 +204,7 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
     <div>
       <p class="eyebrow"><span class="tick"></span>Laboratory configurator</p>
       <h1 id="h" class="display">Configure a self-driving laboratory, <em>one instrument at a time.</em></h1>
-      <p class="lede">Labu is a catalogue and design tool for research groups that want to automate. Compare dispensers, robot arms, integrated platforms and open-source software side by side, with published specifications and the papers behind them. Lay the cell out in 3D, check that it covers every step, then source each part directly from its maker.</p>
+      <p class="lede">Laboo is a catalogue and design tool for research groups that want to automate. Compare dispensers, robot arms, integrated platforms and open-source software side by side, with published specifications and the papers behind them. Lay the cell out in 3D, check that it covers every step, then source each part directly from its maker.</p>
       <div class="cta">
         <a class="btn btn-accent" href="new-design/">Start a new design</a>
         <a class="btn" href="parts/">Browse the parts library</a>
@@ -215,6 +215,8 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
       <div class="frame" id="fig1">
         <img src="assets/img/formulator/cell-perspective.webp" alt="Rendering of the Formulator: an aluminium T-slot frame holding an overhead robot arm, a blue three-axis dispensing gantry with tools, and a planetary mixer." width="1398" height="1080" fetchpriority="high">
       </div>
+      <figcaption><b>Fig. 1 | The Formulator,</b> a self-driving formulation cell built by the Acceleration Consortium on McMaster-Carr T-slot framing.
+        <span class="n">1</span>UR3 arm mounted upside down on a linear rail; <span class="n">2</span>dispensing tools: ecoPEN, powder dispenser and Formulator Pen; <span class="n">3</span>three-axis gantry with a tool changer; <span class="n">4</span>THINKY planetary centrifugal mixer; <span class="n">5</span>T-slot frame and fixture-plate deck. Every part is in the library.</figcaption>
     </figure>
   </div>
 </section>
@@ -224,11 +226,11 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
   <div class="wrap">
     <div class="shead">
       <div><span class="secno">1 · One cell</span><h2 id="uo-h" class="h2">One cell, every unit operation.</h2>
-        <p class="lede">Seven steps to a self-driving formulation lab: from hardware assembly through digital twins, data collection, machine learning, and AI agents to full autonomy. Pick a step to see how the Formulator executes it.</p></div>
+        <p class="lede">The Formulator in 3D, straight from its CAD. Pick a subsystem to see what it does in the cell and which parts in the library do the same job.</p></div>
       <a class="btn" href="new-design/?add=lab-formulator&amp;fresh=1">Open it in the design tool</a>
     </div>
     <div class="uo">
-      <div class="uo-tabs" role="tablist" aria-label="SDL workflow steps" id="uo-tabs"></div>
+      <div class="uo-tabs" role="tablist" aria-label="Subsystems of the Formulator" id="uo-tabs"></div>
       <div class="uo-main">
         <div class="viewer" id="viewer"><div class="load" id="load">Loading the 3D model (3.6 MB)…</div>
           <div class="hud"><span id="hud1">The Formulator · 1.79 × 1.08 × 2.07 m</span><span>Drag to rotate · scroll to zoom</span></div>
@@ -239,18 +241,39 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
   </div>
 </section>
 
-<!-- ================================================================ 2 · gallery removed -->
+<!-- ================================================================ 2 · gallery -->
+<section class="band alt" aria-labelledby="gal-h">
+  <div class="wrap">
+    <div class="shead"><div><span class="secno">2 · Renders</span><h2 id="gal-h" class="h2">Inside the Formulator.</h2></div></div>
+    <div class="gal" id="gal"></div>
+    <p class="galcap"><b>Fig. 2 | Renderings of the Formulator.</b> (a) The overhead UR3 above the gantry, with two premix cups on their stations. (b) Dispensing tools parked on the rail. (c) Front view. (d) The cell on its own. (e) Side view. Select an image to enlarge it.</p>
+  </div>
+</section>
+<dialog class="lb" id="lb"><img alt=""><p></p><button type="button" aria-label="Close">×</button></dialog>
+
+<!-- ================================================================ the name -->
+<section class="band-tight name" aria-labelledby="name-h">
+  <div class="wrap">
+    <div class="word" aria-hidden="true">Laboo<span>لبو</span><small>labu · Persian · beetroot</small></div>
+    <div>
+      <h2 id="name-h">Why Laboo?</h2>
+      <p>Lab, as in laboratory, and <i>labu</i> (لبو), the Persian word for beetroot. In Iranian winters, beets are slow-cooked in large pots and sold steaming from street carts: simple, deep red, and grown from a root you never see.</p>
+      <p>A self-driving lab works the same way. The results everyone sees grow from choices nobody photographs: which dispenser, which arm, which scheduler, which model decides the next run. Laboo is where those choices get made, and its colour is the colour of a cooked labu.</p>
+      <p class="eq">lab + لبو → Laboo</p>
+    </div>
+  </div>
+</section>
 
 <!-- ================================================================ 3 · methods -->
 <section class="band" aria-labelledby="how">
   <div class="wrap">
-    <div class="shead"><div><span class="secno">2 · Method</span><h2 id="how" class="h2">From an empty room to a running loop.</h2>
+    <div class="shead"><div><span class="secno">3 · Method</span><h2 id="how" class="h2">From an empty room to a running loop.</h2>
       <p class="lede">Four steps in one workspace. Nothing asks you to commit to a vendor until you choose to contact one.</p></div></div>
     <ol class="methods">
-      <li><span class="k">2.1 · Explore</span><h3>Find the parts</h3><p>Dispensers, arms, platforms, workstations and software, with published prices, accuracy and the reference behind each number.</p><a href="parts/">Parts library</a></li>
-      <li><span class="k">2.2 · Design</span><h3>Lay out the cell</h3><p>Drag parts into a 3D workstation. Pipettes fill plates, arms replay planned transfers and feeders dose while you arrange them.</p><a href="new-design/">New design</a></li>
-      <li><span class="k">2.3 · Automate</span><h3>Make it self-driving</h3><p>Check every step is covered, choose an orchestration system, rehearse in a twin, and pick the optimizer or agents that decide the next run.</p><a href="self-driving/">Self-driving layer</a></li>
-      <li><span class="k">2.4 · Source</span><h3>Contact each maker</h3><p>Your cart splits by provider. Each group links to the maker's own page to order, request a quote or download the software.</p><a href="cart/">Your cart</a></li>
+      <li><span class="k">3.1 · Explore</span><h3>Find the parts</h3><p>Dispensers, arms, platforms, workstations and software, with published prices, accuracy and the reference behind each number.</p><a href="parts/">Parts library</a></li>
+      <li><span class="k">3.2 · Design</span><h3>Lay out the cell</h3><p>Drag parts into a 3D workstation. Pipettes fill plates, arms replay planned transfers and feeders dose while you arrange them.</p><a href="new-design/">New design</a></li>
+      <li><span class="k">3.3 · Automate</span><h3>Make it self-driving</h3><p>Check every step is covered, choose an orchestration system, rehearse in a twin, and pick the optimizer or agents that decide the next run.</p><a href="self-driving/">Self-driving layer</a></li>
+      <li><span class="k">3.4 · Source</span><h3>Contact each maker</h3><p>Your cart splits by provider. Each group links to the maker's own page to order, request a quote or download the software.</p><a href="cart/">Your cart</a></li>
     </ol>
   </div>
 </section>
@@ -258,7 +281,7 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
 <!-- ================================================================ 4 · materials -->
 <section class="band alt" aria-labelledby="mat">
   <div class="wrap">
-    <div class="shead"><div><span class="secno">3 · Materials</span><h2 id="mat" class="h2">Rheology decides the hardware.</h2>
+    <div class="shead"><div><span class="secno">4 · Materials</span><h2 id="mat" class="h2">Rheology decides the hardware.</h2>
       <p class="lede">Viscosity, yield stress and powder flowability set the dispensing mechanism (Table 1 of the review).</p></div>
       <a class="btn btn-ghost" href="solutions/">All solutions <span class="arr">→</span></a></div>
     <div class="mtabs" role="tablist" id="mtabs"></div>
@@ -271,9 +294,9 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
   <div class="wrap">
     <div class="loopwrap">
       <div>
-        <span class="secno" style="color:var(--night-accent)">4 · The self-driving layer</span>
+        <span class="secno" style="color:var(--night-accent)">5 · The self-driving layer</span>
         <h2 id="sdl" class="h2" style="margin-top:12px">Hardware is half a lab. The loop is the other half.</h2>
-        <p class="lede">Vendor configurators stop at the bill of materials. Labu continues to the software that lets a cell decide for itself, organized by the layers of a self-driving lab.</p>
+        <p class="lede">Vendor configurators stop at the bill of materials. Laboo continues to the software that lets a cell decide for itself, organized by the layers of a self-driving lab.</p>
         <ul class="layers">
           <li><span class="L">L4</span><div><b>Decide</b><br><span>Bayesian optimizers and AI agents with human checkpoints</span></div><a href="self-driving/#decide">Agents →</a></li>
           <li><span class="L">L3</span><div><b>Orchestrate</b><br><span>Workflows, scheduling, resources and alerts</span></div><a href="self-driving/#orchestrate">8 systems compared →</a></li>
@@ -320,7 +343,7 @@ dialog.lb button{position:absolute;right:8px;top:8px;width:36px;height:36px;bord
     <div>
       <span class="secno">8 · Sourcing</span>
       <h2 id="md" class="h2" style="margin-top:12px">We help you choose. The makers sell.</h2>
-      <p class="lede">A lab is assembled from many companies and research groups. Labu stays neutral: no stock, no markup, no preferred brand.</p>
+      <p class="lede">A lab is assembled from many companies and research groups. Laboo stays neutral: no stock, no markup, no preferred brand.</p>
       <ol>
         <li><div><b>The cart splits by provider</b><span>Each maker or group gets its own block with parts, quantities and published prices.</span></div></li>
         <li><div><b>One link per provider</b><span>Open the maker's own page to order, request a quote, or download the code.</span></div></li>
@@ -369,47 +392,35 @@ $("#facts").innerHTML = [["Parts in the catalogue", PRODUCTS.length], ["Makers a
 
 /* ---------------- Fig. 1 callouts (positions in % of the render) */
 const CALL = [[51, 37, "Overhead UR3 on a linear rail", "ur3e"], [48, 56, "Dispensing tools", "ecopen"], [31, 61, "Gantry with tool changer", "cnc4040"], [72, 44, "THINKY planetary mixer", "thinky"], [86, 21, "T-slot frame (McMaster-Carr)", "mcm-9351n11"]];
-$("#fig1").insertAdjacentHTML("beforeend", CALL.map(([x, y, t, id]) => `<a class="callout" href="parts/?p=${id}" style="left:${x}%;top:${y}%" aria-label="${t}"><span class="tip">${t}</span></a>`).join(""));
+$("#fig1").insertAdjacentHTML("beforeend", CALL.map(([x, y, t, id], i) => `<a class="callout" href="parts/?p=${id}" style="left:${x}%;top:${y}%" aria-label="${i + 1}: ${t}">${i + 1}<span class="tip">${t}</span></a>`).join(""));
 
-/* ---------------- 1 · SDL workflow steps */
-const SDL = [
-  { g: null, k: "1.0", t: "Hardware assembly", s: "Frame, arm, gantry, tools, mixer", d: "A 1.8 × 1.1 m T-slot cell in which an overhead arm, a dispensing gantry and a mixer share one deck. The premix cup travels from the dispensers to the balances to the mixer without leaving the frame. Every component is in the library.", ids: ["lab-formulator", "mcm-9351n11", "ur3e", "thinky"], subsystems: true },
-  { g: null, k: "1.1", t: "Digital twin", s: "Simulation & rehearsal", d: "Before running an experiment on physical hardware, the workflow is rehearsed in a digital twin. This validates the sequence, checks for collisions, and trains the models without wasting materials.", ids: [] },
-  { g: null, k: "1.2", t: "Data collection", s: "Sensors & characterization", d: "Each step is measured: masses, temperatures, images, spectra. The collected data feeds back into the system, enabling closed-loop control and model improvement.", ids: [] },
-  { g: null, k: "1.3", t: "Machine learning", s: "Model training & inference", d: "Data from previous runs is used to train models that predict outcomes. These models guide the next experiment and improve with each cycle.", ids: [] },
-  { g: null, k: "1.4", t: "AI agents", s: "Decision-making & optimization", d: "Agents use the trained models to decide the next experiment. Bayesian optimizers and reinforcement learning agents work toward a goal while respecting constraints.", ids: [] },
-  { g: null, k: "1.5", t: "Orchestration", s: "Workflow scheduling & control", d: "The experiment workflow is scheduled and executed by an orchestration system that manages device states, queues, alerts and recovery.", ids: [] },
-  { g: null, k: "1.6", t: "Safety & autonomy", s: "Failsafes & human checkpoints", d: "The loop runs with safety checkspoints. Humans stay in control: decisions are logged, can be reviewed and rejected, and the system stops if anything goes wrong.", ids: [] },
+/* ---------------- 1 · subsystems of the Formulator */
+const UO = [
+  { g: null, k: "1.0", t: "Whole cell", s: "Frame, arm, gantry, tools, mixer", d: "A 1.8 × 1.1 m T-slot cell in which an overhead arm, a dispensing gantry and a mixer share one deck. The premix cup travels from the dispensers to the balances to the mixer without leaving the frame.", ids: ["lab-formulator", "mcm-9351n11", "ur3e", "thinky"] },
+  { g: "frame", k: "1.1", t: "Frame and deck", s: "McMaster-Carr T-slot framing", d: "T-slot rails and fixture plates from McMaster-Carr. Stations bolt into the slots, so the layout can change without drilling. The top rails carry the arm's linear axis.", ids: ["mcm-9351n11", "mcm-5206n15", "mcm-5204n11", "mcm-6333n16"] },
+  { g: "arm", k: "1.2", t: "Overhead arm", s: "UR3 on a linear rail", d: "A UR3 hangs upside down from a linear rail, reaching the gantry, the balances and the mixer from above and leaving the deck free for instruments.", ids: ["ur3e", "ur5e", "mcm-3813n14", "lite6"] },
+  { g: "gantry", k: "1.3", t: "Gantry and tool changer", s: "Three axes, parked tools", d: "A three-axis gantry picks a dispensing tool from the parking rail, doses into the premix cup and returns the tool. One motion system serves every material class.", ids: ["cnc4040", "jubilee", "drylin"] },
+  { g: "dispensers", k: "1.4", t: "Dispensing tools", s: "Pastes, powders, liquids", d: "An ecoPEN progressive-cavity pen for pastes and gels, a powder dispenser for solids and the Formulator Pen for liquids, each swapped onto the gantry as needed.", ids: ["ecopen", "powder-hapd", "lab-formulator-pen-assembly", "quantos"] },
+  { g: "balance", k: "1.5", t: "Balances", s: "Two analytical balances", d: "Two analytical balances weigh every dose, so each step is checked by mass rather than assumed from volume.", ids: ["balance", "quantos"] },
+  { g: "mixer", k: "1.6", t: "Mixer", s: "THINKY planetary centrifugal", d: "A planetary centrifugal mixer blends and degasses the premix in its own cup, with no stirrer to clean.", ids: ["thinky", "vortex"] },
 ];
-
-// Legacy subsystems (available when "Hardware assembly" is selected)
-const SUBSYSTEMS = [
-  { g: "frame", k: "1.0.1", t: "Frame and deck", s: "McMaster-Carr T-slot framing", d: "T-slot rails and fixture plates from McMaster-Carr. Stations bolt into the slots, so the layout can change without drilling. The top rails carry the arm's linear axis.", ids: ["mcm-9351n11", "mcm-5206n15", "mcm-5204n11", "mcm-6333n16"] },
-  { g: "arm", k: "1.0.2", t: "Overhead arm", s: "UR3 on a linear rail", d: "A UR3 hangs upside down from a linear rail, reaching the gantry, the balances and the mixer from above and leaving the deck free for instruments.", ids: ["ur3e", "ur5e", "mcm-3813n14", "lite6"] },
-  { g: "gantry", k: "1.0.3", t: "Gantry and tool changer", s: "Three axes, parked tools", d: "A three-axis gantry picks a dispensing tool from the parking rail, doses into the premix cup and returns the tool. One motion system serves every material class.", ids: ["cnc4040", "jubilee", "drylin"] },
-  { g: "dispensers", k: "1.0.4", t: "Dispensing tools", s: "Pastes, powders, liquids", d: "An ecoPEN progressive-cavity pen for pastes and gels, a powder dispenser for solids and the Formulator Pen for liquids, each swapped onto the gantry as needed.", ids: ["ecopen", "powder-hapd", "lab-formulator-pen-assembly", "quantos"] },
-  { g: "balance", k: "1.0.5", t: "Balances", s: "Two analytical balances", d: "Two analytical balances weigh every dose, so each step is checked by mass rather than assumed from volume.", ids: ["balance", "quantos"] },
-  { g: "mixer", k: "1.0.6", t: "Mixer", s: "THINKY planetary centrifugal", d: "A planetary centrifugal mixer blends and degasses the premix in its own cup, with no stirrer to clean.", ids: ["thinky", "vortex"] },
-];
-
-let uoCur = Math.max(0, SDL.findIndex(u => location.hash === `#cell-${u.g}`)), viewerApi = null, showingSubsystems = false;
+let uoCur = Math.max(0, UO.findIndex(u => location.hash === `#cell-${u.g}`)), viewerApi = null;   // deep links: #cell-arm, #cell-mixer, ...
 function drawUO() {
-  const currentList = showingSubsystems && SDL[uoCur]?.subsystems ? SUBSYSTEMS : SDL;
-  $("#uo-tabs").innerHTML = currentList.map((u, i) => `<button type="button" role="tab" aria-selected="${i === (showingSubsystems && SDL[uoCur]?.subsystems ? 0 : uoCur)}" data-i="${i}"><span class="k">${u.k}</span><span><b>${u.t}</b><span>${u.s}</span></span></button>`).join("");
-  const u = currentList[showingSubsystems && SDL[uoCur]?.subsystems ? 0 : uoCur], placeable = u.ids.filter(id => byId[id]?.design);
+  $("#uo-tabs").innerHTML = UO.map((u, i) => `<button type="button" role="tab" aria-selected="${i === uoCur}" data-i="${i}"><span class="k">${u.k}</span><span><b>${u.t}</b><span>${u.s}</span></span></button>`).join("");
+  const u = UO[uoCur], placeable = u.ids.filter(id => byId[id]?.design);
   $("#uo-info").innerHTML = `<div><h3>${u.t}</h3><p>${u.d}</p><p class="dims" id="dims"></p></div>
     <div class="uo-parts"><h4>In the library</h4><ul>${u.ids.map(id => byId[id]).filter(Boolean).map(p => `<li><span class="im">${imgHTML(p)}</span><span><a href="parts/?p=${p.id}" data-open="${p.id}">${esc(p.name)}</a><small>${esc(p.vendor || p.brand)}</small></span><span class="pr">${priceOf(p) ? fmtPrice(priceOf(p)) : esc(p.price)}</span></li>`).join("")}</ul>
     <div class="uo-cta"><a class="btn btn-sm btn-ink" href="parts/?p=${u.ids[0]}">View in the library</a>${placeable.length ? `<a class="btn btn-sm" href="new-design/?add=${placeable.join(",")}&fresh=1">Place in a design</a>` : ""}</div></div>`;
   viewerApi?.focus(u.g);
 }
-$("#uo-tabs").addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) { const idx = +b.dataset.i; if (showingSubsystems && SDL[uoCur]?.subsystems) { showingSubsystems = false; uoCur = 0; } else { uoCur = idx; } drawUO(); history.replaceState(null, "", SDL[uoCur].g ? `#cell-${SDL[uoCur].g}` : location.pathname); } });
+$("#uo-tabs").addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (b) { uoCur = +b.dataset.i; drawUO(); history.replaceState(null, "", UO[uoCur].g ? `#cell-${UO[uoCur].g}` : location.pathname); } });
 if (location.hash.startsWith("#cell-")) $("#cell").scrollIntoView();
-$("#uo-tabs").addEventListener("keydown", e => { if (!/Arrow(Down|Up|Left|Right)/.test(e.key)) return; e.preventDefault(); const currentList = showingSubsystems && SDL[uoCur]?.subsystems ? SUBSYSTEMS : SDL; uoCur = (uoCur + (/Down|Right/.test(e.key) ? 1 : currentList.length - 1)) % currentList.length; drawUO(); $(`#uo-tabs [data-i="${uoCur}"]`).focus(); });
+$("#uo-tabs").addEventListener("keydown", e => { if (!/Arrow(Down|Up|Left|Right)/.test(e.key)) return; e.preventDefault(); uoCur = (uoCur + (/Down|Right/.test(e.key) ? 1 : UO.length - 1)) % UO.length; drawUO(); $(`#uo-tabs [data-i="${uoCur}"]`).focus(); });
 drawUO(); wireCards($("#uo-info"));
 
 /* the viewer loads three.js and the model only when the section comes into view */
 const io = new IntersectionObserver(async es => { if (!es.some(e => e.isIntersecting)) return; io.disconnect();
-  try { viewerApi = await startViewer(); viewerApi.focus(SDL[uoCur].g); } catch (err) { console.warn(err); $("#load").textContent = "The 3D view needs WebGL. The renders below show the same cell."; } }, { rootMargin: "300px" });
+  try { viewerApi = await startViewer(); viewerApi.focus(UO[uoCur].g); } catch (err) { console.warn(err); $("#load").textContent = "The 3D view needs WebGL. The renders below show the same cell."; } }, { rootMargin: "300px" });
 io.observe($("#viewer"));
 async function startViewer() {
   const THREE = await import("three"), { OrbitControls } = await import("three/addons/controls/OrbitControls.js"), { RoomEnvironment } = await import("three/addons/environments/RoomEnvironment.js");
