@@ -60,7 +60,6 @@ export const ITEMS = [
   { id: "vortex", cat: "mixer", sub: "Vortex", name: "Vortex mixer (generic)", model: "vortex", dims: [0.13, 0.16, 0.17], price: "Not in review", caps: ["mix"], color: "#3B4048" },
   // stations
   { id: "lab-cnc-viscometer", cat: "station", sub: "Characterization", name: "Gantry viscometer (Acceleration Consortium)", model: "mesh:lab-cnc-viscometer", price: "Lab-built", caps: ["characterize"], note: "Real CAD: a viscometer carried by a gantry to each cup." },
-  { id: "lab-inline-viscometer", cat: "station", sub: "Characterization", name: "Inline viscometer (Acceleration Consortium)", model: "mesh:lab-inline-viscometer", price: "Lab-built", caps: ["characterize"], note: "Real CAD: measures viscosity in the liquid line." },
   { id: "sensirion-slf3s", cat: "station", sub: "Sensors", name: "Sensirion SLF3S-1300F flow sensor", model: "mesh:sensirion-slf3s", price: "See vendor", caps: ["characterize"], note: "Real CAD: liquid flow sensor." },
   { id: "balance", cat: "station", sub: "Balance", name: "Analytical balance", model: "mesh:balance", price: "Not in review", caps: ["weigh"], note: "Real mesh from the formulation-cell twin." },
   { id: "characterizer", cat: "station", sub: "Characterization", name: "Characterizer (rheometer-type)", model: "characterizer", dims: [0.34, 0.3, 0.46], price: "Not in review", caps: ["characterize"], color: "#2F6FD6" },

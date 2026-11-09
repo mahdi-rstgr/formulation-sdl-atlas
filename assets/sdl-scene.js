@@ -18,7 +18,7 @@ const LINK = { data: C.beet, command: C.command, model: C.model, gate: C.gate };
 const NAMES = {
   frame: "T-slot frame and deck", gantry: "Gantry and tool changer", dispensers: "Dispensing tools", arm: "Overhead UR3",
   balance: "Analytical balances", mixer: "Planetary mixer", ot2: "Opentrons OT-2", benchL: "Bench", benchR: "Characterization bench",
-  pumpP: "Peristaltic pump", pumpR: "Reciprocating pump", visco: "Gantry viscometer", inline: "Inline viscometer", flow: "Flow sensor",
+  pumpP: "Peristaltic pump", pumpR: "Reciprocating pump", visco: "Gantry viscometer", flow: "Flow sensor",
   cnc3030: "3030 gantry", sensors: "Process sensors", twin: "Digital twin", controller: "Orchestration controller",
   datacenter: "Data centre", ml: "Models and optimization", agents: "AI agents", safety: "Safety layer", estop: "Emergency stop",
 };
@@ -71,7 +71,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const F = { w: fdoc.size[0], d: fdoc.size[1], h: fdoc.size[2] };
 
   onProgress("Loading instruments…");
-  const [ot2, bench, pP, pR, visco, inline, flow, cnc3030] = await Promise.all(["ot2", "mcm-9351n11", "peristaltic-pump", "reciprocating-pump", "lab-cnc-viscometer", "lab-inline-viscometer", "sensirion-slf3s", "cnc3030"].map(f => load(f).catch(() => null)));
+  const [ot2, bench, pP, pR, visco, flow, cnc3030] = await Promise.all(["ot2", "mcm-9351n11", "peristaltic-pump", "reciprocating-pump", "lab-cnc-viscometer", "sensirion-slf3s", "cnc3030"].map(f => load(f).catch(() => null)));
   // left bench with the OT-2
   const BL = { x: -F.w / 2 - 1.05, w: 1.15, d: .8, h: .9 };
   const benchL = new THREE.Group(); { const top = std(0xd9d9de), leg = std(0x9aa0a8, { metalness: .5 });
@@ -84,9 +84,9 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const slots = []; let sx = BR.x - BR.w / 2 + .08;
   const put = (id, doc, y = 0, gap = .06) => { if (!doc) return; const w = doc.size[0]; const x = sx + w / 2; sx += w + gap; slots.push([id, x]); actor(id, placed(doc, x, y, BR.h)); return x; };
   const xP = put("pumpP", pP, -.12); const xR = put("pumpR", pR, -.12);
-  const xI = put("inline", inline, -.1); const xF = put("flow", flow, -.22, .08);
-  // the liquid line: pumps -> flow sensor -> inline viscometer, as a tube on the bench
-  if (pP && inline && flow) { const zt = BR.h + .05, pts = [[xP, -.3], [xR, -.32], [xF, -.3], [xI, -.28]].map(([x, y]) => new THREE.Vector3(x, y, zt));
+  const xF = put("flow", flow, -.22, .08); const xI = xF;
+  // the liquid line: peristaltic pump -> reciprocating pump -> flow sensor, as a tube on the bench
+  if (pP && pR && flow) { const zt = BR.h + .05, pts = [[xP, -.3], [(xP + xR) / 2, -.34], [xR, -.32], [xF, -.3], [xF + .25, -.26]].map(([x, y]) => new THREE.Vector3(x, y, zt));
     const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, .008, 8), std(0x7fb6d9, { roughness: .2, opacity: .9 })); actors.flow.obj.add(tube); tube.position.set(-actors.flow.obj.position.x, -actors.flow.obj.position.y, -actors.flow.obj.position.z); }
   // gantry viscometer and the compact 3030 gantry stand on the floor beyond the bench
   const xV = BR.x + BR.w / 2 + .5;
@@ -99,7 +99,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
     const dot = new THREE.Mesh(new THREE.SphereGeometry(.03, 16, 12), new THREE.MeshBasicMaterial({ color: C.beet })); dot.position.copy(c);
     const ring = new THREE.Mesh(new THREE.RingGeometry(.05, .058, 40), new THREE.MeshBasicMaterial({ color: C.beet, side: THREE.DoubleSide })); ring.position.copy(c); ring.lookAt(c.clone().add(new THREE.Vector3(0, 0, 1)));
     sensors.add(dot, ring); sensorDots.push({ dot, ring, label }); };
-  for (const [id, l] of [["balance", "mass"], ["mixer", "torque"], ["dispensers", "pressure"], ["inline", "viscosity"], ["flow", "flow"], ["visco", "viscosity"]]) sensorAt(id, l);
+  for (const [id, l] of [["balance", "mass"], ["mixer", "torque"], ["dispensers", "pressure"], ["flow", "flow"], ["visco", "viscosity"]]) sensorAt(id, l);
   actor("sensors", sensors, { keepColor: true });
 
   /* ------------------------------------------------------------------ digital twin: a desk monitor showing a live simulated copy of the cell */
