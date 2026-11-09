@@ -186,7 +186,7 @@ body.panel-off .collapse{transform:scaleX(-1);border-radius:0 8px 8px 0;border:1
   .hud-l .seg:last-child{display:none}
 }
 
-/* ---------------------------------------------------------------- Laboo integration */
+/* ---------------------------------------------------------------- Labu integration */
 .bl-logo{width:20px;height:20px;color:var(--ink)}
 .brand{color:var(--ink)!important}
 .tocart{background:#B82E5C!important;border-color:#B82E5C!important;color:#fff!important;font-weight:600}

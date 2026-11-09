@@ -1,4 +1,4 @@
-/* Laboo Learn (the wiki): visual identity matched to the Laboo platform (assets/bl.css) */
+/* Labu Learn (the wiki): visual identity matched to the Labu platform (assets/bl.css) */
 
 :root {
   --ink: #121212;
@@ -223,7 +223,7 @@
   .md-typeset .step-cards { grid-template-columns: 1fr; }
 }
 
-/* Laboo platform links in the header */
+/* Labu platform links in the header */
 .md-header__bl { display: flex; align-items: center; gap: 0.1rem; margin: 0 0.4rem; }
 .md-header__bl a { color: rgba(255, 255, 255, 0.82); font-size: 0.66rem; font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 0.2rem; white-space: nowrap; }
 .md-header__bl a:hover, .md-header__bl a:focus { color: #fff; background: rgba(255, 255, 255, 0.1); }

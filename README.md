@@ -1,12 +1,12 @@
-# Laboo
+# Labu
 
 **From root to result.**
 
-*Laboo* = **lab** + **Ù„Ø¨Ùˆ** (*labu*, Persian for beetroot). The palette is the colour of a cooked labu: rich black and beetroot. The site is light by default (off-white `#FAFAFA`, black `#121212` header, footer and feature bands, deep beetroot `#8C1D40`) with a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`) behind the header toggle. Text uses plain Google Fonts: Inter, with Roboto Mono for numbers and part codes. The logo is a round-bottom flask whose bulb is a beetroot.
+*Labu* is a design and configuration tool for self-driving laboratories. The site is light by default (off-white `#FAFAFA`, black `#121212` header, footer and feature bands, deep beetroot `#8C1D40`) with a dark theme (rich black `#0F0F10`, charcoal `#18181B`, vibrant beet `#B82E5C`) behind the header toggle. Text uses plain Google Fonts: Inter, with Roboto Mono for numbers and part codes. The logo is a round-bottom flask whose bulb is a beetroot.
 
 **Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
-Labu is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Laboo sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
+Labu is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. Labu sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
 
 The structure follows [vention.com](https://vention.com), which does the same for factory automation but sells its own parts.
 
@@ -19,7 +19,7 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 | [`/self-driving/`](self-driving/) | Self-driving layer | Architecture (L1â€“L4); an orchestration picker built on Supplementary Table S1 that ranks the eight open-source systems by the functions you tick; the simulation fidelity ladder (Table 6); AI agent roles (Table 7) and optimizers |
 | [`/cart/`](cart/) | Cart | Grouped by vendor with "order or quote" links and a contacted checklist; totals; a self-driving readiness check (act, sense, decide and run) that suggests the lowest-priced part for each missing step; share link (`?c=id:qty,â€¦`); CSV; import from the current design |
 | [`/atlas/`](atlas/) | Atlas | The original interactive review atlas with the live digital twin |
-| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Laboo Learn |
+| [`/wiki/`](wiki/) | Learn | The wiki, rebranded as Labu Learn |
 | `/builder/` | | Redirects to `/new-design/` so old share links keep working |
 
 ### Shared code
@@ -116,8 +116,8 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 | Path | Content |
 |---|---|
-| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Laboo pages (plain HTML and ES modules, no build) |
-| `assets/bl.css`, `assets/bl.js` | Laboo design system and shared runtime |
+| `index.html`, `parts/`, `solutions/`, `self-driving/`, `cart/` | Labu pages (plain HTML and ES modules, no build) |
+| `assets/bl.css`, `assets/bl.js` | Labu design system and shared runtime |
 | `data/catalog.js`, `data/templates.js` | Parts catalogue and design templates |
 | `atlas/`, `assets/app.js`, `assets/style.css` | The atlas page (three.js 0.160 from unpkg) |
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1â€“7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |

@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("laboo-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("labu-theme")||localStorage.getItem("laboo-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Self-driving layer · Laboo</title>
+<title>Self-driving layer · Labu</title>
 <meta name="description" content="Make a lab cell decide for itself: compare eight open-source orchestration systems by the functions you need, choose simulators on a four-level fidelity ladder, and pick optimizers and AI agent roles with human checkpoints.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,7 +94,7 @@
 <main id="main">
 <section class="phero night on-night gridpaper dark" style="padding:72px 0 64px">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb" style="color:var(--night-muted)"><a href="../">Laboo</a><span>/</span><span>Self-driving layer</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb" style="color:var(--night-muted)"><a href="../">Labu</a><span>/</span><span>Self-driving layer</span></nav>
     <p class="eyebrow"><span class="tick"></span>Platform · Self-driving layer</p>
     <h1 class="display" style="max-width:13ch">Make the cell decide for itself.</h1>
     <p class="lede">A self-driving lab is hardware plus a closed loop: devices integrated into one workflow, rehearsed in a twin, and steered by models that choose the next experiment. Choose each layer here and add it to the same cart as your hardware.</p>
@@ -215,7 +215,7 @@ drawMx();
 /* ---------------- fidelity ladder (Table 6) */
 const T6 = R.table_6.rows;
 const TOOLID = { "Discrete-event simulation (e.g. SimPy)": "simpy", "Device emulators, SiLA 2 mocks": "sila2", "MoveIt 2 with RViz": "moveit2", "Vendor offline programming (URSim, RoboDK)": "robodk", "Gazebo": "gazebo", "MuJoCo": "mujoco", "PyBullet": "pybullet", "NVIDIA Isaac Sim": "isaacsim", "Isaac Lab": "isaaclab" };
-const LV = [["1", "Logic & timing", "Queues, device states and protocols. No geometry."], ["2", "Geometry & motion", "Kinematics, reach and collision checks. Laboo's twin lives here."], ["3", "Contact dynamics", "Rigid bodies, grasping, sensors and learning."], ["4", "Material physics", "Fluids, granular flow and pastes. Hours per case."]];
+const LV = [["1", "Logic & timing", "Queues, device states and protocols. No geometry."], ["2", "Geometry & motion", "Kinematics, reach and collision checks. Labu's twin lives here."], ["3", "Contact dynamics", "Rigid bodies, grasping, sensors and learning."], ["4", "Material physics", "Fluids, granular flow and pastes. Hours per case."]];
 $("#ladder").innerHTML = LV.map(([n, h, p]) => { const tools = T6.filter(t => String(t.Level).trim().startsWith(n) || (n === "4" && /\+4|3–4/.test(t.Level)));
   return `<div class="rung"><div class="lv"><b>${n}</b><span>LEVEL</span></div><div class="fill" style="--w:${25 * +n}%"></div><h3>${h}</h3><p>${p}</p>
     ${tools.map(t => { const id = TOOLID[t["Tool or class"]]; return `<div class="tool"><b>${esc(t["Tool or class"])}${id ? `<button type="button" data-add="${id}" aria-label="Add ${esc(t["Tool or class"])} to cart">+ Cart</button>` : ""}</b><span>${esc(t["Best SDL use"])} · <i>${esc(t["Main constraint"])}</i></span></div>`; }).join("")}</div>`; }).join("");

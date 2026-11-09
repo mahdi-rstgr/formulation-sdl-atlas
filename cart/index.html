@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -97,8 +97,8 @@
 import { mountChrome, cart, byId, PRODUCTS, CATS, esc, priceOf, fmtPrice, money, vendorOf, ICON, GLYPH, imgHTML, toast, ROOT } from "../assets/bl.js";
 mountChrome();
 const $ = s => document.querySelector(s);
-const DONE = "laboo-contacted-v1";
-const done = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE)) || []); } catch { return new Set(); } };
+const DONE = "labu-contacted-v1";
+const done = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE)) || JSON.parse(localStorage.getItem("laboo-contacted-v1")) || []); } catch { return new Set(); } };
 const setDone = s => { try { localStorage.setItem(DONE, JSON.stringify([...s])); } catch { } };
 
 /* shared cart link: ?c=id:qty,id:qty */
@@ -182,7 +182,7 @@ $("#csv").onclick = () => {
   const rows = [["SKU", "Part", "Maker", "Category", "Qty", "List price (published)", "Vendor page", "Review refs"]];
   for (const l of cart.all()) rows.push([l.p.sku, l.p.name, l.p.brand, CATS.find(c => c.id === l.p.cat)?.name, l.qty, l.p.price, l.p.url, l.p.ref]);
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
-  a.download = "laboo-cart.csv"; a.click(); toast("Parts list downloaded.");
+  a.download = "labu-cart.csv"; a.click(); toast("Parts list downloaded.");
 };
 $("#toDesign").onclick = e => { const ids = cart.all().filter(l => l.p.design).flatMap(l => Array(l.qty).fill(l.p.id)); if (ids.length) { e.preventDefault(); location.href = `../new-design/?add=${ids.join(",")}&fresh=1`; } };
 $("#clear").onclick = () => { if (!cart.count()) return; const prev = Object.fromEntries(cart.all().map(l => [l.p.id, l.qty])); cart.clear();
