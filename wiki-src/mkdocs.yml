@@ -16,8 +16,8 @@ copyright: >-
 theme:
   name: material
   custom_dir: overrides
-  logo: assets/labu.svg
-  favicon: assets/labu.svg
+  logo: assets/labu-logo.png
+  favicon: assets/labu-logo.png
   language: en
   font:
     text: Inter
