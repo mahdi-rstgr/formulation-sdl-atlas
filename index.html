@@ -8,7 +8,7 @@
 <meta name="description" content="assemblab is a catalogue and Lab Simulator for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:title" content="assemblab · Configure a self-driving laboratory">
 <meta property="og:description" content="Compare instruments and software with citations, lay the cell out in 3D, and source each part from its maker.">
-<meta property="og:image" content="assets/img/platform-hero.webp">
+<meta property="og:image" content="assets/img/lab-orbit-poster.webp">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
@@ -19,8 +19,8 @@
 /* hero: the platform render full width, a dark gradient over its left side, the title on that shadow (like vention.com) */
 .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(60% 80% at 68% 60%,rgba(59,130,246,.22),rgba(109,93,246,.08) 45%,transparent 75%),var(--paper)}
 .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(148,163,184,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.06) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:radial-gradient(70% 70% at 60% 60%,#000,transparent);mask-image:radial-gradient(70% 70% at 60% 60%,#000,transparent);pointer-events:none}
-.hero .media{position:relative;aspect-ratio:2000/1161;max-height:calc(100vh - 70px);width:100%}
-.hero .media img{width:100%;height:100%;object-fit:cover;object-position:right 22%;display:block}
+.hero .media{position:relative;aspect-ratio:16/9;max-height:calc(100vh - 70px);width:100%}
+.hero .media img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
 .hero .media::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,13,25,.94) 0%,rgba(8,13,25,.82) 26%,rgba(8,13,25,.45) 46%,rgba(8,13,25,0) 64%),linear-gradient(0deg,rgba(8,13,25,.55),transparent 30%)}
 .hero h1{position:absolute;z-index:2;left:clamp(20px,4.5vw,72px);top:50%;transform:translateY(-50%);width:min(54%,17ch);margin:0;text-align:left;font-size:clamp(28px,3.5vw,58px);line-height:1.07;color:#F8FAFC;text-shadow:0 2px 24px rgba(8,13,25,.6)}
 .hero h1 em{display:block;font-style:normal;color:#7DB3FF}
@@ -195,7 +195,7 @@
 <section class="hero" aria-labelledby="h">
   <h1 id="h" class="display">Configure a Self&#8209;Driving Lab, <em>from Labware to Orchestrator, Data, ML Models, and AI Agents</em></h1>
   <div class="media">
-    <img src="assets/img/platform-hero.webp" alt="Rendering of a self-driving formulation platform assembled from parts in the library: two aluminium T-slot workstations with a stainless deck holding an Opentrons OT-2, a compact cobot, an analytical balance, vial racks and flasks, a small dispensing gantry with its tool stand, a gantry viscometer, a planetary mixer, pumps, a flow sensor and a stack light." width="2000" height="1161" fetchpriority="high">
+    <img id="heroImg" src="assets/img/lab-orbit-poster.webp" alt="A self-driving formulation lab, turning slowly: the platform built from parts in the library, with its digital twin, orchestration cabinet, data centre, model display and the AI agents desk around it on the lab floor." width="1120" height="630" fetchpriority="high">
   </div>
 </section>
 
@@ -346,6 +346,10 @@ import { STAGES, BANDS } from "./data/sdl-workflow.js";
 import { TEMPLATES } from "./data/templates.js";
 mountChrome();
 const $ = s => document.querySelector(s);
+
+/* ---------------- hero: a slow 360° turn around the whole lab (tools/render-hero-orbit.html); the still frame shows first,
+   the animation replaces it once loaded, and stays off for visitors who prefer reduced motion */
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { const im = new Image(); im.onload = () => { $("#heroImg").src = im.src; }; im.src = "assets/img/lab-orbit.webp"; }
 
 /* ---------------- partners ribbon */
 $("#partners").insertAdjacentHTML("beforeend", PARTNERS().replace("><img", '><span class="sep" aria-hidden="true"></span><img')

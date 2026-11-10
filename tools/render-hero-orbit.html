@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Render the hero orbit</title>
+<meta name="robots" content="noindex">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body style="margin:0;background:#080D19">
+<!-- Renders the frames of the home-page hero: one slow 360° orbit around the whole self-driving lab of section 1
+     (platform, digital twin, orchestration, data centre, models, agents). Run headless with --force-prefers-reduced-motion
+     and --dump-dom; ?n=<frames>&w=<px>&h=<px>&k0=<first>&k1=<end> (render in batches). The JPEG frames land in the last <pre id="out"> as a JSON list. -->
+<div id="host" style="position:relative;width:640px;height:360px"></div>
+<pre id="out"></pre>
+<script type="module">
+import { createSDLScene } from "../assets/sdl-scene.js";
+import { STAGES } from "../data/sdl-workflow.js";
+const Q = new URLSearchParams(location.search), N = +(Q.get("n") || 240), W = +(Q.get("w") || 1120), H = +(Q.get("h") || 630), K0 = +(Q.get("k0") || 0), K1 = +(Q.get("k1") || N);
+const sc = await createSDLScene(document.getElementById("host"), { root: "../" });
+const i = STAGES.findIndex(s => s.all); sc.setStage(STAGES[i], i, STAGES);
+await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+const frames = [];
+for (let k = K0; k < K1; k++) frames.push(sc.capture({ w: W, h: H, theta: -2.1 + k / N * Math.PI * 2, tau: k / 10, elev: .6, zoom: .7, shift: .15 }));
+document.getElementById("out").textContent = JSON.stringify(frames);
+</script>
+</body>
+</html>

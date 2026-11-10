@@ -187,10 +187,10 @@ const TITLES = {
   "solutions/": ["Solutions", "Start from what you formulate"], "self-driving/": ["Self-driving layer", "Orchestrate, rehearse and decide"],
   "cart/": ["Cart", "Each provider, one by one"],
 };
-/* the developer credited in the footer; replace the two links with the exact profile URLs */
-export const DEVELOPER = { name: "Mohammad M. (Mahdi) Rastegardoost",
-  scholar: "https://scholar.google.com/citations?view_op=search_authors&mauthors=Rastegardoost",
-  linkedin: "https://www.linkedin.com/search/results/people/?keywords=Mohammad%20Rastegardoost" };
+/* the developer credited in the footer */
+export const DEVELOPER = { name: "Mahdi Rastegar",
+  scholar: "https://scholar.google.ca/citations?user=tWmo_h0AAAAJ&hl=en",
+  linkedin: "https://www.linkedin.com/in/mahdirstgr/" };
 const SCHOLAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 1 9.5l4 2.4V17h2v-3.9l5 3 11-6.6L12 3Zm-5 12.2V18c0 1.7 2.2 3 5 3s5-1.3 5-3v-2.8l-5 3-5-3Z"/></svg>';
 const LINKEDIN_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5Z"/></svg>';
 export const PARTNERS = () => `<img src="${ROOT}assets/logos/acceleration-consortium.png" alt="University of Toronto and Acceleration Consortium" class="rev"><img src="${ROOT}assets/logos/matter-lab.svg" alt="The Matter Lab" class="rev">`;

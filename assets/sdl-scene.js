@@ -305,5 +305,22 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
     placeLabels();
   })();
   onProgress("");
-  return { setStage, setSafety, names: NAMES };
+  /* capture one frame of a slow orbit for the home-page hero (tools/render-hero-orbit.html): the camera circles the whole lab at
+     angle theta; tau is the time used for the connection dots. Returns a JPEG data URL. */
+  function capture({ w = 1280, h = 720, theta = 0, tau = 0, elev = .5, zoom = .66, q = .9, shift = 0 } = {}) {
+    r.setPixelRatio(1); r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
+    if (!scene.background) { const t = canvasTex(1024, 576), g = t.x.createRadialGradient(512, 230, 40, 512, 288, 620); g.addColorStop(0, "#16233F"); g.addColorStop(1, "#080D19"); t.x.fillStyle = g; t.x.fillRect(0, 0, 1024, 576); t.t.needsUpdate = true; scene.background = t.t; }
+    const c = everything.getCenter(new THREE.Vector3()), rad = everything.getSize(new THREE.Vector3()).length() / 2;
+    const vf = cam.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * cam.aspect), d = rad / Math.sin(Math.min(vf, hf) / 2) * zoom;
+    c.z = Math.max(.55, c.z * .8); goal = null; userMoved = true;
+    cam.position.set(c.x + d * Math.cos(elev) * Math.cos(theta), c.y + d * Math.cos(elev) * Math.sin(theta), c.z + d * Math.sin(elev)); cam.lookAt(c); ctl.target.copy(c);
+    for (const l of links) l.dots.forEach((dd, i) => dd.position.copy(l.curve.getPoint(((tau * .35) + i / 3) % 1)));
+    for (const { ring } of sensorDots) { const k = Math.abs(Math.sin(tau * 3)); ring.scale.setScalar(1 + .5 * k); ring.material.opacity = 1 - k * .7; }
+    paintScreens(3 + tau);
+    if (actors.twin.obj.visible) { cupT.position.copy(path.getPoint((Math.sin(tau * .6) + 1) / 2)); tCam.position.set(Math.cos(tau * .15) * 3.6 - .4, Math.sin(tau * .15) * 3.6 - 1, 2.6); tCam.lookAt(0, 0, .9); r.setRenderTarget(RT); r.render(tScene, tCam); r.setRenderTarget(null); }
+    if (shift) cam.setViewOffset(w, h, -w * shift, 0, w, h);   // shift the lab to the right of the frame, leaving room for the hero title
+    r.render(scene, cam); const url = r.domElement.toDataURL("image/jpeg", q); if (shift) cam.clearViewOffset();
+    return url;
+  }
+  return { setStage, setSafety, capture, names: NAMES };
 }
