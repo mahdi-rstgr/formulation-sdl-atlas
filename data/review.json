@@ -44,7 +44,7 @@
   }
  ],
  "affiliations": {
-  "a": "Acceleration Consortium, University of Toronto, Toronto, ON M5S 3H6, Canada",
+  "a": "University of Toronto, Toronto, ON M5S 3H6, Canada",
   "b": "SEKISUI Chemical Co., Ltd., Osaka, Japan"
  },
  "abstract": "Formulation, combining liquids, pastes and powders into products whose properties emerge from both composition and process, is a promising but comparatively under-automated target for self-driving laboratories (SDLs). An autonomous formulation experiment is a physical choreography: ingredients of very different rheology are dosed into one premix container, which is carried to a mixer, processed and characterized, often with materials the robot has never handled. Landmark SDLs show that this physical layer, the handling of materials and the manipulation of the containers that hold them, can limit autonomy as much as the planning algorithm. Yet reviews of the field have mostly treated it as a platform detail. This review examines the methods, trends and open challenges of automating formulation, following a representative workflow through an SDL. We examine how viscosity, yield stress and powder flowability affect dispensing and review how recent studies use sensing, modeling and feedback to handle liquids, semi-solids and powders; compare gantry, SCARA, articulated, collaborative and mobile robots for moving premix containers and tools; and compare commercial dispensers and integrated platforms, finding that price tracks mechanism and ecosystem rather than accuracy and is rarely public, so that researchers can match dispensing methods, robots and platforms to their formulation tasks. We then show how low-cost retrofits extend platforms beyond their factory specifications, how simulation and digital twins let a laboratory rehearse and verify a workflow before material is committed, how system architecture and orchestration software integrate the devices into one laboratory, and how data, machine learning and AI agents, connected through APIs and data pipelines, choose the next experiment. We close with shared benchmarks (reference materials and handling tasks), open interfaces, calibrated twins and safeguards that a laboratory able to formulate with any ingredient will need.",
@@ -780,7 +780,7 @@
     "Example tasks": "Goal to draft campaign; dry-run checks of seed formulations",
     "Autonomy": "Draft; submit only in approved campaigns",
     "Human checkpoint": "Scientist approves campaign and runs",
-    "SDL examples": "La Agente Óptima [174]; ChemAgents [175]"
+    "SDL examples": "Campaign and recovery agent [174]; ChemAgents [175]"
    },
    {
     "Agent": "Laboratory copilot",
@@ -788,7 +788,7 @@
     "Example tasks": "Explains status, rejections and validation verdicts",
     "Autonomy": "Inform",
     "Human checkpoint": "None (read-only)",
-    "SDL examples": "ORGANA [172]; CRESt [178]"
+    "SDL examples": "Lab copilot agent [172]; CRESt [178]"
    },
    {
     "Agent": "Recovery advisor",
@@ -796,7 +796,7 @@
     "Example tasks": "Gathers fault context; ranks recovery options",
     "Autonomy": "Draft",
     "Human checkpoint": "Operator decides the recovery",
-    "SDL examples": "La Agente Óptima [174]"
+    "SDL examples": "Campaign and recovery agent [174]"
    },
    {
     "Agent": "Results analyst",

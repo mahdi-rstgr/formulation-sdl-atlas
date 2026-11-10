@@ -49,4 +49,4 @@ A formulator who wants to automate should be able to describe what they need in 
 
 ## Hand-off
 
-The output (equipment list, station poses, twin scene) is meant to be a starting point for a self-building lab such as [Self-Building Labs](https://self-building-labs.github.io/). A self-building lab could then build the skills and workflows that run the cell.
+The output (equipment list, station poses, twin scene) is meant to be a starting point for a self-building lab such as a self-building lab planner. A self-building lab could then build the skills and workflows that run the cell.

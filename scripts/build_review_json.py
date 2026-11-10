@@ -19,7 +19,7 @@ out = {
     "title": lines[0].lstrip("# ").strip(),
     "version": "V3 (final)",
     "authors": authors,
-    "affiliations": {"a": "Acceleration Consortium, University of Toronto, Toronto, ON M5S 3H6, Canada",
+    "affiliations": {"a": "University of Toronto, Toronto, ON M5S 3H6, Canada",
                      "b": "SEKISUI Chemical Co., Ltd., Osaka, Japan"},
     "abstract": md.split("## Abstract")[1].split("**Keywords:**")[0].strip(),
     "keywords": [k.strip() for k in md.split("**Keywords:**")[1].split("\n")[0].split(";")],

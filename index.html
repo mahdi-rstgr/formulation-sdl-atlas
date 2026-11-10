@@ -27,9 +27,7 @@
 :root[data-theme="light"] .hero{background:#0B1222}
 @media (max-width:760px){.hero .media{aspect-ratio:auto;height:min(92vw,520px)}.hero .media img{object-position:72% center}.hero h1{width:auto;right:20px;top:auto;bottom:24px;transform:none;font-size:clamp(26px,7vw,40px)}.hero .media::after{background:linear-gradient(0deg,rgba(8,13,25,.95) 0%,rgba(8,13,25,.7) 45%,rgba(8,13,25,0) 80%)}}
 
-.ribbon .note{max-width:52ch;text-transform:none;letter-spacing:0;font:400 13.5px/1.5 var(--body);color:var(--ink-2);margin-left:auto}
-:root[data-theme="light"] .ribbon .note{color:#C9D2E0}
-
+:root[data-theme="light"] 
 /* ---------- section heads */
 .shead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;margin-bottom:36px}
 .shead .secno{display:block;margin-bottom:12px}
@@ -199,11 +197,6 @@
   </div>
 </section>
 
-<!-- ================================================================ partners ribbon -->
-<section class="ribbon" aria-label="Partners">
-  <div class="wrap in" id="partners"><p>Developed with</p></div>
-</section>
-
 <!-- ================================================================ 1 · the self-driving laboratory, stage by stage -->
 <section class="band" aria-labelledby="uo-h" id="cell">
   <div class="wrap">
@@ -324,7 +317,7 @@
     <div>
       <span class="secno">8 · Evidence</span>
       <h2 id="rs" class="h2" style="margin-top:12px">Every number is cited.</h2>
-      <p class="lede">The catalogue grew out of a review from the Acceleration Consortium at the University of Toronto: 8 authors, 178 references and 7 comparison tables on handling liquids, pastes, powders and objects. Prices, accuracies and comparisons link back to their source.</p>
+      <p class="lede">The catalogue grew out of a review of self-driving laboratories for formulation: 8 authors, 178 references and 7 comparison tables on handling liquids, pastes, powders and objects. Prices, accuracies and comparisons link back to their source.</p>
       <div class="links"><a class="btn btn-ink" href="atlas/">Read the interactive atlas</a><a class="btn" href="wiki/">Open the wiki</a></div>
     </div>
   </div>
@@ -341,7 +334,7 @@
 </main>
 
 <script type="module">
-import { mountChrome, PRODUCTS, CATS, byId, card, wireCards, GLYPH, ROOT, esc, priceOf, fmtPrice, money, vendorOf, ICON, MAT, imgHTML, PARTNERS } from "./assets/bl.js";
+import { mountChrome, PRODUCTS, CATS, byId, card, wireCards, GLYPH, ROOT, esc, priceOf, fmtPrice, money, vendorOf, ICON, MAT, imgHTML } from "./assets/bl.js";
 import { STAGES, BANDS } from "./data/sdl-workflow.js";
 import { TEMPLATES } from "./data/templates.js";
 mountChrome();
@@ -350,10 +343,6 @@ const $ = s => document.querySelector(s);
 /* ---------------- hero: a slow 360° turn around the whole lab (tools/render-hero-orbit.html); the still frame shows first,
    the animation replaces it once loaded, and stays off for visitors who prefer reduced motion */
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { const im = new Image(); im.onload = () => { $("#heroImg").src = im.src; }; im.src = "assets/img/lab-orbit.webp"; }
-
-/* ---------------- partners ribbon */
-$("#partners").insertAdjacentHTML("beforeend", PARTNERS().replace("><img", '><span class="sep" aria-hidden="true"></span><img')
-  + `<p class="note">We work with the Acceleration Consortium at the University of Toronto and the Matter Lab. Their lab-built devices, optimizers and agents are in the library.</p>`);
 
 
 /* ---------------- 1 · the self-driving laboratory, stage by stage (content: data/sdl-workflow.js, 3D: assets/sdl-scene.js) */
@@ -398,7 +387,7 @@ io.observe($("#viewer"));
 const MATS = {
   liquid: { t: "Liquids", range: "1–1,000 cP", flow: "Newtonian to mildly shear-thinning", tech: "Air- and positive-displacement pipettes, syringe and peristaltic pumps, acoustic and drop-on-demand", issue: "Evaporation, splashing, viscous lag", ids: ["ot2", "rainin-e4", "hamilton-psd4", "lab-formulator-pen-assembly"] },
   paste: { t: "Pastes & gels", range: "Yield stress; 10³–10⁶ cP", flow: "Shear-thinning, thixotropic", tech: "Pneumatic, syringe and auger extrusion; positive-displacement pens", issue: "Air entrapment, stringing, residue", ids: ["ecopen", "ultimus", "cellink-syringe", "fisnar-pdv1000"] },
-  powder: { t: "Powders", range: "Hausner ratio 1.0–1.6+", flow: "Free-flowing to cohesive", tech: "Gravimetric dosing heads, twin-screw and vibratory feeders", issue: "Bridging, static, humidity", ids: ["quantos", "mt12", "powder-hapd", "vf1"] },
+  powder: { t: "Powders", range: "Hausner ratio 1.0–1.6+", flow: "Free-flowing to cohesive", tech: "Gravimetric dosing heads, twin-screw and vibratory feeders", issue: "Bridging, static, humidity", ids: ["quantos", "mt12", "powder-auger", "vf1"] },
   object: { t: "Objects", range: "Cups, vials, plates", flow: "Pick, place, transfer", tech: "Cartesian gantries, SCARA, 6- and 7-DOF cobots, mobile manipulators", issue: "Reach, repeatability, collisions", ids: ["ur3e", "pf400", "lite6", "kmr"] },
 };
 let curM = "liquid";
@@ -423,10 +412,10 @@ $("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").lengt
 $("#cats").innerHTML = CATS.map(c => `<a href="parts/?cat=${c.id}" class="${c.id === "structure" ? "hl" : ""}"><span class="n">${PRODUCTS.filter(p => p.cat === c.id).length}</span>${GLYPH[c.id]}<b>${c.name}</b><span>${c.blurb}</span></a>`).join("")
   + `<a href="parts/"><span class="n">${PRODUCTS.length}</span>${GLYPH.platform}<b>Everything</b><span>Search and filter the whole library by material, maker and price.</span></a>`;
 
-/* ---------------- 7 · templates: the Formulator first, from its render; the others from renders made by the Lab Simulator (lab-simulator/?shot=<template>) */
+/* ---------------- 2 · templates: the formulation cell first, from its render; the others from renders made by the Lab Simulator (lab-simulator/?shot=<template>) */
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = `<a class="tpl" href="lab-simulator/?add=lab-formulator&fresh=1"><div class="ph plate"><img class="full" src="assets/img/formulator/cell-studio.webp" alt="" loading="lazy"></div>
-    <div class="bd"><h3>The Formulator</h3><p>The Acceleration Consortium's formulation cell as one placeable unit, from its CAD.</p><div class="ft"><span>1 cell</span><span>lab-built</span></div></div></a>` +
+    <div class="bd"><h3>Formulation cell</h3><p>A lab-built formulation cell as one placeable unit, from its CAD.</p><div class="ft"><span>1 cell</span><span>lab-built</span></div></div></a>` +
   Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
     return `<a class="tpl" href="lab-simulator/?t=${k}"><div class="ph"><img class="full" src="assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>
       <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}</span></div></div></a>`; }).join("");

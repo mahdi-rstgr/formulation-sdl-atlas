@@ -119,7 +119,7 @@ Landmark SDLs show that this physical layer can limit autonomy as much as the pl
 
 > **Self-Driving Laboratories for Formulation: Handling Liquids, Pastes, Powders and Objects, from Robots to Digital Twins and AI Agents**  
 > Mohammad M. Rastegardoost<sup>a,\*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a</sup>, Nasim Abdollahi<sup>a</sup>, Kourosh Darvish<sup>a</sup>, Aaron Clasky<sup>a</sup>, Hiroki Ohsaka<sup>b</sup>, Frantz Le Devedec<sup>a</sup>  
-> <sup>a</sup> Acceleration Consortium, University of Toronto, Toronto, ON, Canada · <sup>b</sup> SEKISUI Chemical Co., Ltd., Osaka, Japan  
+> <sup>a</sup> University of Toronto, Toronto, ON, Canada · <sup>b</sup> SEKISUI Chemical Co., Ltd., Osaka, Japan  
 > <sup>\*</sup> Corresponding author: m.rastegardoost@utoronto.ca  
 > Manuscript in preparation, 2026.
 

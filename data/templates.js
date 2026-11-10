@@ -4,13 +4,13 @@ export const TEMPLATES = {
   sfl: {
     name: "Self-Formulating Lab cell", mat: ["liquid", "paste", "powder", "object"],
     blurb: "The review's reference cell: a CNC gantry docks a paste pen and a powder dispenser, a UR5e carries the premix cup to the mixer and the rheometer.",
-    w: 3, d: 2, items: [["cnc4040", .6, .3, 0, 0, 0, 0], ["ecopen", 0, 0, 0, 0, 0, 0, "dock0"], ["powder-hapd", 0, 0, 0, 0, 0, 0, "dock1"], ["lab-formulator-pen-assembly", 0, 0, 0, 0, 0, 0, "dock2"], ["balance", .55, -.55, 0, 0, 0, 0], ["ur5e", -.1, -.15, 0, 0, 0, 0], ["thinky", -.75, .3, 0, 0, 0, 0], ["characterizer", -.8, -.55, 0, 0, 0, 0], ["cup", .55, -.55, 0, 0, 0, 0]],
+    w: 3, d: 2, items: [["cnc4040", .6, .3, 0, 0, 0, 0], ["ecopen", 0, 0, 0, 0, 0, 0, "dock0"], ["powder-auger", 0, 0, 0, 0, 0, 0, "dock1"], ["lab-formulator-pen-assembly", 0, 0, 0, 0, 0, 0, "dock2"], ["balance", .55, -.55, 0, 0, 0, 0], ["ur5e", -.1, -.15, 0, 0, 0, 0], ["thinky", -.75, .3, 0, 0, 0, 0], ["characterizer", -.8, -.55, 0, 0, 0, 0], ["cup", .55, -.55, 0, 0, 0, 0]],
   },
   loop: {
     name: "Closed-loop cell", mat: ["liquid", "paste", "powder", "object"],
-    blurb: "The Self-Formulating Lab cell run as a self-driving lab: MADSci orchestrates it, Atlas chooses each next experiment, and La Agente Óptima plans the campaign behind a human-approval gate.",
-    w: 3, d: 2, items: [["cnc4040", .6, .3, 0, 0, 0, 0], ["ecopen", 0, 0, 0, 0, 0, 0, "dock0"], ["powder-hapd", 0, 0, 0, 0, 0, 0, "dock1"], ["lab-formulator-pen-assembly", 0, 0, 0, 0, 0, 0, "dock2"], ["balance", .55, -.55, 0, 0, 0, 0], ["ur5e", -.1, -.15, 0, 0, 0, 0], ["thinky", -.75, .3, 0, 0, 0, 0], ["characterizer", -.8, -.55, 0, 0, 0, 0], ["cup", .55, -.55, 0, 0, 0, 0],
-      ["madsci", -.6, 1.55, 0, 0, 0, 0], ["ac-atlas", .15, 1.55, 0, 0, 0, 0], ["ac-optima", .9, 1.55, 0, 0, 0, 0]],
+    blurb: "The Self-Formulating Lab cell run as a self-driving lab: MADSci orchestrates it, a constrained Bayesian planner chooses each next experiment, and a campaign agent plans the campaign behind a human-approval gate.",
+    w: 3, d: 2, items: [["cnc4040", .6, .3, 0, 0, 0, 0], ["ecopen", 0, 0, 0, 0, 0, 0, "dock0"], ["powder-auger", 0, 0, 0, 0, 0, 0, "dock1"], ["lab-formulator-pen-assembly", 0, 0, 0, 0, 0, 0, "dock2"], ["balance", .55, -.55, 0, 0, 0, 0], ["ur5e", -.1, -.15, 0, 0, 0, 0], ["thinky", -.75, .3, 0, 0, 0, 0], ["characterizer", -.8, -.55, 0, 0, 0, 0], ["cup", .55, -.55, 0, 0, 0, 0],
+      ["madsci", -.6, 1.55, 0, 0, 0, 0], ["bo-planner", .15, 1.55, 0, 0, 0, 0], ["agent-campaign", .9, 1.55, 0, 0, 0, 0]],
   },
   liquid: {
     name: "Liquid-handling bench", mat: ["liquid", "object"],

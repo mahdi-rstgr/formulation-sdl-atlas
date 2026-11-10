@@ -11,7 +11,7 @@ Status as of November 2026.
 | Library agent | Spec | Weekly diff job, then LLM-proposed pull requests |
 | SFL agent | Twin, RRT-Connect, local chat agent, selection preview | Requirements dialogue, then layout optimizer, then drag-and-drop editing, then bill of materials |
 | Twin | Four UR arms, balance, CNC gantry, mixer, characterizer | Meshes for the most-cited dispensers and robots in Tables 2–3; a second robot class (SCARA or gantry) |
-| Outreach | Brief prepared for the Matter Lab / Self-Building Labs | Agree on a shared cell description for the SFL → SBL hand-off |
+| Outreach | Brief prepared for the self-building lab planner team | Agree on a shared cell description for the SFL → SBL hand-off |
 
 ## Milestones
 

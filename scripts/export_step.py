@@ -13,9 +13,9 @@ the group's colour. Fasteners and other tiny solids are dropped and each face is
 McMaster (SolidWorks) downloads are Y-up; lab assemblies are Z-up unless --up says otherwise.
 
 The models in data/models were made with:
-    python scripts/export_step.py CAD data/models                                    # McMaster parts, Formulator Pen
+    python scripts/export_step.py CAD data/models                                    # McMaster parts, lab-built liquid pen
     python scripts/export_step.py "OT-2 Reference Model Detailed.STEP" data/models --id ot2 --label "Opentrons OT-2" --color "#e9ebee"
-    python scripts/export_step.py Formulator.STEP data/models --id lab-formulator --label "The Formulator"         --groups --cell 0.0015 --min-part 0.008 --ignore-color "#cad1ee"
+    python scripts/export_step.py Formulator.STEP data/models --id lab-formulator --label "Formulation cell"         --groups --cell 0.0015 --min-part 0.008 --ignore-color "#cad1ee"
 """
 import argparse, base64, json, re, sys
 from pathlib import Path
@@ -224,7 +224,7 @@ if __name__ == "__main__":
         elif "_" in path.stem:               # McMaster download: "<part>_<name>.STEP"
             part, label = path.stem.split("_", 1)
             model_id, label = "mcm-" + part.lower(), label + " (McMaster-Carr " + part + ")"
-        else:                                # lab-made part, e.g. "Formulator Pen Assembly.step"
+        else:                                # lab-made part, e.g. "Liquid Pen Assembly.step"
             part = label = path.stem
             model_id = "lab-" + "-".join(path.stem.lower().split())
         if a.only and part not in a.only:

@@ -28,13 +28,13 @@ Coscientist [\[125\]](../references.md#ref-125) and ChemCrow [\[127\]](../refere
 
 | Agent | What it does |
 | --- | --- |
-| **ORGANA** | Works with chemists to derive experiment goals, resolves ambiguities and keeps experiment logs while planning and running robotic chemistry with visual feedback [\[172\]](../references.md#ref-172). |
+| **Lab copilot agent** | Works with chemists to derive experiment goals, resolves ambiguities and keeps experiment logs while planning and running robotic chemistry with visual feedback [\[172\]](../references.md#ref-172). |
 | **ChemAgents** | Coordinates role-specific agents for literature reading, experiment design, computation and robot operation around a robotic AI chemist [\[175\]](../references.md#ref-175). |
 | **LLM-RDF** | Assigns specialized agents to literature search, experiment design, hardware execution, spectrum analysis and result interpretation, for end-to-end synthesis development [\[176\]](../references.md#ref-176). |
 | **AILA** | Automates atomic force microscopy. It comes with a benchmark of the whole workflow, from experimental design to analysis, that shows where current models still fail [\[177\]](../references.md#ref-177). |
 | **CRESt** | Couples multimodal models and natural-language interaction with robotic synthesis and characterization to discover multi-element electrocatalysts [\[178\]](../references.md#ref-178). |
-| **El Agente** | Generates and runs quantum-chemistry workflows from natural-language requests (computational) [\[173\]](../references.md#ref-173). |
-| **La Agente Óptima** | Builds and supervises Bayesian optimization campaigns, keeping LLM reasoning separate from the loop that actually runs. In a closed-loop contact-angle campaign it caught and corrected a mid-run measurement failure. It also concluded that the target could not be reached with the available reagents and recommended a change of formulation [\[174\]](../references.md#ref-174). This is the closest example to formulation. |
+| **Quantum-chemistry agent** | Generates and runs quantum-chemistry workflows from natural-language requests (computational) [\[173\]](../references.md#ref-173). |
+| **Campaign and recovery agent** | Builds and supervises Bayesian optimization campaigns, keeping LLM reasoning separate from the loop that actually runs. In a closed-loop contact-angle campaign it caught and corrected a mid-run measurement failure. It also concluded that the target could not be reached with the available reagents and recommended a change of formulation [\[174\]](../references.md#ref-174). This is the closest example to formulation. |
 
 ## Agent roles in a formulation SDL
 
@@ -52,9 +52,9 @@ Each agent acts only through tools that the [orchestration layer](../orchestrati
 
 | Agent | Assists | Example tasks | Autonomy | Human checkpoint | SDL examples |
 | --- | --- | --- | --- | --- | --- |
-| Campaign designer | Scientist | Goal to draft campaign; dry-run checks of seed formulations | Draft; submit only in approved campaigns | Scientist approves campaign and runs | La Agente Óptima [\[174\]](../references.md#ref-174); ChemAgents [\[175\]](../references.md#ref-175) |
-| Laboratory copilot | Scientist, operator | Explains status, rejections and validation verdicts | Inform | None (read-only) | ORGANA [\[172\]](../references.md#ref-172); CRESt [\[178\]](../references.md#ref-178) |
-| Recovery advisor | Operator | Gathers fault context; ranks recovery options | Draft | Operator decides the recovery | La Agente Óptima [\[174\]](../references.md#ref-174) |
+| Campaign designer | Scientist | Goal to draft campaign; dry-run checks of seed formulations | Draft; submit only in approved campaigns | Scientist approves campaign and runs | Campaign and recovery agent [\[174\]](../references.md#ref-174); ChemAgents [\[175\]](../references.md#ref-175) |
+| Laboratory copilot | Scientist, operator | Explains status, rejections and validation verdicts | Inform | None (read-only) | Lab copilot agent [\[172\]](../references.md#ref-172); CRESt [\[178\]](../references.md#ref-178) |
+| Recovery advisor | Operator | Gathers fault context; ranks recovery options | Draft | Operator decides the recovery | Campaign and recovery agent [\[174\]](../references.md#ref-174) |
 | Results analyst | Scientist, engineer | Explains proposals; sandboxed analysis; report drafts | Act digitally | Author reviews reports | LLM-RDF [\[176\]](../references.md#ref-176); AILA [\[177\]](../references.md#ref-177) |
 | Knowledge assistant | Everyone | Cited answers from SOPs, manuals and safety data sheets | Inform | None (read-only) | Coscientist [\[125\]](../references.md#ref-125); ChemCrow [\[127\]](../references.md#ref-127) |
 

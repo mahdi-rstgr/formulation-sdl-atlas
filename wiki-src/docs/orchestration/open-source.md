@@ -25,7 +25,7 @@ Eight systems qualified: **MADSci** [\[158\]](../references.md#ref-158), **AlabO
 
 Two notable systems were excluded:
 
-- **ChemOS** [\[143\]](../references.md#ref-143) pioneered orchestration for SDLs, but its successor ChemOS 2.0 [\[144\]](../references.md#ref-144) is a configuration that accompanies a publication rather than a general package.
+- **A lab orchestration OS** [\[143\]](../references.md#ref-143) pioneered orchestration for SDLs, but its successor [\[144\]](../references.md#ref-144) is a configuration that accompanies a publication rather than a general package.
 - **OCTOPUS** [\[166\]](../references.md#ref-166) publishes no license.
 
 Each function was rated as provided through standard mechanisms (configuration files and documented formats and APIs), partially provided, or not provided. Ratings are based on the code and documentation of the repository versions listed below.

@@ -19,7 +19,8 @@ try {   // carry over carts and preferences saved under the earlier name
   for (const [o, n] of [["laboo-cart-v1", KEY], ["labu-cart-v1", KEY], ["laboo-contacted-v1", "assemblab-contacted-v1"], ["labu-contacted-v1", "assemblab-contacted-v1"], ["laboo-theme", "assemblab-theme"], ["labu-theme", "assemblab-theme"]])
     if (localStorage.getItem(o) != null && localStorage.getItem(n) == null) { localStorage.setItem(n, localStorage.getItem(o)); localStorage.removeItem(o); }
 } catch { }
-const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
+const RENAMED = { "powder-hapd": "powder-auger", "ac-chemos2": "orch-os", "ac-atlas": "bo-planner", "ac-gryffin": "bo-categorical", "ac-golem": "robust-opt", "ac-chimera": "mo-scalarizer", "ac-olympus": "opt-benchmark", "ac-self-building-labs": "self-building-lab", "ac-organa": "agent-copilot", "ac-el-agente": "agent-chemistry", "ac-optima": "agent-campaign" };
+const read = () => { try { const o = JSON.parse(localStorage.getItem(KEY)) || {}; for (const [a, b] of Object.entries(RENAMED)) if (o[a]) { o[b] = (o[b] || 0) + o[a]; delete o[a]; } return o; } catch { return {}; } };
 const write = o => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch { } window.dispatchEvent(new CustomEvent("bl-cart")); };
 export const cart = {
   all() { const o = read(); return Object.entries(o).filter(([id, q]) => byId[id] && q > 0).map(([id, qty]) => ({ p: byId[id], qty })); },
@@ -68,7 +69,6 @@ export const GLYPH = {
   ai: G('<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M34 6v8h-8"/><circle cx="24" cy="24" r="3"/>'),
 };
 export const thumbOf = p => p.design ? `${ROOT}lab-simulator/thumbs/${p.id}.png` : null;
-export const isAgent = p => p.vendor === "The Matter Lab" && p.cat === "ai";
 export const logoSrc = l => `${ROOT}assets/logos/${l.src}`;
 /* a small provider mark beside the maker's name; makers without a logo get a two-letter badge */
 export function logoChip(p) {
@@ -83,7 +83,6 @@ function logoImage(p) {
     : `<span class="logo-card"><img src="${logoSrc(l)}" alt="${esc(l.name)}" loading="lazy"></span>`;
 }
 export const imgHTML = (p, cls = "") => {
-  if (isAgent(p)) return logoImage(p);
   const t = thumbOf(p);
   return t ? `<img class="${cls}" src="${t}" alt="" loading="lazy" onerror="this.outerHTML=this.nextElementSibling?.innerHTML||''"><template>${logoImage(p)}</template>` : logoImage(p);
 };
@@ -193,7 +192,6 @@ export const DEVELOPER = { name: "Mahdi Rastegar",
   linkedin: "https://www.linkedin.com/in/mahdirstgr/" };
 const SCHOLAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 1 9.5l4 2.4V17h2v-3.9l5 3 11-6.6L12 3Zm-5 12.2V18c0 1.7 2.2 3 5 3s5-1.3 5-3v-2.8l-5 3-5-3Z"/></svg>';
 const LINKEDIN_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5Z"/></svg>';
-export const PARTNERS = () => `<img src="${ROOT}assets/logos/acceleration-consortium.png" alt="University of Toronto and Acceleration Consortium" class="rev"><img src="${ROOT}assets/logos/matter-lab.svg" alt="The Matter Lab" class="rev">`;
 
 export function mountChrome() {
   const rootPath = new URL(ROOT).pathname, here = location.pathname.slice(rootPath.length).replace(/index\.html$/, "");
@@ -201,8 +199,7 @@ export function mountChrome() {
   const app = document.createElement("div"); app.className = "app";
   const side = document.createElement("aside"); side.className = "sidebar"; side.id = "bl-side"; side.setAttribute("aria-label", "Navigation");
   side.innerHTML = `<a class="brand" href="${ROOT}"><img src="${ROOT}assets/brand/assemblab-favicon.svg" alt=""><span><b>assemb<i>lab</i></b><span>Self-driving lab builder</span></span></a>
-    <nav class="side-nav">${NAV.map(([h, items]) => `<h6>${h}</h6>` + items.map(([href, label, ic]) => `<a href="${ROOT}${href}" class="${href === sec ? "cur" : ""}"${href === sec ? ' aria-current="page"' : ""}>${ICON[ic]}<span>${label}</span>${ic === "cart" ? '<span class="n zero" id="bl-side-n">0</span>' : ""}</a>`).join("")).join("")}</nav>
-    <div class="partners"><p>Developed with the Acceleration Consortium, University of Toronto, and the Matter Lab</p>${PARTNERS()}</div>`;
+    <nav class="side-nav">${NAV.map(([h, items]) => `<h6>${h}</h6>` + items.map(([href, label, ic]) => `<a href="${ROOT}${href}" class="${href === sec ? "cur" : ""}"${href === sec ? ' aria-current="page"' : ""}>${ICON[ic]}<span>${label}</span>${ic === "cart" ? '<span class="n zero" id="bl-side-n">0</span>' : ""}</a>`).join("")).join("")}</nav>`;
   const main = document.createElement("div"); main.className = "app-main";
   const [tt, ts] = TITLES[sec] || [document.title.split(" · ")[0], "assemblab"];
   const top = document.createElement("header"); top.className = "topbar";
@@ -223,7 +220,7 @@ export function mountChrome() {
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
     </div>
     <div class="dev"><span>Developed by <b>${DEVELOPER.name}</b></span><a href="${DEVELOPER.scholar}" target="_blank" rel="noopener">${SCHOLAR_SVG}Google Scholar</a><a href="${DEVELOPER.linkedin}" target="_blank" rel="noopener">${LINKEDIN_SVG}LinkedIn</a></div>
-    <div class="base"><span>Developed with the Acceleration Consortium (University of Toronto) and the Matter Lab. Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026).</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
+    <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026).</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
   main.append(f);
   app.append(side, main); document.body.prepend(app);
 

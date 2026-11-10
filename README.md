@@ -4,8 +4,6 @@
 
 The interface is a dark dashboard: a left sidebar with the main sections, a top bar with search, theme and cart, navy cards with hairline borders, gradient stat tiles and blue, violet and cyan accents (`assets/bl.css`; a light theme sits behind the top-bar toggle). Text uses plain Google Fonts: Space Grotesk for headings and the wordmark, Inter for body text, Roboto Mono for numbers and part codes. The logo is the Twin Module mark: three solid modules and one dashed module, the physical cell and its digital twin. Its vector files are in `assets/brand/` and are built by `scripts/build_brand.py`.
 
-assemblab is developed with the Acceleration Consortium (University of Toronto) and the Matter Lab. Their logos appear in the partner ribbon on the home page and in the sidebar.
-
 **Live site:** https://mahdi-rstgr.github.io/formulation-sdl-atlas/
 
 assemblab is where scientists design self-driving labs. They explore robots, dispensers, platforms, workstations and open-source software from every maker, lay the cell out in 3D, check that it works, and then buy each part from the company that makes it. assemblab sells nothing: the cart is split by vendor, and each group links to the maker's own page to order or request a quote.
@@ -29,24 +27,24 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 - `data/catalog.js`: the single parts catalogue. It holds 89 parts (57 hardware, 32 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
 - `data/templates.js`: the design templates used by the home page, Solutions and the Lab Simulator.
 - `assets/bl.css`, `assets/bl.js`: the design system and the shared runtime: the app shell (sidebar, top bar, footer), a cart stored in `localStorage` and shared by every page, product cards with provider logos, and the product drawer.
-- `assets/logos/`: provider logos. `logoOf()` in `data/catalog.js` picks a logo for each part: the Matter Lab for its agents (also used as their image), the Acceleration Consortium for its lab-built devices and pumps, Opentrons, Universal Robots, and site icons for other makers. Makers without a logo get a two-letter badge.
+- `assets/logos/`: provider logos. `logoOf()` in `data/catalog.js` picks a logo for each part (Opentrons, Universal Robots, and site icons for other makers). Makers without a logo get a two-letter badge.
 - `assets/platform.js`: the demonstration platform composed from catalogue CAD (two McMaster-Carr workstations under a stainless deck with an OT-2, a Lite 6, a balance, labware, a 3030 gantry with three dispensing tools, the gantry viscometer, a mixer, pumps, a flow sensor, a stack light and an e-stop). It is used by the home-page 3D scene and the hero render.
 - `tools/render-hero-orbit.html`: renders the home-page hero, one slow 360° orbit around the whole lab of section 1 (platform, digital twin, orchestration, data centre, models, agents), in batches of JPEG frames (`?n=240&k0=0&k1=30`, 1120 × 630). The frames are assembled into `assets/img/lab-orbit.webp` (animated, 240 frames at 10 fps: one turn every 24 s) and `assets/img/lab-orbit-poster.webp` (the still shown first, and to visitors who prefer reduced motion).
 - `tools/render-platform.html`: renders a still of the platform alone and projects each component's outline for hotspots (not used by the current hero).
 
-### Acceleration Consortium
+### Lab-built devices and research tools
 
-Lab-built devices (the Formulator Pen, the HAPD powder dispenser, the peristaltic and reciprocating pumps) and the Matter Lab's self-driving-lab tools (ChemOS 2.0, Atlas, Gryffin, Golem, Chimera, Olympus, Self-Building Labs) are listed with the Acceleration Consortium as provider. The agents ORGANA, El Agente and La Agente Óptima are listed under the Matter Lab. The cart groups them under one provider block.
+Lab-built devices (the positive-displacement liquid pen, the auger powder dispenser, the gantry viscometer, the peristaltic and reciprocating pumps and the formulation cell) are listed as *Lab-built*. Research tools for self-driving labs are listed by function: the lab orchestration OS, the constrained Bayesian planner, the categorical Bayesian optimizer, the robust optimizer, the hierarchical multi-objective scalarizer, the optimizer benchmark suite, the self-building lab planner, and three agents (lab copilot, quantum-chemistry, campaign and recovery). Published ones link to their paper.
 
-### The Formulator, renders and CAD
+### The formulation cell, renders and CAD
 
-- `assets/img/formulator/*.webp`: two renders of the Acceleration Consortium's Formulator cell (hero figure and template card), compressed from the original PNGs.
-- `data/models/lab-formulator.json`: the Formulator assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the Lab Simulator as one unit.
+- `assets/img/formulator/*.webp`: two renders of the lab-built formulation cell (template card), compressed from the original PNGs.
+- `data/models/lab-formulator.json`: the formulation cell assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the Lab Simulator as one unit.
 - `data/models/ot2.json`: Opentrons' OT-2 reference model, which replaces the procedural OT-2 in the Lab Simulator.
 
 ### McMaster-Carr parts and lab CAD
 
-Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the Lab Simulator, along with the lab-built Formulator Pen. These are real CAD:
+Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the Lab Simulator, along with the lab-built positive-displacement liquid pen. These are real CAD:
 
 - `scripts/export_step.py` tessellates STEP files with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/*.json`. `--groups` tags assembly subsystems; the exact commands for every model are in the script's docstring.
 - Source CAD and render PNGs are not kept in the repository; only the meshes and WebP renders are published.
@@ -72,7 +70,7 @@ Below the steps:
 
 - **Twenty literature scenarios** (Fig. 3), each titled by its sense–act sequence and filterable by material class.
 - **Plan a cell**, a preview of the SFL agent's selection step. It picks a robot from Table 2 that meets the repeatability you need, picks a dispenser per material class from Table 3, totals the list prices against your budget, and loads the cell in the twin. It is rule-based and its rules are printed on the page.
-- **Citation** and **related work** (Self-Building Labs).
+- **Citation** and **related work** (the self-building lab planner).
 
 Every number links to its reference in the wiki (`wiki/references/#ref-N`).
 
@@ -92,13 +90,13 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 ### The digital layer: orchestration, optimizers and AI agents
 
-Orchestration software (MADSci, AlabOS, EOS, UniLabOS, ChemOS 2.0, PyLabRobot), optimizers (Atlas, Gryffin, Ax, BayBE) and AI agents (ORGANA, El Agente, La Agente Óptima) can be placed like devices. They stand as control stations in a row behind the workstation and are left out of the footprint, overlap and reach checks. The run simulation is in `lab-simulator/sim.js`; the **Run** tab of the side panel shows it.
+Orchestration software (MADSci, AlabOS, EOS, UniLabOS, the lab orchestration OS, PyLabRobot), optimizers (the constrained Bayesian planner, the categorical Bayesian optimizer, Ax, BayBE) and AI agents (the lab copilot agent, the quantum-chemistry agent, the campaign and recovery agent) can be placed like devices. They stand as control stations in a row behind the workstation and are left out of the footprint, overlap and reach checks. The run simulation is in `lab-simulator/sim.js`; the **Run** tab of the side panel shows it.
 
 - **Orchestration.** The first orchestrator builds a workflow from the capabilities on the deck (dose → move → weigh → mix → move → characterize) and runs it once per experiment. Commands fly to each device, the device glows while it works, and weighing and characterization send data back. Dispensing steps fail now and then; the orchestrator pauses and retries.
 - **Optimizers.** Each experiment makes a premix at a thickener fraction *x* and measures a desirability *y* from a hidden response curve with noise. An optimizer starts with a two-point space-filling design, then fits a Gaussian process (RBF kernel, exact inference) and proposes the next *x* by upper confidence bound. Its screen and the Run tab plot the mean, the ±2σ band and the observations. Without an optimizer the orchestrator walks a fixed grid; without a characterization station nothing is measured and the loop stays open.
 - **Agents.** Agents draft the campaign, re-plan every six experiments and draft recoveries after faults. They act only through the orchestrator, behind a human-approval gate: automatic by default, or manual with *Ask me to approve every agent plan* and the **Approve plan** button.
 - **Checks.** The Cell intelligence tab lists *Orchestrate as one workflow* and *Choose the next experiment* as capabilities, and warns when optimizers or agents have no orchestrator to act through.
-- The **Closed-loop cell** template (`?t=loop`) is the Self-Formulating Lab cell with MADSci, Atlas and La Agente Óptima.
+- The **Closed-loop cell** template (`?t=loop`) is the Self-Formulating Lab cell with MADSci, the constrained Bayesian planner and the campaign and recovery agent.
 
 - **Device banner:** six categories of devices, each with a rendered thumbnail and its list price:
   - **Material handlers:** liquid, paste and powder dispensers
@@ -187,7 +185,7 @@ See [docs/roadmap.md](docs/roadmap.md). In short:
 
 Mohammad M. Rastegardoost<sup>a,*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a</sup>, Nasim Abdollahi<sup>a</sup>, Kourosh Darvish<sup>a</sup>, Aaron Clasky<sup>a</sup>, Hiroki Ohsaka<sup>b</sup>, Frantz Le Devedec<sup>a</sup>
 
-<sup>a</sup> Acceleration Consortium, University of Toronto, Toronto, ON M5S 3H6, Canada · <sup>b</sup> SEKISUI Chemical Co., Ltd., Osaka, Japan · <sup>*</sup> m.rastegardoost@utoronto.ca
+<sup>a</sup> University of Toronto, Toronto, ON M5S 3H6, Canada · <sup>b</sup> SEKISUI Chemical Co., Ltd., Osaka, Japan · <sup>*</sup> m.rastegardoost@utoronto.ca
 
 ## Citation
 
@@ -195,7 +193,7 @@ Mohammad M. Rastegardoost<sup>a,*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a
 
 ## Related work
 
-[Self-Building Labs](https://self-building-labs.github.io/) (Bai, Zhao et al., [arXiv 2610.23826](https://arxiv.org/abs/2610.23826)) build the layout, twin, robot skills and workflows a lab needs for a scientific goal. The Self-Formulating Lab works one step earlier: it chooses what to buy and how to lay it out for a formulation budget. We see the two as complementary.
+Self-building lab planners (for example Bai, Zhao et al., [arXiv 2610.23826](https://arxiv.org/abs/2610.23826)) build the layout, twin, robot skills and workflows a lab needs for a scientific goal. The Self-Formulating Lab works one step earlier: it chooses what to buy and how to lay it out for a formulation budget. We see the two as complementary.
 
 ## Licence
 
