@@ -29,6 +29,8 @@
 .tpl:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
 .tpl .ph{aspect-ratio:16/9;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .tpl .ph img{position:absolute;width:30%;height:auto;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}
+.tpl .ph img.full{inset:0;width:100%;height:100%;object-fit:cover;filter:none;transition:transform .35s}
+.tpl:hover .ph img.full{transform:scale(1.03)}
 .tpl .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .tpl h3{font-size:19px}
 .tpl p{font-size:14px;color:var(--ink-2);margin:0}
@@ -103,7 +105,7 @@ wireCards($("#sols"));
 
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = Object.entries(TEMPLATES).map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-  return `<a class="tpl" href="../new-design/?t=${k}"><div class="ph gridpaper plate">${ids.map((id, i) => `<img src="../new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
+  return `<a class="tpl" href="../new-design/?t=${k}">${t.items.length ? `<div class="ph"><img class="full" src="../assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>` : `<div class="ph gridpaper plate"></div>`}
     <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>${t.items.length ? `from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}` : "your choice"}</span></div></div></a>`; }).join("");
 
 const CLS = { liquid: ["Liquids", "liquid"], "semi-solid": ["Pastes & gels", "paste"], powder: ["Powders", "powder"] };

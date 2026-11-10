@@ -50,6 +50,7 @@ Workstations, pedestals, a UR electric slide, a delta robot and its safety enclo
 - `scripts/export_step.py` tessellates STEP files with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/*.json`. `--groups` tags assembly subsystems; the exact commands for every model are in the script's docstring.
 - Source CAD and render PNGs are not kept in the repository; only the meshes and WebP renders are published.
 - In the design tool, anything dropped onto a workstation, pedestal or slide rests on top and moves with it. The delta robot hangs inside its enclosure.
+- Template renders on the home page and Solutions cards come from `new-design/?shot=<template>`, which loads the template, frames it and writes a 1600 × 900 PNG into `<pre id="shot-out">` for headless capture; they are saved as `assets/img/templates/<template>.webp`.
 - Thumbnails come from `new-design/?thumbs=<id,id>`. The page writes the PNGs as data URLs into `<pre id="thumbs-out">` for headless capture.
 
 ## The atlas (`/atlas/`)

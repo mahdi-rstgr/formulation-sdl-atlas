@@ -433,6 +433,18 @@ if (Q.get("t") && TEMPLATES[Q.get("t")]) await load(TEMPLATES[Q.get("t")]);
 else if (h) { let L = TEMPLATES.sfl; try { L = JSON.parse(atob(h[1])); } catch { } await load(L); }
 else if (Q.get("add")) { await load(Q.has("fresh") || !saved ? TEMPLATES.empty : saved); for (const id of Q.get("add").split(",")) if (byId[id]) await add(id); toast("Added from the parts library. Drag it where it belongs."); }
 else { await load(saved || TEMPLATES.sfl); startScreen(!!saved); }
+/* template render mode: ?shot=<template> frames the loaded layout and writes a 1600 × 900 PNG into <pre id="shot-out"> (read by headless --dump-dom;
+   used for the template cards on the home page, saved to assets/img/templates/<template>.webp) */
+if (Q.get("shot") && TEMPLATES[Q.get("shot")] && renderer) {
+  await load(TEMPLATES[Q.get("shot")]); running = false; showLabels = false; for (const o of placed) o.label.style.display = "none";
+  await new Promise(r => setTimeout(r, 400));
+  const W = 1600, H = 900; renderer.setPixelRatio(1); renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
+  const bb = new THREE.Box3(); for (const o of placed) bb.union(new THREE.Box3().setFromObject(o.group));
+  const c = bb.getCenter(new THREE.Vector3()), rad = bb.getSize(new THREE.Vector3()).length() / 2, vf = camera.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+  const dist = rad / Math.sin(Math.min(vf, hf) / 2) * .74; camera.position.copy(c).add(new THREE.Vector3(.62, -1.15, .72).normalize().multiplyScalar(dist)); controls.target.copy(c); controls.update();
+  renderer.render(scene, camera);
+  const out = document.createElement("pre"); out.id = "shot-out"; out.textContent = renderer.domElement.toDataURL("image/png"); document.body.append(out);
+}
 if (Q.toString()) history.replaceState(null, "", location.pathname + location.hash);
 
 /* ================================================================ start screen (like a "new design" chooser) */

@@ -156,7 +156,8 @@
 .tpl:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
 .tpl .ph{aspect-ratio:16/9;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
 .tpl .ph img{position:absolute;width:30%;height:auto;filter:drop-shadow(0 8px 8px rgba(0,0,0,.12))}
-.tpl .ph img.full{inset:0;width:100%;height:100%;object-fit:cover;filter:none}
+.tpl .ph img.full{inset:0;width:100%;height:100%;object-fit:cover;filter:none;transition:transform .35s}
+.tpl:hover .ph img.full{transform:scale(1.03)}
 .tpl .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
 .tpl h3{font-size:16.5px}
 .tpl p{font-size:13.5px;color:var(--ink-2);margin:0}
@@ -418,12 +419,12 @@ $("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").lengt
 $("#cats").innerHTML = CATS.map(c => `<a href="parts/?cat=${c.id}" class="${c.id === "structure" ? "hl" : ""}"><span class="n">${PRODUCTS.filter(p => p.cat === c.id).length}</span>${GLYPH[c.id]}<b>${c.name}</b><span>${c.blurb}</span></a>`).join("")
   + `<a href="parts/"><span class="n">${PRODUCTS.length}</span>${GLYPH.platform}<b>Everything</b><span>Search and filter the whole library by material, maker and price.</span></a>`;
 
-/* ---------------- 7 · templates (the Formulator first, from its render) */
+/* ---------------- 7 · templates: the Formulator first, from its render; the others from renders made by the design tool (new-design/?shot=<template>) */
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = `<a class="tpl" href="new-design/?add=lab-formulator&fresh=1"><div class="ph plate"><img class="full" src="assets/img/formulator/cell-studio.webp" alt="" loading="lazy"></div>
     <div class="bd"><h3>The Formulator</h3><p>The Acceleration Consortium's formulation cell as one placeable unit, from its CAD.</p><div class="ft"><span>1 cell</span><span>lab-built</span></div></div></a>` +
   Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-    return `<a class="tpl" href="new-design/?t=${k}"><div class="ph gridpaper plate">${ids.map((id, i) => `<img src="new-design/thumbs/${id}.png" alt="" loading="lazy" style="left:${6 + i * 22}%;top:${i % 2 ? 26 : 10}%" onerror="this.remove()">`).join("")}</div>
+    return `<a class="tpl" href="new-design/?t=${k}"><div class="ph"><img class="full" src="assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>
       <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}</span></div></div></a>`; }).join("");
 
 /* ---------------- 8 · example cart split by provider */
