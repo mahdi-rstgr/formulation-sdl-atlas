@@ -5,7 +5,7 @@
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>assemblab · Configure a self-driving lab</title>
-<meta name="description" content="assemblab is a catalogue and design tool for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
+<meta name="description" content="assemblab is a catalogue and Lab Simulator for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:title" content="assemblab · Configure a self-driving laboratory">
 <meta property="og:description" content="Compare instruments and software with citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:image" content="assets/img/platform-hero.webp">
@@ -225,16 +225,25 @@
   </div>
 </section>
 
-<!-- ================================================================ 3 · methods -->
+<!-- ================================================================ 2 · templates -->
+<section class="band alt" aria-labelledby="tp" id="templates">
+  <div class="wrap">
+    <div class="shead"><div><span class="secno">2 · Templates</span><h2 id="tp" class="h2">Start from a cell that already works.</h2></div>
+      <a class="btn btn-ghost" href="lab-simulator/">Or start blank <span class="arr">→</span></a></div>
+    <div class="tpls" id="tpls"></div>
+  </div>
+</section>
+
+<!-- ================================================================ 3 · method -->
 <section class="band" aria-labelledby="how">
   <div class="wrap">
-    <div class="shead"><div><span class="secno">2 · Method</span><h2 id="how" class="h2">From an empty room to a running loop.</h2>
+    <div class="shead"><div><span class="secno">3 · Method</span><h2 id="how" class="h2">From an empty room to a running loop.</h2>
       <p class="lede">Four steps in one workspace. Nothing asks you to commit to a vendor until you choose to contact one.</p></div></div>
     <ol class="methods">
-      <li><span class="k">2.1 · Explore</span><h3>Find the parts</h3><p>Dispensers, arms, platforms, workstations and software, with published prices, accuracy and the reference behind each number.</p><a href="parts/">Parts library</a></li>
-      <li><span class="k">2.2 · Design</span><h3>Lay out the cell</h3><p>Drag parts into a 3D workstation. Pipettes fill plates, arms replay planned transfers and feeders dose while you arrange them.</p><a href="new-design/">New design</a></li>
-      <li><span class="k">2.3 · Automate</span><h3>Make it self-driving</h3><p>Check every step is covered, choose an orchestration system, rehearse in a twin, and pick the optimizer or agents that decide the next run.</p><a href="self-driving/">Self-driving layer</a></li>
-      <li><span class="k">2.4 · Source</span><h3>Contact each maker</h3><p>Your cart splits by provider. Each group links to the maker's own page to order, request a quote or download the software.</p><a href="cart/">Your cart</a></li>
+      <li><span class="k">3.1 · Explore</span><h3>Find the parts</h3><p>Dispensers, arms, platforms, workstations and software, with published prices, accuracy and the reference behind each number.</p><a href="parts/">Parts library</a></li>
+      <li><span class="k">3.2 · Design</span><h3>Lay out the cell</h3><p>Drag parts into a 3D workstation. Pipettes fill plates, arms replay planned transfers and feeders dose while you arrange them.</p><a href="lab-simulator/">Lab Simulator</a></li>
+      <li><span class="k">3.3 · Automate</span><h3>Make it self-driving</h3><p>Check every step is covered, choose an orchestration system, rehearse in a twin, and pick the optimizer or agents that decide the next run.</p><a href="self-driving/">Self-driving layer</a></li>
+      <li><span class="k">3.4 · Source</span><h3>Contact each maker</h3><p>Your cart splits by provider. Each group links to the maker's own page to order, request a quote or download the software.</p><a href="cart/">Your cart</a></li>
     </ol>
   </div>
 </section>
@@ -242,7 +251,7 @@
 <!-- ================================================================ 4 · materials -->
 <section class="band alt" aria-labelledby="mat">
   <div class="wrap">
-    <div class="shead"><div><span class="secno">3 · Materials</span><h2 id="mat" class="h2">Rheology decides the hardware.</h2>
+    <div class="shead"><div><span class="secno">4 · Materials</span><h2 id="mat" class="h2">Rheology decides the hardware.</h2>
       <p class="lede">Viscosity, yield stress and powder flowability set the dispensing mechanism (Table 1 of the review).</p></div>
       <a class="btn btn-ghost" href="solutions/">All solutions <span class="arr">→</span></a></div>
     <div class="mtabs" role="tablist" id="mtabs"></div>
@@ -255,7 +264,7 @@
   <div class="wrap">
     <div class="loopwrap">
       <div>
-        <span class="secno" style="color:var(--night-accent)">4 · The self-driving layer</span>
+        <span class="secno" style="color:var(--night-accent)">5 · The self-driving layer</span>
         <h2 id="sdl" class="h2" style="margin-top:12px">Hardware is half a lab. The loop is the other half.</h2>
         <p class="lede">Vendor configurators stop at the bill of materials. assemblab continues to the software that lets a cell decide for itself, organized by the layers of a self-driving lab.</p>
         <ul class="layers">
@@ -282,24 +291,15 @@
 <!-- ================================================================ 6 · parts -->
 <section class="band" aria-labelledby="eco">
   <div class="wrap">
-    <div class="shead"><div><span class="secno">5 · Parts library</span><h2 id="eco" class="h2">One catalogue, every maker.</h2>
+    <div class="shead"><div><span class="secno">6 · Parts library</span><h2 id="eco" class="h2">One catalogue, every maker.</h2>
       <p class="lede">Instruments, industrial structure and open-source software side by side. Parts tagged 3D drop straight into a design.</p></div>
       <a class="btn" href="parts/">Open the library</a></div>
     <div class="cats" id="cats"></div>
   </div>
 </section>
 
-<!-- ================================================================ 7 · templates -->
-<section class="band alt" aria-labelledby="tp" id="templates">
-  <div class="wrap">
-    <div class="shead"><div><span class="secno">6 · Templates</span><h2 id="tp" class="h2">Start from a cell that already works.</h2></div>
-      <a class="btn btn-ghost" href="new-design/">Or start blank <span class="arr">→</span></a></div>
-    <div class="tpls" id="tpls"></div>
-  </div>
-</section>
-
-<!-- ================================================================ 8 · sourcing -->
-<section class="band" aria-labelledby="md" id="model">
+<!-- ================================================================ 7 · sourcing -->
+<section class="band alt" aria-labelledby="md" id="model">
   <div class="wrap model">
     <div>
       <span class="secno">7 · Sourcing</span>
@@ -316,8 +316,8 @@
   </div>
 </section>
 
-<!-- ================================================================ 9 · research -->
-<section class="band alt" aria-labelledby="rs">
+<!-- ================================================================ 8 · evidence -->
+<section class="band" aria-labelledby="rs">
   <div class="wrap research">
     <figure class="fig"><div class="frame"><img src="figures/graphical_abstract.jpg" alt="Graphical abstract: a formulation SDL dosing liquids, pastes and powders into a premix container that robots move to a mixer and characterizers, mirrored by a digital twin and directed by AI agents." width="1800" height="737" loading="lazy"></div>
       <figcaption><b>Seven steps to a self-driving formulation lab.</b> Graphical abstract of the review behind the catalogue.</figcaption></figure>
@@ -332,10 +332,10 @@
 
 <section class="band night on-night" aria-labelledby="go">
   <div class="wrap">
-    <span class="secno" style="color:var(--night-accent)">From root to result</span>
+    <span class="secno" style="color:var(--night-accent)">Module by module</span>
     <h2 id="go" class="h1" style="max-width:20ch;margin-top:12px">Your next experiment starts with a layout.</h2>
-    <p class="lede">Open the design tool, drop in a liquid handler and an arm, and let the cell check itself.</p>
-    <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap"><a class="btn btn-accent" href="new-design/">Start designing</a><a class="btn" href="solutions/#templates">Browse templates</a></div>
+    <p class="lede">Open the Lab Simulator, drop in a liquid handler and an arm, and let the cell check itself.</p>
+    <div style="display:flex;gap:10px;margin-top:28px;flex-wrap:wrap"><a class="btn btn-accent" href="lab-simulator/">Lab Simulator</a><a class="btn" href="solutions/#templates">Browse templates</a></div>
   </div>
 </section>
 </main>
@@ -368,7 +368,7 @@ function drawInfo() {
       <ul class="flows">${st.flows.map(f => `<li>${f}</li>`).join("")}</ul><p class="ref">Review ${st.ref}</p>
       <div class="sdl-nav"><button type="button" class="btn btn-sm" data-step="-1" ${sdlIdx ? "" : "disabled"}>← Previous</button><span class="mono fine">${sdlIdx + 1} / ${STAGES.length}</span><button type="button" class="btn btn-sm btn-accent" data-step="1" ${sdlIdx < STAGES.length - 1 ? "" : "disabled"}>Next →</button></div></div>
     <div class="uo-parts"><h4>In the library</h4><ul>${parts.map(p => `<li><span class="im">${imgHTML(p)}</span><span><a href="parts/?p=${p.id}" data-open="${p.id}">${esc(p.name)}</a><small>${esc(p.vendor || p.brand)}</small></span><span class="pr">${priceOf(p) ? fmtPrice(priceOf(p)) : esc(p.price)}</span></li>`).join("")}</ul>
-      ${placeable.length ? `<div class="uo-cta"><a class="btn btn-sm" href="new-design/?add=${placeable.join(",")}&fresh=1">Place in a design</a></div>` : ""}</div>`;
+      ${placeable.length ? `<div class="uo-cta"><a class="btn btn-sm" href="lab-simulator/?add=${placeable.join(",")}&fresh=1">Place in a design</a></div>` : ""}</div>`;
 }
 function go(i, user = true) {
   sdlIdx = (i + STAGES.length) % STAGES.length; drawSteps(); drawInfo(); sdlScene?.setStage(STAGES[sdlIdx], sdlIdx, STAGES);
@@ -419,12 +419,12 @@ $("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").lengt
 $("#cats").innerHTML = CATS.map(c => `<a href="parts/?cat=${c.id}" class="${c.id === "structure" ? "hl" : ""}"><span class="n">${PRODUCTS.filter(p => p.cat === c.id).length}</span>${GLYPH[c.id]}<b>${c.name}</b><span>${c.blurb}</span></a>`).join("")
   + `<a href="parts/"><span class="n">${PRODUCTS.length}</span>${GLYPH.platform}<b>Everything</b><span>Search and filter the whole library by material, maker and price.</span></a>`;
 
-/* ---------------- 7 · templates: the Formulator first, from its render; the others from renders made by the design tool (new-design/?shot=<template>) */
+/* ---------------- 7 · templates: the Formulator first, from its render; the others from renders made by the Lab Simulator (lab-simulator/?shot=<template>) */
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
-$("#tpls").innerHTML = `<a class="tpl" href="new-design/?add=lab-formulator&fresh=1"><div class="ph plate"><img class="full" src="assets/img/formulator/cell-studio.webp" alt="" loading="lazy"></div>
+$("#tpls").innerHTML = `<a class="tpl" href="lab-simulator/?add=lab-formulator&fresh=1"><div class="ph plate"><img class="full" src="assets/img/formulator/cell-studio.webp" alt="" loading="lazy"></div>
     <div class="bd"><h3>The Formulator</h3><p>The Acceleration Consortium's formulation cell as one placeable unit, from its CAD.</p><div class="ft"><span>1 cell</span><span>lab-built</span></div></div></a>` +
   Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-    return `<a class="tpl" href="new-design/?t=${k}"><div class="ph"><img class="full" src="assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>
+    return `<a class="tpl" href="lab-simulator/?t=${k}"><div class="ph"><img class="full" src="assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>
       <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}</span></div></div></a>`; }).join("");
 
 /* ---------------- 8 · example cart split by provider */

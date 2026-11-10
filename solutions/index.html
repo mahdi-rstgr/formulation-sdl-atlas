@@ -65,7 +65,7 @@
 
 <section class="band alt" id="templates" aria-labelledby="tp" style="scroll-margin-top:84px">
   <div class="wrap">
-    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Design templates</p><h2 id="tp" class="h2">Cells you can open, change and buy.</h2></div><a class="btn" href="../new-design/">Start blank</a></div>
+    <div class="sec-head"><div><p class="eyebrow"><span class="tick"></span>Design templates</p><h2 id="tp" class="h2">Cells you can open, change and buy.</h2></div><a class="btn" href="../lab-simulator/">Start blank</a></div>
     <div class="tpls" id="tpls"></div>
   </div>
 </section>
@@ -98,14 +98,14 @@ $("#sols").innerHTML = SOL.map((s, i) => { const t = TEMPLATES[s.tpl];
       <div class="range">${s.rows.map(r => T1[r]).map(r => `<div><div><b>${esc(r.Material)}</b><em>${esc(r["Common Technologies"])}</em></div><span>${esc(r["Viscosity / Particle Size"])}<br>${esc(r["Typical Accuracy"])} accuracy</span></div>`).join("")}</div>
       <p class="fine" style="margin-top:10px">From Table 1 of the review. Watch for: ${s.rows.map(r => esc(T1[r]["Key Challenges"]).toLowerCase()).join("; ")}.</p></div>
     <div><div class="pgrid">${s.ids.map(id => card(byId[id])).join("")}</div>
-      <div class="tplcta"><p><b>${esc(t.name)}</b> · ${esc(t.blurb)}</p><a class="btn btn-ink btn-sm" href="../new-design/?t=${s.tpl}">Open template</a></div>
+      <div class="tplcta"><p><b>${esc(t.name)}</b> · ${esc(t.blurb)}</p><a class="btn btn-ink btn-sm" href="../lab-simulator/?t=${s.tpl}">Open template</a></div>
       <a class="btn btn-ghost" href="../parts/?mat=${s.k}" style="margin-top:8px">All ${s.t.toLowerCase()} parts <span class="arr">→</span></a></div>
   </section>`; }).join("");
 wireCards($("#sols"));
 
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };
 $("#tpls").innerHTML = Object.entries(TEMPLATES).map(([k, t]) => { const [lo, n] = tplTotal(t), ids = [...new Set(t.items.map(i => i[0]))].slice(0, 4);
-  return `<a class="tpl" href="../new-design/?t=${k}">${t.items.length ? `<div class="ph"><img class="full" src="../assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>` : `<div class="ph gridpaper plate"></div>`}
+  return `<a class="tpl" href="../lab-simulator/?t=${k}">${t.items.length ? `<div class="ph"><img class="full" src="../assets/img/templates/${k}.webp" alt="3D render of the ${esc(t.name)} template" loading="lazy" width="1600" height="900"></div>` : `<div class="ph gridpaper plate"></div>`}
     <div class="bd"><h3>${esc(t.name)}</h3><p>${esc(t.blurb)}</p><div class="ft"><span>${t.items.length} parts</span><span>${t.items.length ? `from <b>${money(lo)}</b>${n ? ` + ${n} quotes` : ""}` : "your choice"}</span></div></div></a>`; }).join("");
 
 const CLS = { liquid: ["Liquids", "liquid"], "semi-solid": ["Pastes & gels", "paste"], powder: ["Powders", "powder"] };

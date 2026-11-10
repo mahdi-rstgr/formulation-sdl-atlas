@@ -15,19 +15,19 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 | Path | Page | What it does |
 |---|---|---|
 | `/` | Home | A full-width render of the assemblab demonstration platform with the title on a dark gradient over its left side, as on vention.com; the partner ribbon; **Standardize automation across the lab**: the platform on a lab floor, a *Full lab floor* tab, then the 13 stages from the review as horizontal tabs, with hardware, digital twin, orchestration, data centre, models, agents and safety appearing stage by stage and animated connections between them (content in `data/sdl-workflow.js`, scene in `assets/sdl-scene.js`, deep links `#sdl-floor`, `#sdl-twin`, `#sdl-agents`, …); method; materials; the self-driving layer; parts categories; templates; sourcing; evidence |
-| [`/new-design/`](new-design/) | New design | The 3D design tool (formerly the Lab Builder), laid out like the rest of the site: the device library sits in a left sidebar, one collapsible group per category (all collapsed at first; a search opens the groups that match), and devices are dragged into the workstation. It opens with a start screen (blank, a template, or your saved design) and sends the design to the cart. `?t=<template>` opens a template and `?add=<id,id>` adds parts. |
+| [`/lab-simulator/`](lab-simulator/) | Lab Simulator | The 3D Lab Simulator (formerly the Lab Builder), laid out like the rest of the site: the device library sits in a left sidebar, one collapsible group per category (all collapsed at first; a search opens the groups that match), and devices are dragged into the workstation. It opens with a start screen (blank, a template, or your saved design) and sends the design to the cart. `?t=<template>` opens a template and `?add=<id,id>` adds parts. |
 | [`/parts/`](parts/) | Parts library | All parts with filters for category, material, type, price and maker; search; sort; a detail drawer for each part (`?cat=`, `?mat=`, `?q=`, `?p=`) |
 | [`/solutions/`](solutions/) | Solutions | Guides by material (liquids, pastes and gels, powders, objects), design templates, and the 20 published sense–act loops |
 | [`/self-driving/`](self-driving/) | Self-driving layer | Architecture (L1–L4); an orchestration picker built on Supplementary Table S1 that ranks the eight open-source systems by the functions you tick; the simulation fidelity ladder (Table 6); AI agent roles (Table 7) and optimizers |
 | [`/cart/`](cart/) | Cart | Grouped by vendor with "order or quote" links and a contacted checklist; totals; a self-driving readiness check (act, sense, decide and run) that suggests the lowest-priced part for each missing step; share link (`?c=id:qty,…`); CSV; import from the current design |
 | [`/atlas/`](atlas/) | Atlas | The original interactive review atlas with the live digital twin |
 | [`/wiki/`](wiki/) | Learn | The wiki, rebranded as assemblab Learn |
-| `/builder/` | | Redirects to `/new-design/` so old share links keep working |
+| `/new-design/`, `/builder/` | | Redirect to `/lab-simulator/` so old links and shared designs keep working |
 
 ### Shared code
 
 - `data/catalog.js`: the single parts catalogue. It holds 89 parts (57 hardware, 32 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
-- `data/templates.js`: the design templates used by the home page, Solutions and the design tool.
+- `data/templates.js`: the design templates used by the home page, Solutions and the Lab Simulator.
 - `assets/bl.css`, `assets/bl.js`: the design system and the shared runtime: the app shell (sidebar, top bar, footer), a cart stored in `localStorage` and shared by every page, product cards with provider logos, and the product drawer.
 - `assets/logos/`: provider logos. `logoOf()` in `data/catalog.js` picks a logo for each part: the Matter Lab for its agents (also used as their image), the Acceleration Consortium for its lab-built devices and pumps, Opentrons, Universal Robots, and site icons for other makers. Makers without a logo get a two-letter badge.
 - `assets/platform.js`: the demonstration platform composed from catalogue CAD (two McMaster-Carr workstations under a stainless deck with an OT-2, a Lite 6, a balance, labware, a 3030 gantry with three dispensing tools, the gantry viscometer, a mixer, pumps, a flow sensor, a stack light and an e-stop). It is used by the home-page 3D scene and the hero render.
@@ -40,18 +40,18 @@ Lab-built devices (the Formulator Pen, the HAPD powder dispenser, the peristalti
 ### The Formulator, renders and CAD
 
 - `assets/img/formulator/*.webp`: two renders of the Acceleration Consortium's Formulator cell (hero figure and template card), compressed from the original PNGs.
-- `data/models/lab-formulator.json`: the Formulator assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the design tool as one unit.
-- `data/models/ot2.json`: Opentrons' OT-2 reference model, which replaces the procedural OT-2 in the design tool.
+- `data/models/lab-formulator.json`: the Formulator assembly from its STEP file, with each top-level component tagged by subsystem (`frame`, `arm`, `gantry`, `dispensers`, `balance`, `mixer`) for highlighting on the home page. It can also be placed in the Lab Simulator as one unit.
+- `data/models/ot2.json`: Opentrons' OT-2 reference model, which replaces the procedural OT-2 in the Lab Simulator.
 
 ### McMaster-Carr parts and lab CAD
 
-Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the design tool, along with the lab-built Formulator Pen. These are real CAD:
+Workstations, pedestals, a UR electric slide, a delta robot and its safety enclosure from McMaster-Carr can be placed in the Lab Simulator, along with the lab-built Formulator Pen. These are real CAD:
 
 - `scripts/export_step.py` tessellates STEP files with OpenCASCADE (`pip install cadquery-ocp numpy`). It drops fasteners, decimates within each face, converts McMaster's Y-up to Z-up and writes `data/models/*.json`. `--groups` tags assembly subsystems; the exact commands for every model are in the script's docstring.
 - Source CAD and render PNGs are not kept in the repository; only the meshes and WebP renders are published.
-- In the design tool, anything dropped onto a workstation, pedestal or slide rests on top and moves with it. The delta robot hangs inside its enclosure.
-- Template renders on the home page and Solutions cards come from `new-design/?shot=<template>`, which loads the template, frames it and writes a 1600 × 900 PNG into `<pre id="shot-out">` for headless capture; they are saved as `assets/img/templates/<template>.webp`.
-- Thumbnails come from `new-design/?thumbs=<id,id>`. The page writes the PNGs as data URLs into `<pre id="thumbs-out">` for headless capture.
+- In the Lab Simulator, anything dropped onto a workstation, pedestal or slide rests on top and moves with it. The delta robot hangs inside its enclosure.
+- Template renders on the home page and Solutions cards come from `lab-simulator/?shot=<template>`, which loads the template, frames it and writes a 1600 × 900 PNG into `<pre id="shot-out">` for headless capture; they are saved as `assets/img/templates/<template>.webp`.
+- Thumbnails come from `lab-simulator/?thumbs=<id,id>`. The page writes the PNGs as data URLs into `<pre id="thumbs-out">` for headless capture.
 
 ## The atlas (`/atlas/`)
 
@@ -85,9 +85,19 @@ The twin is the Self-Formulating Lab cell exported as static data:
 
 `data/twin/<arm>.json` holds the meshes (base64), the kinematics and the planned trajectories. The page runs forward kinematics in the browser. Nothing is simulated beyond kinematics and clearance: there are no forces and no material physics (level 2 of the review's fidelity hierarchy).
 
-## The design tool (`/new-design/`, formerly the Lab Builder)
+## The Lab Simulator (`/lab-simulator/`, formerly New design and the Lab Builder)
 
-[`new-design/`](new-design/) is a 3D lab-design tool. A device banner sits under the top bar, and the workstation fills the rest of the screen.
+[`lab-simulator/`](lab-simulator/) is a 3D lab simulator. The device library sits in a left sidebar, and the workstation fills the rest of the screen.
+
+### The digital layer: orchestration, optimizers and AI agents
+
+Orchestration software (MADSci, AlabOS, EOS, UniLabOS, ChemOS 2.0, PyLabRobot), optimizers (Atlas, Gryffin, Ax, BayBE) and AI agents (ORGANA, El Agente, La Agente Óptima) can be placed like devices. They stand as control stations in a row behind the workstation and are left out of the footprint, overlap and reach checks. The run simulation is in `lab-simulator/sim.js`; the **Run** tab of the side panel shows it.
+
+- **Orchestration.** The first orchestrator builds a workflow from the capabilities on the deck (dose → move → weigh → mix → move → characterize) and runs it once per experiment. Commands fly to each device, the device glows while it works, and weighing and characterization send data back. Dispensing steps fail now and then; the orchestrator pauses and retries.
+- **Optimizers.** Each experiment makes a premix at a thickener fraction *x* and measures a desirability *y* from a hidden response curve with noise. An optimizer starts with a two-point space-filling design, then fits a Gaussian process (RBF kernel, exact inference) and proposes the next *x* by upper confidence bound. Its screen and the Run tab plot the mean, the ±2σ band and the observations. Without an optimizer the orchestrator walks a fixed grid; without a characterization station nothing is measured and the loop stays open.
+- **Agents.** Agents draft the campaign, re-plan every six experiments and draft recoveries after faults. They act only through the orchestrator, behind a human-approval gate: automatic by default, or manual with *Ask me to approve every agent plan* and the **Approve plan** button.
+- **Checks.** The Cell intelligence tab lists *Orchestrate as one workflow* and *Choose the next experiment* as capabilities, and warns when optimizers or agents have no orchestrator to act through.
+- The **Closed-loop cell** template (`?t=loop`) is the Self-Formulating Lab cell with MADSci, Atlas and La Agente Óptima.
 
 - **Device banner:** six categories of devices, each with a rendered thumbnail and its list price:
   - **Material handlers:** liquid, paste and powder dispensers
@@ -116,7 +126,7 @@ The twin is the Self-Formulating Lab cell exported as static data:
 - **Models:**
   - Real meshes: the formulation-cell devices and articulated UR e-Series and Lite 6 arms (`data/models/`, from `scripts/export_models.py`).
   - Everything else is procedural and drawn at approximate footprints (`builder/catalog.js`).
-  - Thumbnails are rendered by opening `new-design/?thumbs=1`.
+  - Thumbnails are rendered by opening `lab-simulator/?thumbs=1`.
 
 ## Repository layout
 
@@ -129,8 +139,8 @@ The twin is the Self-Formulating Lab cell exported as static data:
 | `data/review.json` | Machine-readable review: title, authors, abstract, keywords, section list, figure captions, the seven steps, Tables 1–7, 20 literature scenarios, 178 references ([schema](docs/data.md)) |
 | `data/twin/*.json` | Twin scenes and planned transfers per arm |
 | `data/models/*.json` | Real device meshes and articulated arms (`*_arm.json`: link meshes, joint chain, trajectory) for the Lab Builder |
-| `new-design/` | Design tool: `catalog.js` (3D models, animated procedural models), `builder.js` (app), `thumbs/` (rendered card images) |
-| `builder/` | Redirect to `new-design/` |
+| `lab-simulator/` | Lab Simulator: `catalog.js` (3D models, animated procedural models), `builder.js` (app), `sim.js` (run simulation of the digital layer), `thumbs/` (rendered card images) |
+| `builder/` | Redirect to `lab-simulator/` |
 | `figures/` | Review figures used on the site (Figs. 1, 3, 4, 7, 8, 9 and the graphical abstract) |
 | `wiki-src/` | MkDocs Material source of the wiki |
 | `wiki/` | Built wiki, served at `/wiki/` |
@@ -188,7 +198,7 @@ Mohammad M. Rastegardoost<sup>a,*</sup>, Zeqing Bao<sup>a</sup>, Sara Sadr<sup>a
 
 ## Licence
 
-- **Code** (pages, `assets/`, `data/*.js`, `new-design/`, `scripts/`): MIT, see [LICENSE](LICENSE).
+- **Code** (pages, `assets/`, `data/*.js`, `lab-simulator/`, `scripts/`): MIT, see [LICENSE](LICENSE).
 - **McMaster-Carr meshes (`data/models/mcm-*.json`):** tessellated from CAD that McMaster-Carr provides for its catalogue parts. They are used only to visualize those parts. McMaster-Carr is a trademark of McMaster-Carr Supply Company.
 - **Review text, tables, figures and wiki content:** © the authors, all rights reserved until the review is published.
 - **UR e-Series meshes and kinematics in `data/twin/` and `data/models/ur*.json`:** BSD-3-Clause, Universal Robots ([data/twin/LICENSE-UR](data/twin/LICENSE-UR)).

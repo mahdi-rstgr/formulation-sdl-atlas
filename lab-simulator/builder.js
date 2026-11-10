@@ -5,6 +5,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { CATEGORIES, ITEMS, CAPS, buildModel, addDock } from "./catalog.js";
 import { TEMPLATES } from "../data/templates.js";
 import { cart as blCart, byId as P } from "../assets/bl.js";
+import { createSim } from "./sim.js";
 
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -107,6 +108,7 @@ gizmo.addEventListener("objectChange", () => { if (selected) { followDock(select
 
 /* ================================================================ placed devices */
 let placed = [], nextNo = 1, selected = null, hovered = null, running = true, showLabels = true;
+const sim = createSim({ THREE, scene, byId, toast: t => toast(t) });   // the digital layer: orchestration, optimizers and agents (sim.js)
 const labelsEl = $("#labels");
 async function add(id, x = null, y = null, opts = {}) {
   const it = byId[id]; if (!it) return;
@@ -115,7 +117,7 @@ async function add(id, x = null, y = null, opts = {}) {
   const obj = { no: nextNo++, id, group, dockedTo: null, slot: null };
   group.userData.obj = obj;
   if (opts.rot) group.rotation.set(opts.rot[0] || 0, opts.rot[1] || 0, opts.rot[2] || 0);
-  if (x == null) { const p = freeSpot(obj); x = p.x; y = p.y; }
+  if (x == null) { const p = it.digital ? digitalSpot(obj) : freeSpot(obj); x = p.x; y = p.y; }
   group.position.set(x, y, opts.z || 0); scene.add(group); placed.push(obj);
   if (it.reach) { const ring = new THREE.Mesh(new THREE.RingGeometry(it.reach - .008, it.reach, 128), new THREE.MeshBasicMaterial({ color: 0x5be3a0, transparent: true, opacity: .55, side: THREE.DoubleSide, depthWrite: false }));
     ring.position.z = .004; ring.userData.helper = true; group.add(ring);
@@ -152,6 +154,11 @@ function rest(obj) { const it = byId[obj.id], p = obj.group.position; let top = 
 function riders(host) { return placed.filter(o => o.onMount === host); }
 function boxOf(o) { const b = new THREE.Box3(); o.group.updateMatrixWorld(true); o.group.traverse(m => { if (m.isMesh && !m.userData.helper && m.geometry) { m.geometry.computeBoundingBox(); b.union(m.geometry.boundingBox.clone().applyMatrix4(m.matrixWorld)); } }); return b; }
 function afterMove(obj) { const it = byId[obj.id]; if (it.tool) { if (!trySnap(obj)) rest(obj); } else rest(obj); followDock(obj); for (const o of placed) if (o !== obj && (byId[o.id].stack || o.onMount)) rest(o); refresh(); syncInspector(); }
+function digitalSpot(obj) {   // software stations: a row behind the workstation (screens face the cell and the viewer), left to right
+  const others = placed.filter(o => byId[o.id].digital && o !== obj).map(rect), y = areaD / 2 + .55;
+  for (let k = 0; k < 40; k++) { const x = -areaW / 2 + .35 + k * .62; obj.group.position.set(x, y, 0); const me = rect(obj); if (!others.some(o => overlap(me, o))) return { x, y }; }
+  return { x: 0, y: y + .7 };
+}
 function freeSpot(obj) {
   const others = placed.map(rect);
   for (let r = 0; r < Math.max(areaW, areaD) * 1.6; r += .1) for (let a = 0; a < 6.283; a += r ? .1 / r : 7) {
@@ -167,7 +174,7 @@ function overlap(a, b) { for (const poly of [a, b]) for (let i = 0; i < 4; i++) 
   const pa = a.map(p => p.x * nx + p.y * ny), pb = b.map(p => p.x * nx + p.y * ny); if (Math.max(...pa) <= Math.min(...pb) + 1e-3 || Math.max(...pb) <= Math.min(...pa) + 1e-3) return false; } return true; }
 const snap = v => Math.round(v / .05) * .05;
 function analyse() {
-  const Rr = placed.map(o => ({ o, r: rect(o), b: boxOf(o) })), out = { overlaps: [], outside: [], reach: [], covered: new Set(), footprint: 0 };
+  const Rr = placed.filter(o => !byId[o.id].digital).map(o => ({ o, r: rect(o), b: boxOf(o) })), out = { overlaps: [], outside: [], reach: [], covered: new Set(), footprint: 0 };
   for (let i = 0; i < Rr.length; i++) for (let j = i + 1; j < Rr.length; j++) { const a = Rr[i].o, b = Rr[j].o;
     if (a.dockedTo === b || b.dockedTo === a || (a.dockedTo && a.dockedTo === b.dockedTo) || byId[a.id].stack || byId[b.id].stack || a.onMount === b || b.onMount === a || (a.onMount || null) !== (b.onMount || null)) continue; // different levels
     if (overlap(Rr[i].r, Rr[j].r)) out.overlaps.push([a, b]); }
@@ -283,7 +290,7 @@ async function autoArrange() {
   const arms = placed.filter(o => byId[o.id].reach).sort((a, b) => byId[b.id].reach - byId[a.id].reach);
   if (!arms.length) { toast("Add a robot arm first. Auto-arrange places stations around its reach."); return; }
   const arm = arms[0], R0 = byId[arm.id].reach; arm.group.position.set(0, 0, 0); arm.group.rotation.set(0, 0, 0);
-  const items = placed.filter(o => o !== arm && !o.dockedTo && !byId[o.id].stack && !(byId[o.id].reach && o !== arm));
+  const items = placed.filter(o => o !== arm && !o.dockedTo && !byId[o.id].stack && !byId[o.id].digital && !(byId[o.id].reach && o !== arm));
   items.sort((a, b) => { const A = boxOf(a), B2 = boxOf(b); return (B2.max.x - B2.min.x) * (B2.max.y - B2.min.y) - (A.max.x - A.min.x) * (A.max.y - A.min.y); });
   const done = [arm];
   for (const o of items) {
@@ -335,11 +342,49 @@ function refresh() {
   for (const o of A.outside) msgs.push(`<li class="warn"><b>#${o.no}</b> ${esc(short(byId[o.id].name))} is outside the ${areaW} × ${areaD} m workstation</li>`);
   for (const r of A.reach) msgs.push(`<li class="${r.outR.length ? "info" : "ok"}"><b>#${r.o.no}</b> ${esc(short(byId[r.o.id].name))} reaches ${r.inR.length ? r.inR.map(t => "#" + t.no).join(", ") : "nothing yet"}${r.outR.length ? `; out of reach: ${r.outR.map(t => "#" + t.no).join(", ")}` : ""}</li>`);
   if (!placed.some(o => byId[o.id].reach) && placed.length) msgs.push(`<li class="info">No arm yet, so nothing carries the premix cup between stations.</li>`);
+  sim.sync(placed); const R = sim.roles(), hw = placed.filter(o => !byId[o.id].digital).length;
+  if (!R.orchestrator.length && (R.optimizer.length || R.agent.length)) msgs.push(`<li class="warn">Optimizers and agents act only through orchestration software. Add an orchestrator (MADSci, Alab OS, EOS…) to run them.</li>`);
+  else if (!R.orchestrator.length && hw > 1) msgs.push(`<li class="info">No orchestration software: each device runs on its own, not as one workflow.</li>`);
+  if (R.orchestrator.length > 1) msgs.push(`<li class="info">${R.orchestrator.length} orchestrators placed; the first (#${R.orchestrator[0].no}) runs the workflow.</li>`);
+  if (R.orchestrator.length && !R.optimizer.length) msgs.push(`<li class="info">No optimizer: the orchestrator walks a fixed grid instead of learning where to sample next.</li>`);
   $("#checks").innerHTML = msgs.join("") || `<li class="ok">No overlaps. Everything is inside the workstation.</li>`;
   $("#cart-count").textContent = placed.length;
   saveLocal();
 }
 $("#budget").addEventListener("input", refresh);
+
+/* ================================================================ Run panel: the campaign driven by the digital layer (sim.js) */
+const KIND_ICON = { info: "·", model: "◆", data: "●", gate: "⛨", warn: "!" };
+function drawRun(S) {
+  const R = S.roles, orch = R.orchestrator[0];
+  $("#run-status").textContent = !orch ? "No orchestrator" : S.waiting ? "Waiting for your approval" : !S.workflow.length ? "No devices" : running ? (S.phase === "run" ? "Running" : "Planning") : "Paused";
+  $("#run-status").className = "chip " + (!orch || !S.workflow.length ? "off" : S.waiting ? "wait" : running ? "on" : "off");
+  $("#approve").hidden = !S.waiting;
+  $("#run-n").textContent = S.n; $("#run-best").textContent = S.best == null ? "–" : S.best.toFixed(3); $("#run-faults").textContent = S.faults;
+  $("#run-who").innerHTML = orch ? [orch, ...R.optimizer, ...R.agent].map(o => `<span class="sw" style="background:${byId[o.id].color}"></span>#${o.no} ${esc(short(byId[o.id].name))}`).join(" · ")
+    : `Add <button type="button" class="fix" data-add="madsci">MADSci</button> or another orchestrator from <b>Orchestration software</b> to run the cell as one workflow.`;
+  $$("#run-who [data-add]").forEach(b => b.onclick = () => add(b.dataset.add));
+  $("#run-flow").innerHTML = S.workflow.map(w => `<li><b>${({ dose: "Dose", move: "Move", weigh: "Weigh", mix: "Mix", characterize: "Measure" })[w.kind]}</b> ${w.devs.map(d => "#" + d.no).join(", ")}</li>`).join("") || `<li class="muted">Place devices to build the workflow.</li>`;
+  $("#run-log").innerHTML = [...S.log].reverse().slice(0, 40).map(l => `<li class="${l.kind}"><i>${KIND_ICON[l.kind] || "·"}</i>${esc(l.text)}</li>`).join("");
+  // plot: the optimizer's surrogate over x (top) and the best result so far per experiment (bottom)
+  const cv = $("#run-plot"), x = cv.getContext("2d"), W = cv.width, H = cv.height, L = 34, Rr = W - 10;
+  x.clearRect(0, 0, W, H); x.font = "11px Roboto Mono, monospace";
+  const T1 = 14, B1 = H * .58, X = u => L + u * (Rr - L), Y1 = v => B1 - Math.max(0, Math.min(1, v)) * (B1 - T1);
+  x.strokeStyle = "#1E293B"; x.strokeRect(L, T1, Rr - L, B1 - T1);
+  if (R.optimizer.length && S.X.length) { const { mu, sd } = sim.gp(S.X, S.Y, S.grid);
+    x.fillStyle = "rgba(74,222,128,.18)"; x.beginPath(); S.grid.forEach((u, i) => x.lineTo(X(u), Y1(mu[i] + 2 * sd[i]))); for (let i = S.grid.length - 1; i >= 0; i--) x.lineTo(X(S.grid[i]), Y1(mu[i] - 2 * sd[i])); x.fill();
+    x.strokeStyle = "#4ADE80"; x.lineWidth = 2; x.beginPath(); S.grid.forEach((u, i) => x[i ? "lineTo" : "moveTo"](X(u), Y1(mu[i]))); x.stroke(); x.lineWidth = 1; }
+  S.X.forEach((u, i) => { x.fillStyle = i === S.X.length - 1 ? "#FFD166" : "#E2E8F0"; x.beginPath(); x.arc(X(u), Y1(S.Y[i]), 3.2, 0, 7); x.fill(); });
+  x.fillStyle = "#94A3B8"; x.fillText("desirability y", L + 4, T1 + 12); x.fillText("thickener fraction x →", Rr - 150, B1 + 14);
+  const T2 = H * .7, B2 = H - 16, nmax = Math.max(10, S.Y.length), X2 = i => L + i / (nmax - 1) * (Rr - L), Y2 = v => B2 - Math.max(0, Math.min(1, v)) * (B2 - T2);
+  x.strokeStyle = "#1E293B"; x.strokeRect(L, T2, Rr - L, B2 - T2);
+  let best = 0; x.strokeStyle = "#60A5FA"; x.lineWidth = 2; x.beginPath(); S.Y.forEach((v, i) => { best = Math.max(best, v); x[i ? "lineTo" : "moveTo"](X2(i), Y2(best)); }); x.stroke(); x.lineWidth = 1;
+  x.fillStyle = "#94A3B8"; x.fillText("best so far", L + 4, T2 + 12); x.fillText("experiment →", Rr - 92, H - 3);
+}
+sim.on(drawRun);
+$("#approve").onclick = () => sim.approve();
+$("#manual").onchange = e => sim.setManual(e.target.checked);
+$("#run-reset").onclick = () => { sim.reset(); toast("New campaign."); };
 
 /* ================================================================ device library (left sidebar, one group per category) */
 const openCats = new Set();   // every group starts collapsed; a search opens the matching ones
@@ -378,7 +423,7 @@ async function load(layout) {
   for (const o of placed) followDock(o);
   for (const o of placed) if (!byId[o.id].mount && !o.dockedTo) rest(o);
   if (layout.budget) $("#budget").value = layout.budget;
-  refresh(); setView("iso");
+  refresh(); setView("iso"); sim.reset();
 }
 function serialize() {
   return { w: areaW, d: areaD, budget: +$("#budget").value, items: [...placed].sort((a, b) => a.no - b.no).map(o => { const p = o.group.position, r = o.group.rotation;
@@ -415,7 +460,7 @@ const clock = new THREE.Clock(); let simT = 0; const v3 = new THREE.Vector3();
 function loop() {
   requestAnimationFrame(loop); if (!renderer) return;
   const dt = Math.min(clock.getDelta(), .05);
-  if (running) { simT += dt; for (const o of placed) { o.group.userData.tick?.(simT + o.no * .37, dt); } }
+  if (running) { simT += dt; for (const o of placed) { o.group.userData.tick?.(simT + o.no * .37, dt); } sim.update(dt); }
   controls.update(); selBox?.update(); hovBox?.update();
   if (showLabels) { const r = view.getBoundingClientRect();
     for (const o of placed) { v3.copy(o.group.position); const bb = o._bb ?? (o._bb = boxOf(o)); v3.z = o.group.position.z + (bb.max.z - bb.min.z) + .06; v3.project(camera);
@@ -451,7 +496,7 @@ if (Q.toString()) history.replaceState(null, "", location.pathname + location.ha
 function startScreen(hasSaved) {
   const el = document.createElement("div"); el.className = "start"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Start a design");
   const total = t => { let lo = 0; for (const [id] of t.items) { const it = byId[id]; if (it?.price && it.price.cur === "$") lo += it.price.lo; } return lo; };
-  el.innerHTML = `<div class="start-in"><div class="start-h"><div><p class="k">New design</p><h2>How do you want to start?</h2></div><button type="button" class="x" aria-label="Close">✕</button></div>
+  el.innerHTML = `<div class="start-in"><div class="start-h"><div><p class="k">Lab Simulator</p><h2>How do you want to start?</h2></div><button type="button" class="x" aria-label="Close">✕</button></div>
     <div class="start-g">
       ${hasSaved ? `<button type="button" class="opt hl" data-k="__saved"><b>Continue your design</b><span>${saved.items.length} parts, saved in this browser</span></button>` : ""}
       <button type="button" class="opt" data-k="empty"><b>Blank workstation</b><span>A 3 × 2 m floor and the whole library</span></button>

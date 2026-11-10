@@ -67,7 +67,7 @@ export const GLYPH = {
   simulation: G('<path d="M24 6 8 15v18l16 9 16-9V15L24 6Z" stroke-dasharray="3 3"/><path d="M8 15l16 9 16-9M24 24v18"/>'),
   ai: G('<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M34 6v8h-8"/><circle cx="24" cy="24" r="3"/>'),
 };
-export const thumbOf = p => p.design ? `${ROOT}new-design/thumbs/${p.id}.png` : null;
+export const thumbOf = p => p.design ? `${ROOT}lab-simulator/thumbs/${p.id}.png` : null;
 export const isAgent = p => p.vendor === "The Matter Lab" && p.cat === "ai";
 export const logoSrc = l => `${ROOT}assets/logos/${l.src}`;
 /* a small provider mark beside the maker's name; makers without a logo get a two-letter badge */
@@ -98,7 +98,7 @@ export function priceTag(p) {
 export function kindTags(p) {
   const t = [];
   if (p.kind === "software") t.push(`<span class="tag ${/open/i.test(p.price) ? "open" : ""}">${/open/i.test(p.price) ? "Open source" : "Software"}</span>`);
-  if (p.design) t.push(`<span class="tag cad" title="Can be placed in the 3D design tool">3D</span>`);
+  if (p.design) t.push(`<span class="tag cad" title="Can be placed in the 3D Lab Simulator">3D</span>`);
   if (p.mcm) t.push(`<span class="tag">McMaster</span>`);
   return t.join("");
 }
@@ -149,7 +149,7 @@ export function openProduct(id, push = true) {
       ${p.note ? `<p class="fine">${esc(p.note)}</p>` : ""}
       <div class="acts">
         <button type="button" class="btn btn-accent" data-add="${p.id}">${ICON.plus}Add to cart</button>
-        ${p.design ? `<a class="btn" href="${ROOT}new-design/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
+        ${p.design ? `<a class="btn" href="${ROOT}lab-simulator/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
         ${p.url ? `<a class="btn btn-ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Vendor page ${ICON.out}</a>` : ""}
       </div>
       <p class="fine" style="margin-top:22px">assemblab does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
@@ -179,7 +179,7 @@ export function toast(html, href, label) {
 /* ================================================================ app shell: sidebar, top bar, footer */
 export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="assemblab home"><img src="${ROOT}assets/brand/assemblab-mark-dark.svg" alt="">assemb<i>lab</i></a>`;
 const NAV = [
-  ["Platform", [["", "Overview", "home"], ["new-design/", "New design", "design"], ["parts/", "Parts library", "parts"], ["solutions/", "Solutions", "solutions"], ["self-driving/", "Self-driving layer", "sdl"]]],
+  ["Platform", [["", "Overview", "home"], ["lab-simulator/", "Lab Simulator", "design"], ["parts/", "Parts library", "parts"], ["solutions/", "Solutions", "solutions"], ["self-driving/", "Self-driving layer", "sdl"]]],
   ["Resources", [["atlas/", "Digital twin atlas", "twin"], ["wiki/", "Learn (wiki)", "learn"], ["cart/", "Cart", "cart"]]],
 ];
 const TITLES = {
@@ -187,6 +187,12 @@ const TITLES = {
   "solutions/": ["Solutions", "Start from what you formulate"], "self-driving/": ["Self-driving layer", "Orchestrate, rehearse and decide"],
   "cart/": ["Cart", "Each provider, one by one"],
 };
+/* the developer credited in the footer; replace the two links with the exact profile URLs */
+export const DEVELOPER = { name: "Mohammad M. (Mahdi) Rastegardoost",
+  scholar: "https://scholar.google.com/citations?view_op=search_authors&mauthors=Rastegardoost",
+  linkedin: "https://www.linkedin.com/search/results/people/?keywords=Mohammad%20Rastegardoost" };
+const SCHOLAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 1 9.5l4 2.4V17h2v-3.9l5 3 11-6.6L12 3Zm-5 12.2V18c0 1.7 2.2 3 5 3s5-1.3 5-3v-2.8l-5 3-5-3Z"/></svg>';
+const LINKEDIN_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V21h-4V9.5Z"/></svg>';
 export const PARTNERS = () => `<img src="${ROOT}assets/logos/acceleration-consortium.png" alt="University of Toronto and Acceleration Consortium" class="rev"><img src="${ROOT}assets/logos/matter-lab.svg" alt="The Matter Lab" class="rev">`;
 
 export function mountChrome() {
@@ -206,16 +212,17 @@ export function mountChrome() {
     <form class="search" action="${ROOT}parts/" role="search"><label for="bl-q" class="sr">Search parts</label>${ICON.search}<input id="bl-q" name="q" type="search" placeholder="Search parts, makers, tools…"></form>
     <button type="button" class="iconbtn" id="bl-theme" aria-label="Switch theme"></button>
     <a class="iconbtn cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="n zero" id="bl-cart-n">0</span></a>
-    <a class="btn btn-accent btn-sm" href="${ROOT}new-design/">Start designing</a>`;
+    <a class="btn btn-accent btn-sm" href="${ROOT}lab-simulator/">Lab Simulator</a>`;
   const kids = [...document.body.childNodes].filter(n => n.nodeName !== "SCRIPT");
   main.append(top, ...kids);
   const f = document.createElement("footer"); f.className = "bl-footer";
   f.innerHTML = `<div class="wrap"><div class="top">
-      <div><img class="flogo" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and design tool for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
-      <div><h4>Platform</h4><a href="${ROOT}new-design/">New design</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin atlas</a></div>
+      <div><img class="flogo" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and Lab Simulator for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
+      <div><h4>Platform</h4><a href="${ROOT}lab-simulator/">Lab Simulator</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin atlas</a></div>
       <div><h4>Parts</h4>${CATS.slice(0, 5).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=ai">Decision &amp; AI</a></div>
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
     </div>
+    <div class="dev"><span>Developed by <b>${DEVELOPER.name}</b></span><a href="${DEVELOPER.scholar}" target="_blank" rel="noopener">${SCHOLAR_SVG}Google Scholar</a><a href="${DEVELOPER.linkedin}" target="_blank" rel="noopener">${LINKEDIN_SVG}LinkedIn</a></div>
     <div class="base"><span>Developed with the Acceleration Consortium (University of Toronto) and the Matter Lab. Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026).</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
   main.append(f);
   app.append(side, main); document.body.prepend(app);

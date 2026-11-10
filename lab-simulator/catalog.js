@@ -14,12 +14,15 @@ export const CATEGORIES = [
   { id: "station", name: "Balances & stations", color: "var(--ink-3)" },
   { id: "platform", name: "Integrated platforms", color: "var(--accent)" },
   { id: "structure", name: "Workstations & mounting", color: "#c9a45c" },
+  { id: "orchestration", name: "Orchestration software", color: "#22D3EE" },
+  { id: "decide", name: "Optimizers & AI agents", color: "#4ADE80" },
 ];
 
 /* capability each device provides (used by the cell intelligence panel) */
 export const CAPS = {
   liquids: "Dose liquids", pastes: "Dose pastes & gels", powders: "Dose powders", weigh: "Weigh",
   move: "Move containers", mix: "Mix", characterize: "Characterize",
+  orchestrate: "Orchestrate as one workflow", decide: "Choose the next experiment",
 };
 
 export const ITEMS = [
@@ -45,7 +48,7 @@ export const ITEMS = [
   { id: "drylin", cat: "arm", sub: "Cartesian gantry", name: "igus drylin XYZ gantry", model: "cartesian", dims: [0.9, 0.7, 0.62], src: ["table_2", "drylin"], caps: ["move"], color: "#F5A623" },
   { id: "rs3", cat: "arm", sub: "SCARA", name: "Epson RS3 SCARA", model: "scara", dims: [0.26, 0.26, 0.48], src: ["table_2", "RS3"], reach: 0.35, caps: ["move"], color: "#F2F3F4" },
   { id: "pf400", cat: "arm", sub: "SCARA", name: "PreciseFlex PF400", model: "pf400", dims: [0.26, 0.26, 0.78], src: ["table_2", "PF400"], reach: 0.59, caps: ["move"], color: "#E6E8EB" },
-  { id: "ur3e", cat: "arm", sub: "6-DOF articulated", name: "Universal Robots UR3e", model: "arm:ur3e", src: ["table_2", "UR3e"], reach: 0.5, caps: ["move"], note: "Real UR e-Series mesh (BSD-3), replaying an RRT-Connect transfer planned in the SFL twin." },
+  { id: "ur3e", cat: "arm", sub: "6-DOF articulated", name: "Universal Robots UR3e", model: "arm:ur3e", src: ["table_2", "UR3e"], reach: 0.5, caps: ["move"], note: "Real UR3 CAD (Universal Robots STEP), articulated on UR3 joint frames, replaying an RRT-Connect transfer planned in the SFL twin." },
   { id: "ur5e", cat: "arm", sub: "6-DOF articulated", name: "Universal Robots UR5e", model: "arm:ur5e", price: "Not in review", reach: 0.85, caps: ["move"], note: "Real UR e-Series mesh (BSD-3), replaying planned transfers. Price not listed in the review." },
   { id: "ur10e", cat: "arm", sub: "6-DOF articulated", name: "Universal Robots UR10e", model: "arm:ur10e", price: "Not in review", reach: 1.3, caps: ["move"], note: "Real UR e-Series mesh (BSD-3). Price not listed in the review." },
   { id: "ur16e", cat: "arm", sub: "6-DOF articulated", name: "Universal Robots UR16e", model: "arm:ur16e", price: "Not in review", reach: 0.9, caps: ["move"], note: "Real UR e-Series mesh (BSD-3). Price not listed in the review." },
@@ -85,6 +88,24 @@ export const ITEMS = [
   { id: "mcm-3814n21", cat: "structure", sub: "Pedestal", name: "Telescoping robot pedestal (McMaster 3814N21)", model: "mesh:mcm-3814n21", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD." },
   { id: "mcm-3813n14", cat: "structure", sub: "Linear track", name: "Electric slide for UR arms (McMaster 3813N14)", model: "mesh:mcm-3813n14", price: "See vendor", mount: true, caps: ["mount"], note: "Real McMaster-Carr CAD. A 2.1 m seventh axis; drop a UR arm on the carriage." },
   { id: "mcm-9198n17", cat: "structure", sub: "Enclosure", name: "Delta robot safety enclosure (McMaster 9198N17)", model: "mesh:mcm-9198n17", price: "See vendor", mount: true, frame: true, caps: ["mount"], note: "Real McMaster-Carr CAD. Drop the delta robot on it to hang it from the frame." },
+  // ---------------------------------------------------------------- digital layer: software placed as control stations beside the cell.
+  // digital: excluded from footprint, overlap and reach checks. role drives the run simulation (builder.js):
+  //   orchestrator  builds the workflow from placed hardware, sends commands and collects results
+  //   optimizer     fits a Gaussian-process surrogate to the results and proposes the next experiment (UCB)
+  //   agent         drafts campaigns and recovery options; every action passes a human-approval gate
+  { id: "madsci", cat: "orchestration", sub: "Orchestration · Argonne AD-SDL", name: "MADSci", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#22D3EE", note: "Modular orchestration: nodes, workcells, resources and experiment campaigns." },
+  { id: "alabos", cat: "orchestration", sub: "Orchestration · Ceder Group", name: "AlabOS", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#38BDF8", note: "Task scheduling and resource management for autonomous labs." },
+  { id: "eos", cat: "orchestration", sub: "Orchestration · UNC Robotics", name: "EOS", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#60A5FA", note: "Experiment Orchestration System: campaigns, devices and optimizers." },
+  { id: "unilabos", cat: "orchestration", sub: "Orchestration · DP Technology", name: "UniLabOS", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#818CF8", note: "Lab operating system with a device and workflow registry." },
+  { id: "ac-chemos2", cat: "orchestration", sub: "Orchestration · Acceleration Consortium", name: "ChemOS 2.0", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#2DD4BF", note: "Orchestration with a built-in experiment planner interface." },
+  { id: "pylabrobot", cat: "orchestration", sub: "Device drivers · open source", name: "PyLabRobot", model: "controlNode", digital: true, role: "orchestrator", price: "Open source", caps: ["orchestrate"], color: "#A78BFA", note: "Hardware-agnostic drivers; here it also sequences the workflow." },
+  { id: "ac-atlas", cat: "decide", sub: "Bayesian optimizer · Acceleration Consortium", name: "Atlas", model: "aiStation", digital: true, role: "optimizer", price: "Open source", caps: ["decide"], color: "#4ADE80", note: "Bayesian optimization with constraints, for self-driving labs." },
+  { id: "ac-gryffin", cat: "decide", sub: "Bayesian optimizer · Acceleration Consortium", name: "Gryffin", model: "aiStation", digital: true, role: "optimizer", price: "Open source", caps: ["decide"], color: "#34D399", note: "Bayesian optimization for categorical and mixed variables." },
+  { id: "ax", cat: "decide", sub: "Bayesian optimizer · Meta", name: "Ax / BoTorch", model: "aiStation", digital: true, role: "optimizer", price: "Open source", caps: ["decide"], color: "#22C55E", note: "Adaptive experimentation platform on BoTorch." },
+  { id: "baybe", cat: "decide", sub: "Bayesian optimizer · Merck KGaA", name: "BayBE", model: "aiStation", digital: true, role: "optimizer", price: "Open source", caps: ["decide"], color: "#86EFAC", note: "Bayesian back end for experiment design." },
+  { id: "ac-organa", cat: "decide", sub: "AI agent · The Matter Lab", name: "ORGANA", model: "aiStation", digital: true, role: "agent", price: "Open source", color: "#F59E0B", note: "Assistant that plans and explains chemistry experiments with the scientist." },
+  { id: "ac-el-agente", cat: "decide", sub: "AI agent · The Matter Lab", name: "El Agente", model: "aiStation", digital: true, role: "agent", price: "Open source", color: "#FBBF24", note: "Multi-agent system for research workflows." },
+  { id: "ac-optima", cat: "decide", sub: "AI agent · The Matter Lab", name: "La Agente Óptima", model: "aiStation", digital: true, role: "agent", price: "Open source", color: "#FCD34D", note: "Agent that sets up and steers optimization campaigns." },
 ];
 
 /* ============================================================== materials & primitives */
@@ -112,7 +133,7 @@ function screen(p, w, h, draw, x, y, z, tilt = 0) {
   m.position.set(x, y, z); m.rotation.x = Math.PI / 2 - tilt; p.add(m);
   const bezel = new THREE.Mesh(new THREE.BoxGeometry(w + .012, .008, h + .012), MAT.black); bezel.position.set(x, y + .005, z); bezel.rotation.x = -tilt; p.add(bezel);
   let last = -1;
-  return t => { if (t - last < .25) return; last = t; draw(cv.getContext("2d"), cv.width, cv.height, t); tex.needsUpdate = true; };
+  return (t, force = false) => { if (!force && t - last < .25) return; if (!force) last = t; draw(cv.getContext("2d"), cv.width, cv.height, t); tex.needsUpdate = true; };
 }
 const UI = (ctx, w, h, title, accent = "#5b8def") => {
   ctx.fillStyle = "#0c1117"; ctx.fillRect(0, 0, w, h);
@@ -159,6 +180,44 @@ function runner(keys, apply) {
 
 /* ============================================================== procedural models */
 export const PROC = {
+  /* orchestration node: an edge computer with a live workflow screen. The run simulation writes g.userData.sim
+     ({ title, lines: [[text, state]], status }) and the screen shows it. */
+  controlNode(_, c) {
+    const g = new THREE.Group(), body = std(0x1b2232, { metalness: .3, roughness: .45 }), acc = glow(new THREE.Color(c).getHex(), 1.1);
+    B(g, .36, .26, .05, MAT.dark); B(g, .3, .2, .5, body, 0, .02, .05);
+    for (let i = 0; i < 6; i++) B(g, .26, .004, .012, MAT.black, 0, -.081, .1 + i * .045);
+    const leds = []; for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(.007, 10, 8), glow(0x4ade80, 1.6)); m.position.set(-.1 + i * .02, -.083, .52); g.add(m); leds.push(m); }
+    B(g, .3, .012, .012, acc, 0, -.08, .55);
+    B(g, .03, .03, .22, MAT.dark, 0, .02, .55);
+    const draw = (ctx, W, Hh, t) => { const S = g.userData.sim || {}; UI(ctx, W, Hh, S.title || "Orchestration", c);
+      ctx.font = "11px ui-monospace,monospace";
+      (S.lines || [["Waiting for devices", 0]]).slice(0, 7).forEach(([txt, st], i) => { ctx.fillStyle = st === 2 ? "#4ADE80" : st === 1 ? "#FFD166" : "#64748B";
+        ctx.fillText(`${st === 2 ? "✓" : st === 1 ? "▶" : "·"} ${txt}`.slice(0, 34), 8, 40 + i * 15); });
+      ctx.fillStyle = "#94A3B8"; ctx.fillText((S.status || "idle").slice(0, 34), 8, Hh - 8); };
+    const scr = screen(g, .3, .19, draw, 0, -.03, .86, .15);
+    scr(0);
+    g.userData.tick = t => { scr(t); leds.forEach((m, i) => m.material.emissiveIntensity = Math.sin(t * (4 + i) + i) > 0 ? 1.8 : .2); };
+    g.userData.redraw = () => scr(0, true);
+    return g;
+  },
+  /* optimizer or agent desk: a monitor on a stand. Optimizers plot the surrogate (g.userData.sim.plot), agents show their messages. */
+  aiStation(_, c) {
+    const g = new THREE.Group(), acc = glow(new THREE.Color(c).getHex(), 1.1);
+    B(g, .5, .36, .02, MAT.light, 0, 0, .7); for (const sx of [-1, 1]) for (const sy of [-1, 1]) B(g, .025, .025, .7, MAT.alu, sx * .22, sy * .15);
+    B(g, .04, .04, .2, MAT.dark, 0, .08, .72); B(g, .22, .07, .01, acc, 0, -.08, .72);
+    const draw = (ctx, W, Hh) => { const S = g.userData.sim || {}; UI(ctx, W, Hh, S.title || "Idle", c);
+      if (S.plot) { const { grid, mu, sd, obs, next } = S.plot, L = 10, R = W - 8, T = 30, Bt = Hh - 12, X = u => L + u * (R - L), Y = v => Bt - Math.max(0, Math.min(1, v)) * (Bt - T);
+        ctx.fillStyle = "rgba(74,222,128,.22)"; ctx.beginPath(); grid.forEach((u, i) => ctx.lineTo(X(u), Y(mu[i] + 2 * sd[i]))); for (let i = grid.length - 1; i >= 0; i--) ctx.lineTo(X(grid[i]), Y(mu[i] - 2 * sd[i])); ctx.fill();
+        ctx.strokeStyle = "#4ADE80"; ctx.lineWidth = 2; ctx.beginPath(); grid.forEach((u, i) => ctx[i ? "lineTo" : "moveTo"](X(u), Y(mu[i]))); ctx.stroke();
+        ctx.fillStyle = "#F8FAFC"; for (const [u, v] of obs) { ctx.beginPath(); ctx.arc(X(u), Y(v), 2.6, 0, 7); ctx.fill(); }
+        if (next != null) { ctx.strokeStyle = "#FFD166"; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(next), T); ctx.lineTo(X(next), Bt); ctx.stroke(); ctx.setLineDash([]); } }
+      else { ctx.font = "11px system-ui"; (S.lines || ["Waiting for an orchestrator"]).slice(-6).forEach((l, i) => { ctx.fillStyle = /approve|▶/i.test(l) ? "#FFD166" : "#CBD5E1"; ctx.fillText(String(l).slice(0, 38), 8, 40 + i * 14); }); } };
+    const scr = screen(g, .4, .25, draw, 0, .06, 1.08, .12);
+    scr(0);
+    g.userData.tick = t => scr(t);
+    g.userData.redraw = () => scr(0, true);
+    return g;
+  },
   /* deck-based liquid handler: enclosure, deck with labware, gantry that picks tips, aspirates and fills a plate column by column */
   liquidHandler([w, d, h], c, s) {
     const g = new THREE.Group(), body = std(s.body), frame = std(s.frame, { roughness: .5 }), acc = glow(s.accent, .9);

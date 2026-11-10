@@ -87,7 +87,7 @@
       <h3>Take it with you</h3>
       <button type="button" class="btn btn-sm" id="share">Copy share link</button>
       <button type="button" class="btn btn-sm" id="csv">Download parts list (CSV)</button>
-      <a class="btn btn-sm" href="../new-design/" id="toDesign">Open in the design tool</a>
+      <a class="btn btn-sm" href="../lab-simulator/" id="toDesign">Open in the Lab Simulator</a>
       <button type="button" class="btn btn-sm btn-ghost" id="clear" style="justify-content:center">Empty cart</button>
     </div>
   </aside>
@@ -109,7 +109,7 @@ if (U.get("c")) {
   history.replaceState(null, "", location.pathname);
 }
 
-/* import from the design tool's autosaved layout */
+/* import from the Lab Simulator's autosaved layout */
 function designIds() { try { const j = JSON.parse(localStorage.getItem("sfl-builder-v2")); return (j?.items || []).map(i => i[0]).filter(id => byId[id]); } catch { return []; } }
 function drawImport() {
   const ids = designIds(); if (!ids.length) { $("#import").innerHTML = ""; return; }
@@ -129,7 +129,7 @@ function draw() {
   drawImport();
   const G = groups(), D = done(), lines = cart.all();
   if (!lines.length) {
-    $("#vendors").innerHTML = `<div class="box empty"><p style="font:700 24px/1.2 var(--display);color:var(--ink);margin:0 0 8px">Your cart is empty.</p><p>Add parts from the library, or design a cell and send it here.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px"><a class="btn btn-ink" href="../parts/">Browse parts</a><a class="btn" href="../new-design/">Start a design</a></div></div>`;
+    $("#vendors").innerHTML = `<div class="box empty"><p style="font:700 24px/1.2 var(--display);color:var(--ink);margin:0 0 8px">Your cart is empty.</p><p>Add parts from the library, or design a cell and send it here.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px"><a class="btn btn-ink" href="../parts/">Browse parts</a><a class="btn" href="../lab-simulator/">Open the Lab Simulator</a></div></div>`;
   } else {
     let k = 0;
     $("#vendors").innerHTML = G.map(g => { const none = g.v === "~none", isDone = D.has(g.v); if (!none) k++;
@@ -184,7 +184,7 @@ $("#csv").onclick = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
   a.download = "assemblab-cart.csv"; a.click(); toast("Parts list downloaded.");
 };
-$("#toDesign").onclick = e => { const ids = cart.all().filter(l => l.p.design).flatMap(l => Array(l.qty).fill(l.p.id)); if (ids.length) { e.preventDefault(); location.href = `../new-design/?add=${ids.join(",")}&fresh=1`; } };
+$("#toDesign").onclick = e => { const ids = cart.all().filter(l => l.p.design).flatMap(l => Array(l.qty).fill(l.p.id)); if (ids.length) { e.preventDefault(); location.href = `../lab-simulator/?add=${ids.join(",")}&fresh=1`; } };
 $("#clear").onclick = () => { if (!cart.count()) return; const prev = Object.fromEntries(cart.all().map(l => [l.p.id, l.qty])); cart.clear();
   toast(`Cart emptied <button type="button" id="undo" style="background:none;border:0;color:inherit;text-decoration:underline;font-weight:600">Undo</button>`); $("#undo")?.addEventListener("click", () => cart.replace(prev)); };
 window.addEventListener("bl-cart", draw);

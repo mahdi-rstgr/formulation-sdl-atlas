@@ -244,6 +244,12 @@ p{margin:0 0 1em}
 .bl-footer .tagline{font:600 20px/1.25 var(--display);letter-spacing:-.02em;color:#E7ECF5;margin:16px 0 8px;max-width:22ch}
 .bl-footer .flogo{height:34px;width:auto}
 .bl-footer .base{border-top:1px solid rgba(148,163,184,.12);margin-top:36px;padding-top:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px}
+.bl-footer .dev{display:flex;align-items:center;gap:8px 18px;flex-wrap:wrap;margin-top:30px;padding:14px 16px;border:1px solid rgba(148,163,184,.14);border-radius:12px;background:rgba(59,130,246,.06);font-size:13.5px}
+.bl-footer .dev b{color:#E7ECF5;font-weight:600}
+.bl-footer .dev span{margin-right:auto}
+.bl-footer .dev a{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid rgba(148,163,184,.22);border-radius:8px;color:#C9D4E5}
+.bl-footer .dev a:hover{border-color:#60A5FA;color:#fff}
+.bl-footer .dev svg{width:15px;height:15px}
 @media (max-width:860px){.bl-footer .top{grid-template-columns:1fr 1fr}.bl-footer .top>div:first-child{grid-column:1/-1}}
 
 /* ------------------------------------------------------------ toast, misc */
