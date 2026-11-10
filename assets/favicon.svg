@@ -1,11 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Labu">
-<title>Labu</title>
-<path d="M32.2 11.4C31.6 5.6 36.4 1.4 45.6 1 46 8.8 40.4 12.6 32.2 11.4Z" fill="#5A9E3A"/>
-<path d="M33.6 10.4 42 4.2" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M32 33.6H15.5C16.4 44.4 24.4 51.6 32 61.2Z" fill="#8C1D40"/>
-<path d="M32 61.2C24.4 51.6 15.4 44.6 15.4 33.4 15.4 26.4 20 21.6 25 19.4V13.2M22.4 13.2H25M32 12.2V61.2" fill="none" stroke="#8C1D40" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M32 24H39.6L42.4 21.2M32 33.6H45.4M32 43.6H38.8L41.6 46.4" fill="none" stroke="#8C1D40" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="44.8" cy="18.8" r="3.1" fill="#FFFFFF" stroke="#8C1D40" stroke-width="2.8"/>
-<circle cx="48.8" cy="33.6" r="3.1" fill="#FFFFFF" stroke="#8C1D40" stroke-width="2.8"/>
-<circle cx="44.2" cy="49" r="3.1" fill="#FFFFFF" stroke="#8C1D40" stroke-width="2.8"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="assemblab"><title>assemblab</title><rect width="64" height="64" rx="12" fill="#F7F8FA"/><g transform="translate(3.2 3.2) scale(0.9)"><rect x="4" y="4" width="26" height="26" rx="5" fill="#0E1A2B"/><rect x="34" y="4" width="26" height="26" rx="5" fill="#0E1A2B"/><rect x="4" y="34" width="26" height="26" rx="5" fill="#2563EB"/><rect x="35.5" y="35.5" width="23" height="23" rx="4" fill="none" stroke="#2563EB" stroke-width="4"/></g></svg>

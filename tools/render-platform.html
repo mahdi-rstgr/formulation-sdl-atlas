@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Render the platform hero</title>
+<meta name="robots" content="noindex">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body style="margin:0;background:#0B1120">
+<!-- Renders assets/img/platform-hero.webp and data/platform-hero.json (hotspot outlines) for the home page.
+     Open in a browser, or headless: chrome --headless=new --dump-dom tools/render-platform.html, then save
+     the data URL and regions printed into <pre id="out">. -->
+<pre id="out"></pre>
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { buildPlatform } from "../assets/platform.js";
+const W = 2800, H = 1300, SS = 1;
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setSize(W, H); r.setPixelRatio(SS);
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05; r.outputColorSpace = THREE.SRGBColorSpace; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), .04).texture;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x6b7385, .55));
+const key = new THREE.DirectionalLight(0xffffff, 1.7); key.position.set(-2.5, -3.2, 5.5); key.castShadow = true; key.shadow.mapSize.set(4096, 4096);
+Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: .5, far: 15 }); key.shadow.bias = -.0004; key.shadow.radius = 6; scene.add(key);
+const rim = new THREE.DirectionalLight(0x9cc3ff, .55); rim.position.set(3, 4, 3); scene.add(rim);
+const P = await buildPlatform(THREE, { root: "../" });
+P.group.traverse(o => { if (o.isMesh && !o.material.transparent) { o.castShadow = true; o.receiveShadow = true; } });
+scene.add(P.group);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.ShadowMaterial({ opacity: .42 })); floor.receiveShadow = true; scene.add(floor);
+const cam = new THREE.PerspectiveCamera(19, W / H, .05, 60); cam.up.set(0, 0, 1);
+cam.position.set(-2.2, -6.9, 3.9); cam.lookAt(.05, .05, .72);   // low, nearly frontal: a wide image for the full-width hero cam.updateMatrixWorld();
+r.render(scene, cam);
+// hotspot outlines: convex hull of each component's projected vertices (image pixels)
+function hull(pts) { pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const c = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+  const lo = [], up = []; for (const p of pts) { while (lo.length >= 2 && c(lo.at(-2), lo.at(-1), p) <= 0) lo.pop(); lo.push(p); }
+  for (const p of pts.slice().reverse()) { while (up.length >= 2 && c(up.at(-2), up.at(-1), p) <= 0) up.pop(); up.push(p); } return lo.slice(0, -1).concat(up.slice(0, -1)); }
+const v = new THREE.Vector3(), proj = p => { v.copy(p).project(cam); return [Math.round((v.x + 1) / 2 * W), Math.round((1 - v.y) / 2 * H)]; };
+const regions = [];
+for (const [id, g] of Object.entries(P.parts)) {
+  const pts = []; g.updateMatrixWorld(true);
+  g.traverse(o => { if (!o.isMesh) return; const pos = o.geometry.attributes.position, step = Math.max(1, Math.floor(pos.count / 400));
+    for (let i = 0; i < pos.count; i += step) { v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld); pts.push(proj(v)); } });
+  if (pts.length < 3) continue;
+  const b = new THREE.Box3().setFromObject(g), c = b.getCenter(new THREE.Vector3()); c.z = b.min.z + (b.max.z - b.min.z) * .62;
+  const area = (() => { const h = hull(pts.slice()); let a = 0; for (let i = 0; i < h.length; i++) { const p = h[i], q = h[(i + 1) % h.length]; a += p[0] * q[1] - q[0] * p[1]; } return Math.abs(a / 2); })();
+  regions.push({ id, ...P.info[id], poly: hull(pts), anchor: proj(c), area });
+}
+regions.sort((a, b) => b.area - a.area);   // largest first, so small parts sit on top in the SVG
+document.getElementById("out").textContent = JSON.stringify({ w: W, h: H, png: r.domElement.toDataURL("image/png"), regions });
+</script>
+</body>
+</html>

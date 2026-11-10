@@ -1,8 +1,8 @@
 # Changelog
 
-## 2026-11-08: Labu Learn
+## 2026-11-08: assemblab Learn
 
-The wiki is now **Labu Learn**, the knowledge base of [Labu](https://mahdi-rstgr.github.io/formulation-sdl-atlas/), a platform for designing self-driving labs from every maker's parts.
+The wiki is now **assemblab Learn**, the knowledge base of [assemblab](https://mahdi-rstgr.github.io/formulation-sdl-atlas/), a platform for designing self-driving labs from every maker's parts.
 
 - The header links back to the platform: home, parts library, self-driving layer, atlas and the design tool.
 - The interactive atlas moved to [`/atlas/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/atlas/) and the Lab Builder to [`/new-design/`](https://mahdi-rstgr.github.io/formulation-sdl-atlas/new-design/). Old `/builder/` links redirect.

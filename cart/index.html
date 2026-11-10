@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("labu-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cart Â· Labu</title>
-<meta name="description" content="Your Labu cart, split by vendor. Each maker gets its own block with a link to order or request a quote.">
+<title>Cart · assemblab</title>
+<meta name="description" content="Your assemblab cart, split by vendor. Each maker gets its own block with a link to order or request a quote.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../assets/bl.css">
 <style>
 .cartgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;padding:36px 0 96px;align-items:start}
@@ -69,10 +69,10 @@
 <main id="main">
 <section class="phero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Labu</a><span>/</span><span>Cart</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">assemblab</a><span>/</span><span>Cart</span></nav>
     <p class="eyebrow"><span class="tick"></span>Your cart</p>
     <h1 class="h1">One cart. Each maker, one by one.</h1>
-    <p class="lede">Labu does not sell parts. Your cart is split by vendor: open each maker's page to order or request a quote, then tick it off. Published list prices are a guide; the vendor's quote is the price.</p>
+    <p class="lede">assemblab does not sell parts. Your cart is split by vendor: open each maker's page to order or request a quote, then tick it off. Published list prices are a guide; the vendor's quote is the price.</p>
   </div>
 </section>
 <div class="wrap cartgrid">
@@ -97,7 +97,7 @@
 import { mountChrome, cart, byId, PRODUCTS, CATS, esc, priceOf, fmtPrice, money, vendorOf, ICON, GLYPH, imgHTML, toast, ROOT } from "../assets/bl.js";
 mountChrome();
 const $ = s => document.querySelector(s);
-const DONE = "labu-contacted-v1";
+const DONE = "assemblab-contacted-v1";
 const done = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE)) || []); } catch { return new Set(); } };
 const setDone = s => { try { localStorage.setItem(DONE, JSON.stringify([...s])); } catch { } };
 
@@ -137,12 +137,12 @@ function draw() {
       g.lines.forEach(l => { const v = priceOf(l.p); if (v) { lo += v.lo * l.qty; hi += v.hi * l.qty; cur = v.cur; } else q++; });
       const multi = new Set(g.lines.map(l => l.p.url)).size > 1;
       return `<article class="vend ${isDone ? "done" : ""}" data-v="${esc(g.v)}">
-        <div class="vh"><span class="step">${none ? "â€“" : isDone ? "âœ“" : k}</span><div><h3>${none ? "Generic parts" : esc(g.brand)}</h3><div class="dom">${none ? "No vendor link. Build or source locally." : esc([...g.hosts].join(" Â· "))}</div></div>
+        <div class="vh"><span class="step">${none ? "–" : isDone ? "✓" : k}</span><div><h3>${none ? "Generic parts" : esc(g.brand)}</h3><div class="dom">${none ? "No vendor link. Build or source locally." : esc([...g.hosts].join(" · "))}</div></div>
           <div class="go">${none ? "" : `<label><input type="checkbox" data-done="${esc(g.v)}" ${isDone ? "checked" : ""}>Contacted</label><a class="btn btn-sm ${isDone ? "" : "btn-ink"}" href="${esc(g.lines[0].p.url)}" target="_blank" rel="noopener" data-visit="${esc(g.v)}">${multi ? "Open first page" : "Order or quote"} ${ICON.out}</a>`}</div></div>
         ${g.lines.map(l => { const v = priceOf(l.p);
           return `<div class="line"><div class="im">${imgHTML(l.p)}</div>
-            <div class="nm"><a href="../parts/?p=${l.p.id}"><b>${esc(l.p.name)}</b></a><span>${esc(l.p.sub)} Â· ${l.p.sku}${multi && l.p.url ? ` Â· <a href="${esc(l.p.url)}" target="_blank" rel="noopener">product page</a>` : ""}</span></div>
-            <div class="qty" role="group" aria-label="Quantity"><button type="button" data-q="${l.p.id}" data-d="-1" aria-label="Fewer">âˆ’</button><span>${l.qty}</span><button type="button" data-q="${l.p.id}" data-d="1" aria-label="More">+</button></div>
+            <div class="nm"><a href="../parts/?p=${l.p.id}"><b>${esc(l.p.name)}</b></a><span>${esc(l.p.sub)} · ${l.p.sku}${multi && l.p.url ? ` · <a href="${esc(l.p.url)}" target="_blank" rel="noopener">product page</a>` : ""}</span></div>
+            <div class="qty" role="group" aria-label="Quantity"><button type="button" data-q="${l.p.id}" data-d="-1" aria-label="Fewer">−</button><span>${l.qty}</span><button type="button" data-q="${l.p.id}" data-d="1" aria-label="More">+</button></div>
             <div class="pr ${v ? "" : "q"}">${v ? fmtPrice({ lo: v.lo * l.qty, hi: v.hi * l.qty, cur: v.cur }) : esc(l.p.price)}</div>
             <button type="button" class="rm" data-rm="${l.p.id}" aria-label="Remove ${esc(l.p.name)}">${ICON.close}</button></div>`; }).join("")}
         <div class="vf"><span>${(n => `${n} item${n === 1 ? "" : "s"}`)(g.lines.reduce((s, l) => s + l.qty, 0))}</span><span>${hi ? fmtPrice({ lo, hi, cur }) : ""}${q ? `${hi ? " + " : ""}${q} without list price` : ""}</span></div></article>`; }).join("");
@@ -154,7 +154,7 @@ function draw() {
   $("#totals").innerHTML = `<h3>Summary</h3>
     <div class="tot"><span>Parts</span><b>${cart.count()}</b></div>
     <div class="tot"><span>Vendors to contact</span><b>${vendors.length}</b></div>
-    ${T["â‚¬"] ? `<div class="tot"><span>EUR list</span><b>${fmtPrice({ ...T["â‚¬"], cur: "â‚¬" })}</b></div>` : ""}
+    ${T["€"] ? `<div class="tot"><span>EUR list</span><b>${fmtPrice({ ...T["€"], cur: "€" })}</b></div>` : ""}
     <div class="tot"><span>Quote / see vendor</span><b>${quote}</b></div>
     <div class="tot"><span>Open source / free</span><b>${free}</b></div>
     <div class="tot big"><span>USD list</span><b>${T["$"] ? fmtPrice({ ...T["$"], cur: "$" }) : "$0"}</b></div>
@@ -163,7 +163,7 @@ function draw() {
   const have = new Set(lines.flatMap(l => l.p.caps));
   const cheapest = cap => PRODUCTS.filter(p => p.caps.includes(cap)).sort((a, b) => (priceOf(a)?.lo ?? (/open|free/i.test(a.price) ? 0 : 1e9)) - (priceOf(b)?.lo ?? (/open|free/i.test(b.price) ? 0 : 1e9)))[0];
   const row = (cap, label) => { const ok = have.has(cap), s = ok ? null : cheapest(cap);
-    return `<li class="${ok ? "ok" : "miss"}"><span class="ck">${ok ? "âœ“" : "!"}</span><span>${label}</span>${ok ? "" : `<a href="#" data-sugg="${s.id}" title="${esc(s.brand + " " + s.name)}">+ ${esc(s.name.split(" ").slice(0, 2).join(" "))}</a>`}</li>`; };
+    return `<li class="${ok ? "ok" : "miss"}"><span class="ck">${ok ? "✓" : "!"}</span><span>${label}</span>${ok ? "" : `<a href="#" data-sugg="${s.id}" title="${esc(s.brand + " " + s.name)}">+ ${esc(s.name.split(" ").slice(0, 2).join(" "))}</a>`}</li>`; };
   $("#ready").innerHTML = `<h3>Self-driving readiness</h3><p class="fine" style="margin:0 0 6px">Does this cart close the loop? Missing steps come with the lowest-priced part that adds them.</p>
     <p class="grp">Act</p><ul>${row("liquids", "Dose liquids")}${row("pastes", "Dose pastes & gels")}${row("powders", "Dose powders")}${row("move", "Move containers")}${row("mix", "Mix")}</ul>
     <p class="grp">Sense</p><ul>${row("weigh", "Weigh")}${row("characterize", "Characterize")}</ul>
@@ -182,7 +182,7 @@ $("#csv").onclick = () => {
   const rows = [["SKU", "Part", "Maker", "Category", "Qty", "List price (published)", "Vendor page", "Review refs"]];
   for (const l of cart.all()) rows.push([l.p.sku, l.p.name, l.p.brand, CATS.find(c => c.id === l.p.cat)?.name, l.qty, l.p.price, l.p.url, l.p.ref]);
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" }));
-  a.download = "labu-cart.csv"; a.click(); toast("Parts list downloaded.");
+  a.download = "assemblab-cart.csv"; a.click(); toast("Parts list downloaded.");
 };
 $("#toDesign").onclick = e => { const ids = cart.all().filter(l => l.p.design).flatMap(l => Array(l.qty).fill(l.p.id)); if (ids.length) { e.preventDefault(); location.href = `../new-design/?add=${ids.join(",")}&fresh=1`; } };
 $("#clear").onclick = () => { if (!cart.count()) return; const prev = Object.fromEntries(cart.all().map(l => [l.p.id, l.qty])); cart.clear();

@@ -64,14 +64,14 @@ try {
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   view.appendChild(renderer.domElement);
 } catch { view.innerHTML = '<p class="nogl">The 3D workstation needs WebGL, which is turned off in this browser.</p>'; }
-const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0F0F10);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x080D19);
 if (renderer) scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
 const camera = new THREE.PerspectiveCamera(36, 1, .02, 80); camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer?.domElement ?? view); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * .49; controls.minDistance = .4; controls.maxDistance = 14;
 scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x1a2230, .55));
 const key = new THREE.DirectionalLight(0xffffff, 1.9); key.position.set(2.5, -3.5, 5); key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: .5, far: 20 }); key.shadow.bias = -.0004; scene.add(key);
-const rim = new THREE.DirectionalLight(0xE0679A, .5); rim.position.set(-3, 4, 2.5); scene.add(rim);
+const rim = new THREE.DirectionalLight(0x3B82F6, .5); rim.position.set(-3, 4, 2.5); scene.add(rim);
 
 // floor: shadow catcher, radial glow, rings, fine grid, workstation outline
 const floorPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
@@ -183,7 +183,7 @@ function analyse() {
 let selBox = null, hovBox = null;
 function select(obj) {
   selected = obj; if (selBox) { scene.remove(selBox); selBox = null; }
-  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0xE0679A); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
+  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0x3B82F6); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
   $$(".tag").forEach(t => t.classList.toggle("sel", obj && t === obj.label));
   $$("#cart-lines tr[data-no]").forEach(r => r.classList.toggle("sel", obj && +r.dataset.no === obj.no));
   renderInspector();
@@ -310,7 +310,7 @@ function refresh() {
   $("#cart-lines").innerHTML = rows.length ? rows.map(o => { const it = byId[o.id]; return `<tr data-no="${o.no}" class="${selected === o ? "sel" : ""}">
       <td class="no">${o.no}</td><td><span class="sw" style="background:${CATEGORIES.find(c => c.id === it.cat).color}"></span>${esc(short(it.name))}<div class="sub">${esc(it.sub)} ${linkRefs(it.ref)}${o.dockedTo ? ` · on #${o.dockedTo.no}` : ""}${o.onMount ? ` · on #${o.onMount.no}` : ""}${P[it.id]?.url ? ` · <a href="${P[it.id].url}" target="_blank" rel="noopener">vendor</a>` : ""}</div></td>
       <td class="num">${it.price ? fmt(it.price) : `<span class="q">${esc(it.priceRaw)}</span>`}</td></tr>`; }).join("")
-    : `<tr><td colspan="3" class="empty">Drag devices from the banner into the workstation. The cart prices them as you go.</td></tr>`;
+    : `<tr><td colspan="3" class="empty">Drag devices from the library on the left into the workstation. The cart prices them as you go.</td></tr>`;
   $$("#cart-lines tr[data-no]").forEach(r => { const o = placed.find(p => p.no === +r.dataset.no);
     r.onmouseenter = () => setHover(o); r.onmouseleave = () => setHover(null); r.onclick = e => { if (e.target.tagName !== "A") select(o); }; });
   const usd = tot["$"] || { lo: 0, hi: 0 };
@@ -341,28 +341,31 @@ function refresh() {
 }
 $("#budget").addEventListener("input", refresh);
 
-/* ================================================================ banner library */
-let catFilter = "all";
+/* ================================================================ device library (left sidebar, one group per category) */
+const openCats = new Set();   // every group starts collapsed; a search opens the matching ones
 function banner() {
   const q = $("#search").value.trim().toLowerCase();
-  $("#cats").innerHTML = [{ id: "all", name: "All devices", color: "var(--ink-2)" }, ...CATEGORIES].map(c => {
-    const n = ITEMS.filter(i => c.id === "all" || i.cat === c.id).length;
-    return `<button type="button" data-c="${c.id}" aria-pressed="${catFilter === c.id}"><i style="background:${c.color}"></i>${c.name}<span>${n}</span></button>`; }).join("");
-  $$("#cats button").forEach(b => b.onclick = () => { catFilter = b.dataset.c; banner(); $("#cards").scrollLeft = 0; });
-  const list = ITEMS.filter(i => (catFilter === "all" || i.cat === catFilter) && (!q || (i.name + " " + i.sub + " " + i.cat).toLowerCase().includes(q)));
-  $("#cards").innerHTML = list.map(it => `
-    <div class="card" draggable="true" data-id="${it.id}" tabindex="0" title="${esc(it.note || "Drag into the workstation, or press Enter")}">
-      <div class="thumb"><img src="thumbs/${it.id}.png" alt="" loading="lazy" onerror="this.remove()"><span class="cat-dot" style="background:${CATEGORIES.find(c => c.id === it.cat).color}"></span>${it.model.startsWith("mesh:") || it.model.startsWith("arm:") ? '<span class="badge">real mesh</span>' : ""}</div>
-      <div class="meta"><b>${esc(short(it.name))}</b><span>${esc(it.sub)}${it.reach ? ` · ${it.reach} m` : ""}</span></div>
-      <div class="foot"><span class="price ${it.price ? "" : "q"}">${esc(it.price ? fmt(it.price) : it.priceRaw)}</span><button type="button" class="add" data-id="${it.id}" aria-label="Add ${esc(it.name)}">+</button></div>
-    </div>`).join("") || `<p class="none">No device matches “${esc(q)}”.</p>`;
-  $$("#cards .card").forEach(c => { c.addEventListener("dragstart", ev => { ev.dataTransfer.setData("text/plain", c.dataset.id); ev.dataTransfer.effectAllowed = "copy"; });
+  const hit = i => !q || (i.name + " " + i.sub + " " + i.cat + " " + (i.note || "")).toLowerCase().includes(q);
+  $("#lib").innerHTML = CATEGORIES.map(c => {
+    const list = ITEMS.filter(i => i.cat === c.id && hit(i)); if (q && !list.length) return "";
+    const open = q ? true : openCats.has(c.id);
+    return `<section class="grp${open ? " open" : ""}"><button type="button" class="gh" data-c="${c.id}" aria-expanded="${open}"><i style="background:${c.color}"></i><span>${c.name}</span><em>${list.length}</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+      <div class="devs">${open ? list.map(it => `
+        <div class="dev" draggable="true" data-id="${it.id}" tabindex="0" title="${esc(it.note || "Drag into the workstation, or press Enter")}">
+          <span class="th"><img src="thumbs/${it.id}.png" alt="" loading="lazy" onerror="this.remove()"></span>
+          <span class="nm"><b>${esc(short(it.name))}</b><small>${esc(it.sub)}${it.reach ? ` · ${it.reach} m` : ""}</small><em class="price ${it.price ? "" : "q"}">${esc(it.price ? fmt(it.price) : it.priceRaw)}</em></span>
+          <button type="button" class="add" data-id="${it.id}" aria-label="Add ${esc(it.name)}">+</button>
+        </div>`).join("") : ""}</div></section>`; }).join("") || `<p class="none">No device matches “${esc(q)}”.</p>`;
+  $$("#lib .gh").forEach(b => b.onclick = () => { const c = b.dataset.c; openCats.has(c) ? openCats.delete(c) : openCats.add(c); banner(); });
+  $$("#lib .dev").forEach(c => { c.addEventListener("dragstart", ev => { ev.dataTransfer.setData("text/plain", c.dataset.id); ev.dataTransfer.effectAllowed = "copy"; });
     c.addEventListener("keydown", ev => { if (ev.key === "Enter") add(c.dataset.id); }); });
-  $$("#cards .add").forEach(b => b.onclick = () => add(b.dataset.id));
+  $$("#lib .add").forEach(b => b.onclick = ev => { ev.stopPropagation(); add(b.dataset.id); });
 }
 $("#search").addEventListener("input", banner);
-$("#scrollL").onclick = () => $("#cards").scrollBy({ left: -600, behavior: "smooth" });
-$("#scrollR").onclick = () => $("#cards").scrollBy({ left: 600, behavior: "smooth" });
+{ const side = $("#side"), bg = $("#burger"); let scr = null;
+  const setSide = v => { side.classList.toggle("open", v); bg.setAttribute("aria-expanded", String(v));
+    if (v && !scr) { scr = document.createElement("div"); scr.className = "scrim"; scr.onclick = () => setSide(false); document.body.append(scr); } else if (!v && scr) { scr.remove(); scr = null; } };
+  bg.onclick = () => setSide(!side.classList.contains("open")); document.addEventListener("keydown", e => { if (e.key === "Escape") setSide(false); }); }
 
 /* ================================================================ layouts */
 async function load(layout) {
@@ -450,7 +453,7 @@ function startScreen(hasSaved) {
   el.querySelector(".opt").focus();
 }
 
-/* ================================================================ send the design to the shared Labu cart */
+/* ================================================================ send the design to the shared assemblab cart */
 $("#tocart").addEventListener("click", () => {
   const counts = {}; for (const o of placed) if (P[o.id]) counts[o.id] = (counts[o.id] || 0) + 1;
   if (!Object.keys(counts).length) { toast("Place a few parts first."); return; }

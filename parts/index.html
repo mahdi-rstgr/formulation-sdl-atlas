@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("labu-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Parts library Â· Labu</title>
+<title>Parts library · assemblab</title>
 <meta name="description" content="Every part a self-driving formulation lab needs, from every maker: dispensers, robot arms, integrated platforms, McMaster-Carr workstations, orchestration software, simulators and optimizers, with published prices and vendor links.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../assets/bl.css">
 <style>
 .lib{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;padding:32px 0 96px}
@@ -51,7 +51,7 @@ select.sort{padding:11px 12px;border:1px solid var(--line-2);border-radius:var(-
 <main id="main">
 <section class="phero">
   <div class="wrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Labu</a><span>/</span><span>Parts library</span></nav>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="../">assemblab</a><span>/</span><span>Parts library</span></nav>
     <p class="eyebrow"><span class="tick"></span>Parts library</p>
     <h1 class="h1">Every part a self-driving lab needs.</h1>
     <p class="lede" id="intro">Hardware and software from every maker, with published prices, headline specs and the source behind each number. Add parts to your cart, then buy each one from its maker.</p>
@@ -61,9 +61,9 @@ select.sort{padding:11px 12px;border:1px solid var(--line-2);border-radius:var(-
   <aside class="side" id="side" aria-label="Filters"></aside>
   <section aria-label="Results">
     <div class="toolbar">
-      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><label for="q" class="sr">Search parts</label><input id="q" type="search" placeholder="Search: powder, SCARA, Opentrons, pedestalâ€¦" autocomplete="off"></div>
+      <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg><label for="q" class="sr">Search parts</label><input id="q" type="search" placeholder="Search: powder, SCARA, Opentrons, pedestal…" autocomplete="off"></div>
       <label for="sort" class="sr">Sort</label>
-      <select id="sort" class="sort"><option value="cat">Sort: category</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option><option value="name">Name Aâ€“Z</option></select>
+      <select id="sort" class="sort"><option value="cat">Sort: category</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option><option value="name">Name A–Z</option></select>
       <button type="button" class="btn btn-sm filt-btn" id="filt">Filters</button>
     </div>
     <div class="active" id="active"></div>
@@ -112,8 +112,8 @@ function results() {
   const chips = [];
   if (st.cat !== "all") chips.push(["cat", st.cat, CATS.find(c => c.id === st.cat).name]);
   st.mat.forEach(m => chips.push(["mat", m, MAT[m][0]])); st.kind.forEach(k => chips.push(["kind", k, k[0].toUpperCase() + k.slice(1)]));
-  st.price.forEach(k => chips.push(["price", k, PRICE[k]])); st.brand.forEach(b => chips.push(["brand", b, b])); if (st.d3) chips.push(["d3", 1, "3D"]); if (st.q) chips.push(["q", 1, `â€œ${st.q}â€`]);
-  $("#active").innerHTML = chips.map(([t, v, l]) => `<button type="button" data-rm="${t}" data-v="${esc(v)}">${esc(l)} Ã—</button>`).join("") + (chips.length > 1 ? `<button type="button" data-rm="all">Clear all</button>` : "");
+  st.price.forEach(k => chips.push(["price", k, PRICE[k]])); st.brand.forEach(b => chips.push(["brand", b, b])); if (st.d3) chips.push(["d3", 1, "3D"]); if (st.q) chips.push(["q", 1, `“${st.q}”`]);
+  $("#active").innerHTML = chips.map(([t, v, l]) => `<button type="button" data-rm="${t}" data-v="${esc(v)}">${esc(l)} ×</button>`).join("") + (chips.length > 1 ? `<button type="button" data-rm="all">Clear all</button>` : "");
   const c = CATS.find(c => c.id === st.cat);
   const head = `<div class="cathead"><div><h2>${c ? c.name : "All parts"}</h2><p>${c ? c.blurb : "Hardware and software for every layer of a self-driving lab."}</p></div><span class="count">${list.length} ${list.length === 1 ? "part" : "parts"}</span></div>`;
   if (!list.length) { $("#results").innerHTML = head + `<div class="empty">No part matches these filters. <button type="button" class="btn btn-sm" data-rm="all" style="margin-left:8px">Clear filters</button></div>`; return; }

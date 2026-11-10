@@ -1,7 +1,7 @@
-/* Labu shared runtime: header + mega menu, footer, cart store, product cards, product drawer, toast.
+/* assemblab shared runtime: app shell (sidebar + top bar), footer, cart store, provider logos, product cards, drawer, toast.
  * Every page loads it as a module. Paths are resolved from this file, so pages at any depth work. */
-import { CATS, PRODUCTS, byId, parsePrice, vendorOf } from "../data/catalog.js";
-export { CATS, PRODUCTS, byId, parsePrice, vendorOf };
+import { CATS, PRODUCTS, byId, parsePrice, vendorOf, logoOf } from "../data/catalog.js";
+export { CATS, PRODUCTS, byId, parsePrice, vendorOf, logoOf };
 
 export const ROOT = new URL("../", import.meta.url).href;
 export const $ = (s, el = document) => el.querySelector(s);
@@ -14,9 +14,9 @@ export const refLinks = s => String(s || "").split(",").map(n => n.trim()).filte
 export const MAT = { liquid: ["Liquids", "var(--liquid)"], paste: ["Pastes & gels", "var(--paste)"], powder: ["Powders", "var(--powder)"], object: ["Objects", "var(--object)"] };
 
 /* ================================================================ cart store (localStorage, shared by every page) */
-const KEY = "labu-cart-v1";
+const KEY = "assemblab-cart-v1";
 try {   // carry over carts and preferences saved under the earlier name
-  for (const [o, n] of [["laboo-cart-v1", KEY], ["laboo-contacted-v1", "labu-contacted-v1"], ["laboo-theme", "labu-theme"]])
+  for (const [o, n] of [["laboo-cart-v1", KEY], ["labu-cart-v1", KEY], ["laboo-contacted-v1", "assemblab-contacted-v1"], ["labu-contacted-v1", "assemblab-contacted-v1"], ["laboo-theme", "assemblab-theme"], ["labu-theme", "assemblab-theme"]])
     if (localStorage.getItem(o) != null && localStorage.getItem(n) == null) { localStorage.setItem(n, localStorage.getItem(o)); localStorage.removeItem(o); }
 } catch { }
 const read = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } };
@@ -43,6 +43,14 @@ export const ICON = {
   close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
   car: '<svg class="car" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m2 3.5 3 3 3-3"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" stroke-dasharray="2.4 1.8"/></svg>',
+  design: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg>',
+  parts: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="18" cy="17" r="2"/></svg>',
+  solutions: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4M11 3v6L5.5 18.5A1.6 1.6 0 0 0 6.9 21h10.2a1.6 1.6 0 0 0 1.4-2.5L13 9V3"/><path d="M7.5 15h9"/></svg>',
+  sdl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/><circle cx="12" cy="12" r="2"/></svg>',
+  twin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="m8 12 3-3 2 2 3-3"/></svg>',
+  learn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/></svg>',
+  search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>',
 };
 /* monoline category glyphs (shown when a part has no rendered image) */
 const G = d => `<svg class="glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
@@ -60,8 +68,25 @@ export const GLYPH = {
   ai: G('<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M34 6v8h-8"/><circle cx="24" cy="24" r="3"/>'),
 };
 export const thumbOf = p => p.design ? `${ROOT}new-design/thumbs/${p.id}.png` : null;
-export const imgHTML = (p, cls = "") => { const t = thumbOf(p);
-  return t ? `<img class="${cls}" src="${t}" alt="" loading="lazy" onerror="this.outerHTML=this.nextElementSibling?.innerHTML||''"><template>${GLYPH[p.cat] || ""}</template>` : (GLYPH[p.cat] || ""); };
+export const isAgent = p => p.vendor === "The Matter Lab" && p.cat === "ai";
+export const logoSrc = l => `${ROOT}assets/logos/${l.src}`;
+/* a small provider mark beside the maker's name; makers without a logo get a two-letter badge */
+export function logoChip(p) {
+  const l = logoOf(p);
+  if (!l) return `<span class="mono-badge" aria-hidden="true">${esc((p.vendor || p.brand).replace(/[^A-Za-z0-9]/g, "").slice(0, 2).toUpperCase())}</span>`;
+  return `<span class="plogo ${l.tone}${l.wide ? " wide" : ""}"><img src="${logoSrc(l)}" alt="${esc(l.name)}" loading="lazy"></span>`;
+}
+/* the provider's logo as the product image: agents always, and parts without a render */
+function logoImage(p) {
+  const l = logoOf(p); if (!l) return GLYPH[p.cat] || "";
+  return l.tone === "light" ? `<img class="logo-img" src="${logoSrc(l)}" alt="${esc(l.name)}" loading="lazy">`
+    : `<span class="logo-card"><img src="${logoSrc(l)}" alt="${esc(l.name)}" loading="lazy"></span>`;
+}
+export const imgHTML = (p, cls = "") => {
+  if (isAgent(p)) return logoImage(p);
+  const t = thumbOf(p);
+  return t ? `<img class="${cls}" src="${t}" alt="" loading="lazy" onerror="this.outerHTML=this.nextElementSibling?.innerHTML||''"><template>${logoImage(p)}</template>` : logoImage(p);
+};
 
 /* ================================================================ prices */
 export function priceOf(p) { const v = parsePrice(p.price); return v; }
@@ -84,7 +109,7 @@ export function card(p) {
   return `<article class="pcard" data-id="${p.id}">
     <div class="ph">${imgHTML(p)}<div class="tags">${kindTags(p)}</div><span class="sku">${p.sku}</span></div>
     <div class="bd">
-      <span class="brand">${esc(p.brand)}</span>
+      <span class="brand">${logoChip(p)}${esc(p.brand)}</span>
       <h3><a href="${ROOT}parts/?p=${p.id}" data-open="${p.id}">${esc(p.name)}</a></h3>
       <span class="spec">${esc(p.spec)}</span>
       <div class="ft">${priceTag(p)}<button type="button" class="add ${inCart ? "in" : ""}" data-add="${p.id}" aria-label="Add ${esc(p.name)} to cart">${inCart ? ICON.check + "In cart" : ICON.plus + "Add"}</button></div>
@@ -110,7 +135,7 @@ export function openProduct(id, push = true) {
   d.innerHTML = `<div class="dh"><span class="mono fine">${p.sku} · ${esc(cat?.name)}</span><button class="x" type="button" aria-label="Close">${ICON.close}</button></div>
     <div class="dimg">${imgHTML(p)}</div>
     <div class="db">
-      <p class="brand mono fine" style="margin:0 0 6px">${esc(p.brand)}</p>
+      <p class="brand fine" style="margin:0 0 8px;display:flex;align-items:center;gap:8px">${logoChip(p)}${esc(p.brand)}</p>
       <h2 class="h3" style="font-size:26px">${esc(p.name)}</h2>
       <div style="display:flex;gap:6px;margin:12px 0 0;flex-wrap:wrap">${kindTags(p)}${p.mat.map(m => MAT[m] ? `<span class="tag"><i class="dot" style="background:${MAT[m][1]}"></i>${MAT[m][0]}</span>` : "").join("")}</div>
       <table class="spec-table">
@@ -123,11 +148,11 @@ export function openProduct(id, push = true) {
       </table>
       ${p.note ? `<p class="fine">${esc(p.note)}</p>` : ""}
       <div class="acts">
-        <button type="button" class="btn btn-ink" data-add="${p.id}">${ICON.plus}Add to cart</button>
+        <button type="button" class="btn btn-accent" data-add="${p.id}">${ICON.plus}Add to cart</button>
         ${p.design ? `<a class="btn" href="${ROOT}new-design/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
         ${p.url ? `<a class="btn btn-ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Vendor page ${ICON.out}</a>` : ""}
       </div>
-      <p class="fine" style="margin-top:22px">Labu does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
+      <p class="fine" style="margin-top:22px">assemblab does not sell this part. The cart sends you to ${p.vendor ? esc(p.vendor) : v ? esc(v) : "the maker"} ${/lab-built|research/i.test(p.price) ? "to ask about it" : p.kind === "software" ? "to get it" : "to buy it or request a quote"}.</p>
     </div>`;
   document.body.append(scrim, d);
   const close = () => closeDrawer();
@@ -151,87 +176,67 @@ export function toast(html, href, label) {
   const b = $(".cartbtn"); if (b) { b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump"); }
 }
 
-/* ================================================================ header + footer */
-const LOGO = `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32.2 11.4C31.6 5.6 36.4 1.4 45.6 1 46 8.8 40.4 12.6 32.2 11.4Z" fill="#6DB24A"/><path d="M33.6 10.4 42 4.2" stroke="#121212" stroke-width="1.4" stroke-linecap="round"/><path d="M32 33.6H15.5C16.4 44.4 24.4 51.6 32 61.2Z" fill="#D24A7E"/><path d="M32 61.2C24.4 51.6 15.4 44.6 15.4 33.4 15.4 26.4 20 21.6 25 19.4V13.2M22.4 13.2H25M32 12.2V61.2" fill="none" stroke="#D24A7E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 24H39.6L42.4 21.2M32 33.6H45.4M32 43.6H38.8L41.6 46.4" fill="none" stroke="#D24A7E" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="44.8" cy="18.8" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/><circle cx="48.8" cy="33.6" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/><circle cx="44.2" cy="49" r="3.1" fill="#121212" stroke="#D24A7E" stroke-width="2.8"/></svg>`;
-export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="Labu home">${LOGO}Labu</a>`;
+/* ================================================================ app shell: sidebar, top bar, footer */
+export const logo = (cls = "") => `<a class="logo ${cls}" href="${ROOT}" aria-label="assemblab home"><img src="${ROOT}assets/brand/assemblab-mark-dark.svg" alt="">assemb<i>lab</i></a>`;
+const NAV = [
+  ["Platform", [["", "Overview", "home"], ["new-design/", "New design", "design"], ["parts/", "Parts library", "parts"], ["solutions/", "Solutions", "solutions"], ["self-driving/", "Self-driving layer", "sdl"]]],
+  ["Resources", [["atlas/", "Digital twin atlas", "twin"], ["wiki/", "Learn (wiki)", "learn"], ["cart/", "Cart", "cart"]]],
+];
+const TITLES = {
+  "": ["Overview", "Build your self-driving lab, module by module"], "parts/": ["Parts library", "Hardware and software from every maker"],
+  "solutions/": ["Solutions", "Start from what you formulate"], "self-driving/": ["Self-driving layer", "Orchestrate, rehearse and decide"],
+  "cart/": ["Cart", "Each provider, one by one"],
+};
+export const PARTNERS = () => `<img src="${ROOT}assets/logos/acceleration-consortium.png" alt="University of Toronto and Acceleration Consortium" class="rev"><img src="${ROOT}assets/logos/matter-lab.svg" alt="The Matter Lab" class="rev">`;
 
-function menus() {
-  const R = ROOT;
-  const n = id => PRODUCTS.filter(p => p.cat === id).length;
-  return [
-    { id: "platform", label: "Platform", cols: [
-      { h: "Design", links: [[`${R}new-design/`, "New design", "Lay out a cell in 3D from any vendor's parts"], [`${R}solutions/#templates`, "Design templates", "Start from a proven formulation cell"], [`${R}new-design/#intelligence`, "Cell intelligence", "Capability, reach, overlap and budget checks"]] },
-      { h: "Self-driving layer", links: [[`${R}self-driving/#orchestrate`, "Orchestrate", "Compare 8 open-source orchestration systems"], [`${R}self-driving/#rehearse`, "Rehearse", "Simulation ladder and digital twins"], [`${R}self-driving/#decide`, "Decide", "Optimizers and AI agent roles"]] },
-      { feature: true, h: "Live digital twin", links: [[`${R}atlas/`, "Formulation SDL Atlas", "Follow a premix cup through a real cell with collision-checked UR motions"]] },
-    ] },
-    { id: "solutions", label: "Solutions", cols: [
-      { h: "By material", links: [[`${R}solutions/#liquid`, "Liquids", "Pipettes, pumps, liquid handlers"], [`${R}solutions/#paste`, "Pastes & gels", "Extrusion against a yield stress"], [`${R}solutions/#powder`, "Powders", "Gravimetric and feeder dosing"], [`${R}solutions/#object`, "Objects", "Moving cups, vials and plates"]] },
-      { h: "By cell", links: [[`${R}new-design/?t=sfl`, "Formulation cell", "CNC dispensing + cobot + mixer"], [`${R}new-design/?t=liquid`, "Liquid-handling bench", "Opentrons Flex + UR5e"], [`${R}new-design/?t=powder`, "Powder & paste station", "Quantos, feeders, Lite 6"], [`${R}new-design/?t=mounted`, "Cobot on a workstation", "McMaster table, pedestal and slide"]] },
-      { h: "Proven loops", links: [[`${R}solutions/#loops`, "20 literature scenarios", "How published SDLs sense and act on each material"]] },
-    ] },
-    { id: "parts", label: "Parts library", cols: [
-      { h: "Hardware", links: CATS.slice(0, 8).map(c => [`${R}parts/?cat=${c.id}`, c.name, `${n(c.id)} parts`]) },
-      { h: "Software", links: CATS.slice(8).map(c => [`${R}parts/?cat=${c.id}`, c.name, `${n(c.id)} tools`]) },
-      { feature: true, h: "New: McMaster-Carr structure", links: [[`${R}parts/?cat=structure`, "Workstations, pedestals & slides", "Real CAD you can drop into a design"]] },
-    ] },
-    { id: "learn", label: "Learn", cols: [
-      { h: "Knowledge base", links: [[`${R}wiki/`, "SDL wiki", "Materials, hardware, simulation, AI"], [`${R}wiki/hardware/`, "Hardware guides", "Dispensers, platforms, cost vs. accuracy"], [`${R}wiki/references/`, "178 references", "Every number on Labu is cited"]] },
-      { h: "Research", links: [[`${R}atlas/`, "The atlas", "Seven questions, one live twin"], [`${R}wiki/orchestration/open-source/`, "Orchestration comparison", "Supplementary Table S1"], [`${R}#model`, "Why we don't sell parts", "How the cart refers you to makers"]] },
-    ] },
-  ];
-}
-
-export function mountChrome(current = "") {
-  const h = document.createElement("header"); h.className = "bl-header";
-  const M = menus();
-  h.innerHTML = `<a class="skip" href="#main">Skip to content</a><div class="wrap in">
-    ${logo()}
-    <nav class="nav" id="bl-nav" aria-label="Main">
-      ${M.map(m => `<div><button type="button" class="top ${current === m.id ? "cur" : ""}" aria-expanded="false" aria-controls="mega-${m.id}">${m.label}${ICON.car}</button>
-        <div class="mega" id="mega-${m.id}"><div class="wrap cols">${m.cols.map(c => `<div class="${c.feature ? "feature" : ""}"><h4>${c.h}</h4>${c.links.map(([href, b, s]) => `<a href="${href}"><b>${esc(b)}</b><span>${esc(s)}</span></a>`).join("")}</div>`).join("")}</div></div></div>`).join("")}
-    </nav>
-    <div class="right">
-      <button type="button" class="themebtn" id="bl-theme" aria-label="Switch theme"></button>
-      <a class="cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="lbl">Cart</span><span class="n" id="bl-cart-n">0</span></a>
-      <a class="btn btn-accent btn-sm" href="${ROOT}new-design/">Start designing</a>
-      <button type="button" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="bl-nav">${ICON.menu}</button>
-    </div></div>`;
-  document.body.prepend(h);
-  const tops = $$(".nav .top", h), closeAll = except => tops.forEach(t => { if (t !== except) { t.setAttribute("aria-expanded", "false"); $("#" + t.getAttribute("aria-controls")).classList.remove("open"); } });
-  const desktop = () => matchMedia("(min-width:981px)").matches;
-  tops.forEach(t => {
-    const m = $("#" + t.getAttribute("aria-controls"));
-    const open = v => { t.setAttribute("aria-expanded", String(v)); m.classList.toggle("open", v); };
-    t.onclick = () => { const v = t.getAttribute("aria-expanded") !== "true"; closeAll(t); open(v); };
-    t.parentElement.addEventListener("mouseenter", () => { if (desktop()) { closeAll(t); open(true); } });
-    t.parentElement.addEventListener("mouseleave", () => { if (desktop()) open(false); });
-  });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
-  document.addEventListener("click", e => { if (!h.contains(e.target)) closeAll(); });
-  const burger = $(".burger", h), nav = $("#bl-nav", h);
-  burger.onclick = () => { const v = !nav.classList.contains("open"); nav.classList.toggle("open", v); burger.setAttribute("aria-expanded", String(v)); };
-
+export function mountChrome() {
+  const rootPath = new URL(ROOT).pathname, here = location.pathname.slice(rootPath.length).replace(/index\.html$/, "");
+  const sec = NAV.flatMap(g => g[1]).map(i => i[0]).filter(h => h && here.startsWith(h)).sort((a, b) => b.length - a.length)[0] ?? "";
+  const app = document.createElement("div"); app.className = "app";
+  const side = document.createElement("aside"); side.className = "sidebar"; side.id = "bl-side"; side.setAttribute("aria-label", "Navigation");
+  side.innerHTML = `<a class="brand" href="${ROOT}"><img src="${ROOT}assets/brand/assemblab-favicon.svg" alt=""><span><b>assemb<i>lab</i></b><span>Self-driving lab builder</span></span></a>
+    <nav class="side-nav">${NAV.map(([h, items]) => `<h6>${h}</h6>` + items.map(([href, label, ic]) => `<a href="${ROOT}${href}" class="${href === sec ? "cur" : ""}"${href === sec ? ' aria-current="page"' : ""}>${ICON[ic]}<span>${label}</span>${ic === "cart" ? '<span class="n zero" id="bl-side-n">0</span>' : ""}</a>`).join("")).join("")}</nav>
+    <div class="partners"><p>Developed with the Acceleration Consortium, University of Toronto, and the Matter Lab</p>${PARTNERS()}</div>`;
+  const main = document.createElement("div"); main.className = "app-main";
+  const [tt, ts] = TITLES[sec] || [document.title.split(" · ")[0], "assemblab"];
+  const top = document.createElement("header"); top.className = "topbar";
+  top.innerHTML = `<a class="skip" href="#main">Skip to content</a>
+    <button type="button" class="iconbtn burger" aria-label="Menu" aria-expanded="false" aria-controls="bl-side">${ICON.menu}</button>
+    <div class="ttl"><b>${esc(tt)}</b><span>${esc(ts)}</span></div>
+    <form class="search" action="${ROOT}parts/" role="search"><label for="bl-q" class="sr">Search parts</label>${ICON.search}<input id="bl-q" name="q" type="search" placeholder="Search parts, makers, tools…"></form>
+    <button type="button" class="iconbtn" id="bl-theme" aria-label="Switch theme"></button>
+    <a class="iconbtn cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="n zero" id="bl-cart-n">0</span></a>
+    <a class="btn btn-accent btn-sm" href="${ROOT}new-design/">Start designing</a>`;
+  const kids = [...document.body.childNodes].filter(n => n.nodeName !== "SCRIPT");
+  main.append(top, ...kids);
   const f = document.createElement("footer"); f.className = "bl-footer";
   f.innerHTML = `<div class="wrap"><div class="top">
-      <div>${logo()}<p class="tagline">From root to result.</p><p>Labu is a catalogue and design tool for self-driving laboratories. Labu sells nothing; each part links to its maker.</p></div>
-      <div><h4>Platform</h4><a href="${ROOT}new-design/">New design</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin</a></div>
-      <div><h4>Parts</h4>${CATS.slice(0, 6).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}</div>
-      <div><h4>Software</h4>${CATS.slice(8).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=structure">Workstations</a></div>
+      <div><img class="flogo" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and design tool for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
+      <div><h4>Platform</h4><a href="${ROOT}new-design/">New design</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin atlas</a></div>
+      <div><h4>Parts</h4>${CATS.slice(0, 5).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=ai">Decision &amp; AI</a></div>
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
     </div>
-    <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (Acceleration Consortium, University of Toronto, 2026).</span><span>Product names are trademarks of their owners. Prices are published list prices; vendors quote the final price.</span></div></div>`;
-  document.body.append(f);
+    <div class="base"><span>Developed with the Acceleration Consortium (University of Toronto) and the Matter Lab. Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026).</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
+  main.append(f);
+  app.append(side, main); document.body.prepend(app);
 
-  // theme: dark (black + vibrant beet) by default, light editorial on request; remembered per browser
-  const tb = $("#bl-theme", h), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
+  const burger = $(".burger", top); let scr = null;
+  const setNav = v => { side.classList.toggle("open", v); burger.setAttribute("aria-expanded", String(v));
+    if (v && !scr) { scr = document.createElement("div"); scr.className = "scrim-nav"; scr.onclick = () => setNav(false); document.body.append(scr); }
+    else if (!v && scr) { scr.remove(); scr = null; } };
+  burger.onclick = () => setNav(!side.classList.contains("open"));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") setNav(false); });
+  const q = new URLSearchParams(location.search).get("q"); if (q && sec === "parts/") $("#bl-q").value = q;
+
+  // theme: dark dashboard by default, light on request; remembered per browser
+  const tb = $("#bl-theme", top), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
   const paint = () => { const t = document.documentElement.dataset.theme || "dark"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
-  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("labu-theme", t); } catch { } paint(); };
+  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("assemblab-theme", t); } catch { } paint(); };
   paint();
 
-  const upd = () => { const n = cart.count(), el = $("#bl-cart-n"); if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };
+  const upd = () => { const n = cart.count(); for (const el of [$("#bl-cart-n"), $("#bl-side-n")]) if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };
   window.addEventListener("bl-cart", upd); window.addEventListener("storage", e => { if (e.key === KEY) { upd(); window.dispatchEvent(new CustomEvent("bl-cart")); } }); upd();
 
-  // reveal-on-scroll
   const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" }) : null;
   $$(".reveal").forEach(el => io ? io.observe(el) : el.classList.add("in"));
 }

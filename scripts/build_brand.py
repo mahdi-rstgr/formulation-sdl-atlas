@@ -1,48 +1,53 @@
-"""Build the Labu brand files in assets/brand/ (mark, horizontal and stacked lockups, light and dark).
+"""Build the assemblab brand files in assets/brand/ (mark, horizontal and stacked lockups, light and dark, favicon).
 
     pip install fonttools
-    python scripts/build_brand.py Inter-Bold.ttf assets/brand
+    python scripts/build_brand.py SpaceGrotesk-SemiBold.ttf assets/brand
 
-The wordmark is Inter Bold (SIL Open Font License, from Google Fonts) outlined to vector paths, so the files
-need no installed font. The mark: a beet whose left half is a flask with liquid (the experiment) and whose
-right half is a circuit whose nodes trace the beet's outline (data, models and agents), with one leaf.
+The mark is the "Twin Module": three solid modules (lab hardware, data tools, AI agents) and one dashed module,
+the digital twin. The wordmark is "assemblab" in Space Grotesk 600 (SIL Open Font License, Google Fonts) with "lab"
+in the accent colour, outlined to vector paths so the files need no installed font.
 """
 import sys
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
+
 font = TTFont(sys.argv[1]); out = sys.argv[2]
 gs, cmap, hmtx = font.getGlyphSet(), font.getBestCmap(), font["hmtx"]
 UPM = font["head"].unitsPerEm
 
-def word(text, size, x0, base, track=-0.02):
+
+def word(text, size, x0, base, track=-0.04):
+    """Return (path, width) for text outlined at size px, baseline at base."""
     pen = SVGPathPen(gs); x = 0; s = size / UPM
     for ch in text:
         g = cmap[ord(ch)]
-        tp = TransformPen(pen, (s, 0, 0, -s, x0 + x, base)); gs[g].draw(tp)
+        gs[g].draw(TransformPen(pen, (s, 0, 0, -s, x0 + x, base)))
         x += hmtx[g][0] * s + track * size
     return pen.getCommands(), x - track * size
 
-def mark_body(beet, leaf, hole, rib):
-    sw = 3.4
-    return f'''<path d="M32.2 11.4C31.6 5.6 36.4 1.4 45.6 1 46 8.8 40.4 12.6 32.2 11.4Z" fill="{leaf}"/>
-<path d="M33.6 10.4 42 4.2" stroke="{rib}" stroke-width="1.4" stroke-linecap="round"/>
-<path d="M32 33.6H15.5C16.4 44.4 24.4 51.6 32 61.2Z" fill="{beet}"/>
-<path d="M32 61.2C24.4 51.6 15.4 44.6 15.4 33.4 15.4 26.4 20 21.6 25 19.4V13.2M22.4 13.2H25M32 12.2V61.2" fill="none" stroke="{beet}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M32 24H39.6L42.4 21.2M32 33.6H45.4M32 43.6H38.8L41.6 46.4" fill="none" stroke="{beet}" stroke-width="{sw}" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="44.8" cy="18.8" r="3.1" fill="{hole}" stroke="{beet}" stroke-width="2.8"/>
-<circle cx="48.8" cy="33.6" r="3.1" fill="{hole}" stroke="{beet}" stroke-width="2.8"/>
-<circle cx="44.2" cy="49" r="3.1" fill="{hole}" stroke="{beet}" stroke-width="2.8"/>'''
 
-THEMES = {"": dict(beet="#8C1D40", leaf="#5A9E3A", hole="#FFFFFF", rib="#FFFFFF", ink="#121212"),
-          "-dark": dict(beet="#D24A7E", leaf="#6DB24A", hole="#121212", rib="#121212", ink="#F4F4F5")}
+def mark(ink, accent, dash="5 3.4", sw=3):
+    return (f'<rect x="4" y="4" width="26" height="26" rx="5" fill="{ink}"/>'
+            f'<rect x="34" y="4" width="26" height="26" rx="5" fill="{ink}"/>'
+            f'<rect x="4" y="34" width="26" height="26" rx="5" fill="{accent}"/>'
+            f'<rect x="35.5" y="35.5" width="23" height="23" rx="4" fill="none" stroke="{accent}" stroke-width="{sw}"'
+            + (f' stroke-dasharray="{dash}"' if dash else "") + '/>')
+
+
+THEMES = {"": dict(ink="#0E1A2B", accent="#2563EB"), "-dark": dict(ink="#F7F8FA", accent="#60A5FA")}
+svg = lambda vb, body: f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb}" role="img" aria-label="assemblab"><title>assemblab</title>{body}</svg>\n'
 for suf, t in THEMES.items():
-    body = mark_body(t["beet"], t["leaf"], t["hole"], t["rib"])
-    open(f"{out}/labu-mark{suf}.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Labu">\n<title>Labu</title>\n{body}\n</svg>\n')
-    d, w = word("Labu", 34, 70, 46)                         # horizontal lockup
-    W = 70 + w + 4
-    open(f"{out}/labu-logo{suf}.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W:.1f} 64" role="img" aria-label="Labu">\n<title>Labu</title>\n{body}\n<path d="{d}" fill="{t["ink"]}"/>\n</svg>\n')
-    d2, w2 = word("Labu", 40, 0, 0)                         # stacked lockup for marketing
-    S = 3.0; mw = 64 * S; H = mw + 70; W2 = max(mw, w2) + 40
-    open(f"{out}/labu-logo-stacked{suf}.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W2:.1f} {H:.1f}" role="img" aria-label="Labu">\n<title>Labu</title>\n<g transform="translate({(W2-mw)/2:.1f} 0) scale({S})">{body}</g>\n<path transform="translate({(W2-w2)/2:.1f} {mw+52:.1f})" d="{d2}" fill="{t["ink"]}"/>\n</svg>\n')
+    m = mark(t["ink"], t["accent"])
+    open(f"{out}/assemblab-mark{suf}.svg", "w").write(svg("0 0 64 64", m))
+    a, wa = word("assemb", 44, 80, 47); b, wb = word("lab", 44, 80 + wa - 1.2, 47)
+    open(f"{out}/assemblab-logo{suf}.svg", "w").write(svg(f"0 0 {80 + wa + wb + 4:.1f} 64", m + f'<path d="{a}" fill="{t["ink"]}"/><path d="{b}" fill="{t["accent"]}"/>'))
+    a2, wa2 = word("assemb", 52, 0, 0); b2, wb2 = word("lab", 52, wa2 - 1.4, 0); W = wa2 + wb2
+    S = 3; mw = 64 * S; W2 = max(mw, W) + 40
+    open(f"{out}/assemblab-logo-stacked{suf}.svg", "w").write(svg(f"0 0 {W2:.1f} {mw + 92:.1f}",
+        f'<g transform="translate({(W2 - mw) / 2:.1f} 0) scale({S})">{m}</g>'
+        f'<g transform="translate({(W2 - W) / 2:.1f} {mw + 70:.1f})"><path d="{a2}" fill="{t["ink"]}"/><path d="{b2}" fill="{t["accent"]}"/></g>'))
+# favicon: the mark on a light tile, large (the modules fill ~84% of the tile) with a solid twin outline so it reads at 16 px
+open(f"{out}/assemblab-favicon.svg", "w").write(svg("0 0 64 64", '<rect width="64" height="64" rx="12" fill="#F7F8FA"/>'
+    f'<g transform="translate(3.2 3.2) scale(0.9)">{mark("#0E1A2B", "#2563EB", dash=None, sw=4)}</g>'))
 print("ok")

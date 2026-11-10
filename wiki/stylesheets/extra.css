@@ -1,14 +1,14 @@
-/* Labu Learn (the wiki): visual identity matched to the Labu platform (assets/bl.css) */
+/* assemblab Learn (the wiki): visual identity matched to the assemblab platform (assets/bl.css) */
 
 :root {
-  --ink: #121212;
+  --ink: #0E1A2B;
   --ink-2: #1F1F23;
-  --accent: #8C1D40;
+  --accent: #2563EB;
   --mc-liquid: #2C6FD1;
   --mc-semi-solid: #C27A1E;
   --mc-powder: #7A5BB5;
   --mc-object: #23906B;
-  --font-heading: "Inter", system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Inter", system-ui, sans-serif;
   --card-bg: #FFFFFF;
   --card-border: #E4E4E7;
   --zebra: rgba(16, 26, 36, 0.035);
@@ -25,7 +25,7 @@
 }
 [data-md-color-accent="custom"] {
   --md-accent-fg-color: var(--accent);
-  --md-accent-fg-color--transparent: rgba(140, 29, 64, 0.1);
+  --md-accent-fg-color--transparent: rgba(37, 99, 235, 0.1);
   --md-accent-bg-color: #FFFFFF;
 }
 [data-md-color-scheme="default"] {
@@ -33,16 +33,15 @@
   --md-default-bg-color: #FAFAFA;
 }
 [data-md-color-scheme="slate"] {
-  --accent: #E0679A;
-  --md-typeset-a-color: #E0679A;
-  --md-accent-fg-color: #E0679A;
-  --md-accent-fg-color--transparent: rgba(224, 103, 154, 0.12);
-  --md-default-bg-color: #0F0F10;
-  --md-default-bg-color: #0E151D;
-  --md-default-bg-color--light: #131C26;
-  --md-code-bg-color: #16212C;
-  --card-bg: #151F2A;
-  --card-border: #283646;
+  --accent: #60A5FA;
+  --md-typeset-a-color: #60A5FA;
+  --md-accent-fg-color: #60A5FA;
+  --md-accent-fg-color--transparent: rgba(96, 165, 250, 0.12);
+  --md-default-bg-color: #080D19;
+  --md-default-bg-color--light: #0F172A;
+  --md-code-bg-color: #131D33;
+  --card-bg: #0F172A;
+  --card-border: #1E293B;
   --zebra: rgba(255, 255, 255, 0.03);
   --muted: #9AA9B9;
   --mc-liquid: #6FA0EA;
@@ -223,11 +222,11 @@
   .md-typeset .step-cards { grid-template-columns: 1fr; }
 }
 
-/* Labu platform links in the header */
+/* assemblab platform links in the header */
 .md-header__bl { display: flex; align-items: center; gap: 0.1rem; margin: 0 0.4rem; }
 .md-header__bl a { color: rgba(255, 255, 255, 0.82); font-size: 0.66rem; font-weight: 500; padding: 0.25rem 0.5rem; border-radius: 0.2rem; white-space: nowrap; }
 .md-header__bl a:hover, .md-header__bl a:focus { color: #fff; background: rgba(255, 255, 255, 0.1); }
-.md-header__bl .md-header__bl-cta { background: #B82E5C; color: #fff; font-weight: 600; margin-left: 0.3rem; }
+.md-header__bl .md-header__bl-cta { background: #2563EB; color: #fff; font-weight: 600; margin-left: 0.3rem; }
 .md-header__bl .md-header__bl-cta:hover { background: #7A1A3B; }
 @media screen and (max-width: 76.24em) { .md-header__bl a:not(.md-header__bl-cta) { display: none; } }
 @media screen and (max-width: 30em) { .md-header__bl { display: none; } }

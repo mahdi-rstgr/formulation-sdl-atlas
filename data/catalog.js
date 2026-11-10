@@ -1,5 +1,5 @@
-/* Labu catalogue: every part a scientist can put in a self-driving lab, with the vendor page we refer them to.
- * Labu sells nothing. The cart groups parts by vendor and links out, one vendor at a time.
+/* assemblab catalogue: every part a scientist can put in a self-driving lab, with the vendor page we refer them to.
+ * assemblab sells nothing. The cart groups parts by vendor and links out, one vendor at a time.
  *
  * Fields
  *   id      stable id; equals the 3D-model id in new-design/catalog.js when `design` is true
@@ -25,7 +25,7 @@ export const CATS = [
   { id: "structure", name: "Workstations & mounting", blurb: "Tables, pedestals and enclosures the cell is built on (McMaster-Carr)." },
   { id: "orchestration", name: "Orchestration software", blurb: "Open-source systems that run devices as one workflow." },
   { id: "simulation", name: "Simulation & twins", blurb: "From discrete-event models to GPU physics for rehearsing a cell." },
-  { id: "ai", name: "Decision & AI", blurb: "Optimizers and agent protocols that choose the next experiment." },
+  { id: "ai", name: "Decision & AI", blurb: "Optimizers and AI agents that choose the next experiment." },
 ];
 
 const T = (o) => ({ kind: "hardware", design: false, mat: [], caps: [], ...o });
@@ -39,8 +39,8 @@ export const PRODUCTS = [
   T({ id: "hamilton-psd4", name: "PSD/4 syringe pump", brand: "Hamilton", cat: "liquid", sub: "Positive-displacement pump", mat: ["liquid"], price: "$400–500", spec: "±1% accuracy; ≤0.05% repeatability", url: "https://www.hamiltoncompany.com/knowledge-base/spec-sheet/psd-4-specification-sheet", ref: "62", design: true, caps: ["liquids"] }),
   T({ id: "qdos20", name: "Qdos 20 metering pump", brand: "Watson-Marlow", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "$4,248", spec: "±1% dosing accuracy; ±0.5% repeatability", url: "https://www.wmfts.com/en-us/brands/watson-marlow-peristaltic-pumps/cased-pumps/qdos-accurate-versatile-chemical-dosing-pumps/", ref: "63", design: true, caps: ["liquids"] }),
   T({ id: "lab-formulator-pen-assembly", name: "Formulator Pen", brand: "Acceleration Consortium", cat: "liquid", sub: "Lab-built dispenser · CNC tool", mat: ["liquid"], price: "Lab-built", spec: "Liquid-dispensing tool for the CNC dock; real CAD", url: "https://acceleration.utoronto.ca/", vendor: "Acceleration Consortium", ref: "", design: true, caps: ["liquids"], note: "Built by the Acceleration Consortium for its formulation cell. Contact them about build files or collaboration." }),
-  T({ id: "peristaltic-pump", name: "Peristaltic pump (cell module)", brand: "Generic", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "See vendor", spec: "Continuous transfer of liquids through tubing; real CAD", url: "", ref: "", design: true, caps: ["liquids"], note: "Generic peristaltic pump module from the Acceleration Consortium's cell CAD." }),
-  T({ id: "reciprocating-pump", name: "Reciprocating pump (cell module)", brand: "Generic", cat: "liquid", sub: "Positive-displacement pump", mat: ["liquid", "paste"], price: "See vendor", spec: "Piston-driven positive displacement for viscous liquids; real CAD", url: "", ref: "", design: true, caps: ["liquids"], note: "Generic reciprocating pump module from the Acceleration Consortium's cell CAD." }),
+  T({ id: "peristaltic-pump", name: "Peristaltic pump (cell module)", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "Lab-built", spec: "Continuous transfer of liquids through tubing; real CAD", url: "https://acceleration.utoronto.ca/", ref: "", design: true, caps: ["liquids"], note: "Built by the Acceleration Consortium for its formulation cells." }),
+  T({ id: "reciprocating-pump", name: "Reciprocating pump (cell module)", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "liquid", sub: "Positive-displacement pump", mat: ["liquid", "paste"], price: "Lab-built", spec: "Piston-driven positive displacement for viscous liquids; real CAD", url: "https://acceleration.utoronto.ca/", ref: "", design: true, caps: ["liquids"], note: "Built by the Acceleration Consortium for its formulation cells." }),
   T({ id: "masterflex-ls", name: "Masterflex L/S Digital", brand: "Cole-Parmer / Avantor", cat: "liquid", sub: "Peristaltic pump", mat: ["liquid"], price: "$9,000", spec: "±0.1–0.25% speed-control accuracy", url: "https://www.fishersci.com/shop/products/masterflex-l-s-digital-precision-pump-systems-open-head-sensor-easy-load-head-4/11747346", ref: "64", caps: ["liquids"] }),
 
   // ---------------------------------------------------------------- paste & gel (Table 3)
@@ -145,10 +145,10 @@ export const PRODUCTS = [
   S({ id: "ac-golem", name: "Golem", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Robust optimization", spec: "Finds conditions that stay good when inputs are noisy", url: "https://github.com/the-matter-lab/golem", ref: "", caps: ["decide"] }),
   S({ id: "ac-chimera", name: "Chimera", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Multi-objective optimization", spec: "Ranks objectives by priority instead of weighting them", url: "https://github.com/the-matter-lab/chimera", ref: "", caps: ["decide"] }),
   S({ id: "ac-olympus", name: "Olympus", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "simulation", sub: "Benchmarking", spec: "Benchmarks optimizers and experiment planners on noisy, realistic tasks", url: "https://github.com/the-matter-lab/olympus", ref: "", caps: ["simulate", "decide"] }),
-  S({ id: "ac-self-building-labs", name: "Self-Building Labs", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "simulation", sub: "Lab design · twin · skills", price: "Research (paper)", spec: "Builds the layout, digital twin, robot skills and workflows a scientific goal needs", url: "https://self-building-labs.github.io/", ref: "", caps: ["simulate"], note: "Works one step after Labu's design tool: Labu helps choose and buy the parts, Self-Building Labs turns a goal into a running cell." }),
-  S({ id: "ac-organa", name: "ORGANA", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Laboratory copilot", price: "Research (paper)", spec: "Robotic assistant that runs and characterizes chemistry experiments by conversation", url: "https://doi.org/10.1016/j.matt.2024.10.015", ref: "172", caps: ["decide"] }),
-  S({ id: "ac-el-agente", name: "El Agente", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "AI agent", price: "Research (paper)", spec: "Autonomous agent that plans and runs quantum-chemistry calculations", url: "https://doi.org/10.1016/j.matt.2025.102263", ref: "173", caps: ["decide"] }),
-  S({ id: "ac-optima", name: "La Agente Óptima", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "ai", sub: "Agentic SDL · recovery advisor", price: "Research (paper)", spec: "Agents for self-driving labs; gathers fault context and ranks recovery options", url: "https://doi.org/10.48550/arXiv.2609.04564", ref: "174", caps: ["decide"], note: "Benchmark data and audits: github.com/the-matter-lab/La-Agente-Optima-artifacts." }),
+  S({ id: "ac-self-building-labs", name: "Self-Building Labs", brand: "Acceleration Consortium", vendor: "Acceleration Consortium", cat: "simulation", sub: "Lab design · twin · skills", price: "Research (paper)", spec: "Builds the layout, digital twin, robot skills and workflows a scientific goal needs", url: "https://self-building-labs.github.io/", ref: "", caps: ["simulate"], note: "Works one step after assemblab's design tool: assemblab helps choose and buy the parts, Self-Building Labs turns a goal into a running cell." }),
+  S({ id: "ac-organa", name: "ORGANA", brand: "The Matter Lab", vendor: "The Matter Lab", cat: "ai", sub: "Laboratory copilot", price: "Research (paper)", spec: "Robotic assistant that runs and characterizes chemistry experiments by conversation", url: "https://doi.org/10.1016/j.matt.2024.10.015", ref: "172", caps: ["decide"] }),
+  S({ id: "ac-el-agente", name: "El Agente", brand: "The Matter Lab", vendor: "The Matter Lab", cat: "ai", sub: "AI agent", price: "Research (paper)", spec: "Autonomous agent that plans and runs quantum-chemistry calculations", url: "https://doi.org/10.1016/j.matt.2025.102263", ref: "173", caps: ["decide"] }),
+  S({ id: "ac-optima", name: "La Agente Óptima", brand: "The Matter Lab", vendor: "The Matter Lab", cat: "ai", sub: "Agentic SDL · recovery advisor", price: "Research (paper)", spec: "Agents for self-driving labs; gathers fault context and ranks recovery options", url: "https://doi.org/10.48550/arXiv.2609.04564", ref: "174", caps: ["decide"], note: "Benchmark data and audits: github.com/the-matter-lab/La-Agente-Optima-artifacts." }),
 ];
 /* ---------------------------------------------------------------- helpers shared by every page */
 export const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
@@ -162,4 +162,21 @@ export function parsePrice(s) {
 export function vendorOf(p) {
   if (!p.url) return null;
   try { return new URL(p.url).hostname.replace(/^www\./, ""); } catch { return null; }
+}
+
+/* Provider logos (assets/logos/). tone: "light" = white logo for dark grounds; "dark" = needs a light badge;
+   "icon" = a square brand icon. Agents are credited to the Matter Lab; other Acceleration Consortium work to the AC. */
+const LOGOS = {
+  "The Matter Lab": { src: "matter-lab.svg", tone: "light" },
+  "Acceleration Consortium": { src: "acceleration-consortium.png", tone: "light", wide: true },
+  "Opentrons": { src: "opentrons.svg", tone: "light", wide: true },
+  "Universal Robots": { src: "universal-robots.svg", tone: "dark", wide: true },
+};
+const ICON_DOMAINS = new Set(["allevi3d.com", "anton-paar.com", "brooks.com", "cellink.com", "coperion.com", "dispendix.com", "eppendorf.com", "fisnar.com", "franka.de", "hamiltoncompany.com", "igus.com", "kinovarobotics.com", "kuka.com", "mcmaster.com", "modelcontextprotocol.io", "moveit.ai", "nordson.com", "preeflow.com", "robodk.com", "sainsmart.com", "sila-standard.com", "simpy.readthedocs.io", "thinkymixer.com", "ufactory.cc", "ufactory.us"]);
+export function logoOf(p) {
+  const who = p.vendor || p.brand.split(" (")[0];
+  if (LOGOS[who]) return { ...LOGOS[who], name: who };
+  const d = vendorOf(p);
+  if (d && ICON_DOMAINS.has(d)) return { src: `fav-${d}.png`, tone: "icon", name: who };
+  return null;
 }
