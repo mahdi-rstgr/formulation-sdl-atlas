@@ -23,10 +23,15 @@ export const CATS = [
   { id: "platform", name: "Integrated platforms", blurb: "Turnkey liquid handlers and formulation workstations." },
   { id: "station", name: "Mixers, balances & analysis", blurb: "Stations the premix cup visits: weigh, mix, characterize." },
   { id: "structure", name: "Workstations & mounting", blurb: "Tables, pedestals and enclosures the cell is built on (McMaster-Carr)." },
+  { id: "analysis", name: "Analytical instruments", blurb: "Spectroscopy, chromatography, thermal, particle, imaging and elemental analysis (ChemLab-Assets 3D models)." },
+  { id: "prep", name: "Synthesis & sample prep", blurb: "Reactors, evaporators, dryers, mills, coaters and extractors (ChemLab-Assets 3D models)." },
+  { id: "facility", name: "Lab environment & utilities", blurb: "Fume hoods, gloveboxes, furnaces, freezers, gas and water supply (ChemLab-Assets 3D models)." },
   { id: "orchestration", name: "Orchestration software", blurb: "Open-source systems that run devices as one workflow." },
   { id: "simulation", name: "Simulation & twins", blurb: "From discrete-event models to GPU physics for rehearsing a cell." },
   { id: "ai", name: "Decision & AI", blurb: "Optimizers and AI agents that choose the next experiment." },
 ];
+
+import { CHEMLAB, CHEMLAB_CREDIT } from "./chemlab.js";
 
 const T = (o) => ({ kind: "hardware", design: false, mat: [], caps: [], ...o });
 const S = (o) => ({ kind: "software", price: "Open source", design: false, mat: [], caps: [], ...o });
@@ -151,6 +156,13 @@ export const PRODUCTS = [
   S({ id: "agent-campaign", design: true, name: "Campaign and recovery agent", brand: "Published research", cat: "ai", sub: "Agentic SDL · recovery advisor", price: "Research (paper)", spec: "Agents for self-driving labs; gathers fault context and ranks recovery options", url: "https://doi.org/10.48550/arXiv.2609.04564", ref: "174", caps: ["decide"] }),
 ];
 /* ---------------------------------------------------------------- helpers shared by every page */
+/* ChemLab-Assets (MBZUAI): 199 laboratory instruments with simulation-ready 3D models, imported by tools/import_chemlab.py.
+   The models are CC BY-NC 4.0: credited on every entry, streamed from the dataset rather than copied here. */
+for (const c of CHEMLAB) PRODUCTS.push(T({ id: c.id, name: c.name, brand: c.maker, cat: c.cat, sub: `${c.model} · ${c.domainName}`, mat: [], price: "See vendor",
+  spec: `${c.maker} ${c.model}; ${c.size.map(v => v.toFixed(2)).join(" × ")} m${c.panel ? "; working front panel in the source asset" : ""}`, ref: "", design: true, caps: c.caps,
+  thumb: c.thumb ? `assets/img/chemlab/${c.thumb}` : null, credit: CHEMLAB_CREDIT,
+  note: `3D model from ${CHEMLAB_CREDIT.name} (${CHEMLAB_CREDIT.license}), built from the maker's published documents; not manufacturer CAD. Ask ${c.maker} for a quote.` }));
+
 export const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 PRODUCTS.forEach((p, i) => { p.sku = "BL-" + String(1001 + i); });
 

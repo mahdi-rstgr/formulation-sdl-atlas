@@ -46,7 +46,7 @@ if (new URLSearchParams(location.search).has("thumbs")) {
   const cam = new THREE.PerspectiveCamera(30, 4 / 3, .01, 50); cam.up.set(0, 0, 1);
   window.__thumbs = {};
   const only = (new URLSearchParams(location.search).get("thumbs") || "").split(",").filter(x => x && x !== "1");
-  for (const it of ITEMS.filter(i => !only.length || only.includes(i.id))) {
+  for (const it of ITEMS.filter(i => (!only.length && !i.chemlab) || only.includes(i.id))) {   // ChemLab instruments ship their own thumbnails
     const m = await buildModel(it); m.userData.tick?.(1.3, .016); sc.add(m);
     const b = new THREE.Box3().setFromObject(m), c = b.getCenter(new THREE.Vector3()), s = b.getSize(new THREE.Vector3()).length();
     cam.position.set(c.x + s * .95, c.y - s * 1.35, c.z + s * .7); cam.lookAt(c); r.render(sc, cam);
@@ -397,7 +397,7 @@ function banner() {
     return `<section class="grp${open ? " open" : ""}"><button type="button" class="gh" data-c="${c.id}" aria-expanded="${open}"><i style="background:${c.color}"></i><span>${c.name}</span><em>${list.length}</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
       <div class="devs">${open ? list.map(it => `
         <div class="dev" draggable="true" data-id="${it.id}" tabindex="0" title="${esc(it.note || "Drag into the workstation, or press Enter")}">
-          <span class="th"><img src="thumbs/${it.id}.png" alt="" loading="lazy" onerror="this.remove()"></span>
+          <span class="th"><img src="${it.thumb || `thumbs/${it.id}.png`}" alt="" loading="lazy" onerror="this.remove()"></span>
           <span class="nm"><b>${esc(short(it.name))}</b><small>${esc(it.sub)}${it.reach ? ` · ${it.reach} m` : ""}</small><em class="price ${it.price ? "" : "q"}">${esc(it.price ? fmt(it.price) : it.priceRaw)}</em></span>
           <button type="button" class="add" data-id="${it.id}" aria-label="Add ${esc(it.name)}">+</button>
         </div>`).join("") : ""}</div></section>`; }).join("") || `<p class="none">No device matches “${esc(q)}”.</p>`;

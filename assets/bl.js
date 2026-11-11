@@ -64,11 +64,14 @@ export const GLYPH = {
   platform: G('<rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 30h36M12 16h24"/><path d="M16 22v4M22 22v4M28 22v4M34 22v4"/>'),
   station: G('<path d="M10 38h28l-3-10H13l-3 10Z"/><path d="M16 28v-4h16v4M14 20h20"/><path d="M24 14v6"/>'),
   structure: G('<path d="M6 16h36M6 22h36M10 22v18M38 22v18M10 34h28"/><path d="M14 16V8h8v8"/>'),
+  analysis: G('<rect x="8" y="12" width="32" height="20" rx="2"/><path d="M12 26l6-7 5 4 6-9 7 8"/><path d="M16 38h16M24 32v6"/>'),
+  prep: G('<path d="M19 6h10M21 6v10l-9 18a3 3 0 0 0 2.7 4.4h18.6A3 3 0 0 0 36 34l-9-18V6"/><path d="M15 29h18"/><circle cx="21" cy="33" r="1.2"/><circle cx="27" cy="31" r="1.2"/>'),
+  facility: G('<path d="M8 40V12l16-6 16 6v28"/><path d="M8 40h32M16 40V24h16v16M16 30h16"/>'),
   orchestration: G('<circle cx="24" cy="10" r="4"/><circle cx="10" cy="36" r="4"/><circle cx="38" cy="36" r="4"/><path d="M22 14 12 32M26 14l10 18M14 36h20"/>'),
   simulation: G('<path d="M24 6 8 15v18l16 9 16-9V15L24 6Z" stroke-dasharray="3 3"/><path d="M8 15l16 9 16-9M24 24v18"/>'),
   ai: G('<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M34 6v8h-8"/><circle cx="24" cy="24" r="3"/>'),
 };
-export const thumbOf = p => p.design ? `${ROOT}lab-simulator/thumbs/${p.id}.png` : null;
+export const thumbOf = p => p.thumb ? ROOT + p.thumb : p.design ? `${ROOT}lab-simulator/thumbs/${p.id}.png` : null;
 export const logoSrc = l => `${ROOT}assets/logos/${l.src}`;
 /* a small provider mark beside the maker's name; makers without a logo get a two-letter badge */
 export function logoChip(p) {
@@ -146,6 +149,7 @@ export function openProduct(id, push = true) {
         ${p.mcm ? `<tr><th>McMaster part</th><td class="mono">${p.mcm} <span class="fine">· 3D model from McMaster-Carr CAD</span></td></tr>` : ""}
       </table>
       ${p.note ? `<p class="fine">${esc(p.note)}</p>` : ""}
+      ${p.credit ? `<p class="fine credit">3D model: <a href="${p.credit.url}" target="_blank" rel="noopener">${esc(p.credit.name)}</a> · <a href="${p.credit.licenseUrl}" target="_blank" rel="noopener">${esc(p.credit.license)}</a></p>` : ""}
       <div class="acts">
         <button type="button" class="btn btn-accent" data-add="${p.id}">${ICON.plus}Add to cart</button>
         ${p.design ? `<a class="btn" href="${ROOT}lab-simulator/?add=${p.id}">${ICON.cube}Place in a design</a>` : ""}
@@ -220,7 +224,7 @@ export function mountChrome() {
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
     </div>
     <div class="dev"><span>Developed by <b>${DEVELOPER.name}</b></span><a href="${DEVELOPER.scholar}" target="_blank" rel="noopener">${SCHOLAR_SVG}Google Scholar</a><a href="${DEVELOPER.linkedin}" target="_blank" rel="noopener">${LINKEDIN_SVG}LinkedIn</a></div>
-    <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026).</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
+    <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026). Instrument 3D models: <a href="https://mbzuai-nlp.github.io/ChemLab-Assets/" target="_blank" rel="noopener" style="display:inline;padding:0;text-decoration:underline">ChemLab-Assets (MBZUAI)</a>, CC BY-NC 4.0.</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
   main.append(f);
   app.append(side, main); document.body.prepend(app);
 

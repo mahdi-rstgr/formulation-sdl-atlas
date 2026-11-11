@@ -5,6 +5,8 @@
  * Every model returns a THREE.Group whose userData.tick(t, dt) animates it while the workstation is running.
  */
 import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { CHEMLAB, CHEMLAB_BASE, CHEMLAB_CREDIT } from "../data/chemlab.js";
 
 export const CATEGORIES = [
   { id: "handler", name: "Material handlers", color: "var(--liquid)" },
@@ -14,6 +16,9 @@ export const CATEGORIES = [
   { id: "station", name: "Balances & stations", color: "var(--ink-3)" },
   { id: "platform", name: "Integrated platforms", color: "var(--accent)" },
   { id: "structure", name: "Workstations & mounting", color: "#c9a45c" },
+  { id: "analysis", name: "Analytical instruments", color: "#F472B6" },
+  { id: "prep", name: "Synthesis & sample prep", color: "#FB923C" },
+  { id: "facility", name: "Lab environment & utilities", color: "#94A3B8" },
   { id: "orchestration", name: "Orchestration software", color: "#22D3EE" },
   { id: "decide", name: "Optimizers & AI agents", color: "#4ADE80" },
 ];
@@ -107,6 +112,12 @@ export const ITEMS = [
   { id: "agent-chemistry", cat: "decide", sub: "AI agent · published research", name: "Quantum-chemistry agent", model: "aiStation", digital: true, role: "agent", price: "Open source", color: "#FBBF24", note: "Multi-agent system for research workflows." },
   { id: "agent-campaign", cat: "decide", sub: "AI agent · published research", name: "Campaign and recovery agent", model: "aiStation", digital: true, role: "agent", price: "Open source", color: "#FCD34D", note: "Agent that sets up and steers optimization campaigns." },
 ];
+
+/* ChemLab-Assets instruments (MBZUAI, CC BY-NC 4.0): 199 GLB models streamed from the dataset (data/chemlab.js, tools/import_chemlab.py) */
+const CL_CAT = { station: "station", analysis: "analysis", prep: "prep", facility: "facility", powder: "handler", liquid: "handler", arm: "arm", platform: "platform" };
+for (const c of CHEMLAB) ITEMS.push({ id: c.id, cat: CL_CAT[c.cat] || "analysis", sub: `${c.maker} ${c.model}`, name: c.name, model: "glb:" + c.glb, up: c.up, dims: c.size,
+  thumb: c.thumb ? `../assets/img/chemlab/${c.thumb}` : null, price: "See vendor", caps: c.caps, chemlab: true,
+  note: `${c.maker} ${c.model}. 3D model: ${CHEMLAB_CREDIT.name}, ${CHEMLAB_CREDIT.license}${c.joints ? `; ${c.joints} working joints in the source asset` : ""}.` });
 
 /* ============================================================== materials & primitives */
 const std = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: .45, metalness: .05, ...o });
@@ -522,9 +533,20 @@ async function articulated(it) {
 }
 
 /* ============================================================== public builder */
+const gltf = new GLTFLoader(), glbCache = {};
+async function glbModel(it) {
+  const doc = await (glbCache[it.id] ??= gltf.loadAsync(CHEMLAB_BASE + it.model.slice(4)));
+  const inner = doc.scene.clone(true), g = new THREE.Group(), wrap = new THREE.Group(); wrap.add(inner); g.add(wrap);
+  if (it.up === "y") wrap.rotation.x = Math.PI / 2;                         // glTF Y-up -> Z-up, front stays on -Y
+  g.updateMatrixWorld(true); const b = new THREE.Box3().setFromObject(wrap), c = b.getCenter(new THREE.Vector3());
+  wrap.position.set(-c.x, -c.y, -b.min.z); const sz = b.getSize(new THREE.Vector3()); g.userData.size = [sz.x, sz.y, sz.z];
+  inner.traverse(o => { if (o.isMesh && o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; for (const m of ms) { m.side = THREE.FrontSide; if (m.metalness > .9) m.metalness = .6; } } });
+  return g;
+}
 export async function buildModel(it) {
   let g;
-  if (it.model.startsWith("mesh:")) g = await meshModel(it);
+  if (it.model.startsWith("glb:")) g = await glbModel(it);
+  else if (it.model.startsWith("mesh:")) g = await meshModel(it);
   else if (it.model.startsWith("arm:")) g = await articulated(it);
   else g = PROC[it.model](it.dims, it.color || "#c9cfd6", it.style || {});
   const root = new THREE.Group(); root.add(g); root.userData.tick = g.userData.tick || null; root.userData.size = g.userData.size;

@@ -24,13 +24,22 @@ The structure follows [vention.com](https://vention.com), which does the same fo
 
 ### Shared code
 
-- `data/catalog.js`: the single parts catalogue. It holds 89 parts (57 hardware, 32 software), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
+- `data/catalog.js`: the single parts catalogue. It holds 294 parts (the review's 95 plus 199 instruments from ChemLab-Assets), each with maker, category, materials handled, published price, headline spec, vendor URL and review references. It also says whether a part can be placed in 3D and which capabilities it adds.
 - `data/templates.js`: the design templates used by the home page, Solutions and the Lab Simulator.
 - `assets/bl.css`, `assets/bl.js`: the design system and the shared runtime: the app shell (sidebar, top bar, footer), a cart stored in `localStorage` and shared by every page, product cards with provider logos, and the product drawer.
 - `assets/logos/`: provider logos. `logoOf()` in `data/catalog.js` picks a logo for each part (Opentrons, Universal Robots, and site icons for other makers). Makers without a logo get a two-letter badge.
 - `assets/platform.js`: the demonstration platform composed from catalogue CAD (two McMaster-Carr workstations under a stainless deck with an OT-2, a Lite 6, a balance, labware, a 3030 gantry with three dispensing tools, the gantry viscometer, a mixer, pumps, a flow sensor, a stack light and an e-stop). It is used by the home-page 3D scene and the hero render.
 - `tools/render-hero-orbit.html`: renders the home-page hero, one slow 360° orbit around the whole lab of section 1 (platform, digital twin, orchestration, data centre, models, agents), in batches of JPEG frames (`?n=240&k0=0&k1=30`, 1120 × 630). The frames are assembled into `assets/img/lab-orbit.webp` (animated, 240 frames at 10 fps: one turn every 24 s) and `assets/img/lab-orbit-poster.webp` (the still shown first, and to visitors who prefer reduced motion).
 - `tools/render-platform.html`: renders a still of the platform alone and projects each component's outline for hotspots (not used by the current hero).
+
+### ChemLab-Assets instruments (MBZUAI)
+
+199 laboratory instruments from [ChemLab-Assets](https://mbzuai-nlp.github.io/ChemLab-Assets/) (Song, Zhang, Zhang, Ma, Chang, Chen; MBZUAI; release 1.5.0) are in the parts library and the Lab Simulator. They cover spectroscopy, chromatography, thermal and particle analysis, imaging, elemental analysis, synthesis, separation, sample prep, materials processing and lab utilities, each a specific commercial model with simulation-ready geometry.
+
+- `tools/import_chemlab.py` reads the public catalogue and writes `data/chemlab.js` (name, maker, model, domain, size, up axis, GLB path) and the thumbnails in `assets/img/chemlab/`. Four instruments the catalogue already had with its own model (Quantos, THINKY ARE-310, PreciseFlex 400, Opentrons Flex) are skipped.
+- The GLB models are **not** copied into this repository (about 1 MB each). The Lab Simulator streams each one from the [Hugging Face dataset](https://huggingface.co/datasets/MBZUAI/ChemLab-Assets) when it is placed, turns Y-up assets to Z-up and stands them on the floor at true scale.
+- They sit in three new categories, *Analytical instruments*, *Synthesis & sample prep* and *Lab environment & utilities*, plus the existing ones where they fit (balances and meters, the syringe pump). Their capabilities (weigh, mix, characterize, dose) feed the Lab Simulator's checks and run simulation.
+- **Licence:** the assets are **CC BY-NC 4.0** (attribution, non-commercial use only). Every entry, the product drawer and the footer credit the source and the licence. Commercial use of these models needs permission from the authors.
 
 ### Lab-built devices and research tools
 
