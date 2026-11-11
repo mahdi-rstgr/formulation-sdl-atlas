@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { CATEGORIES, ITEMS, CAPS, buildModel, addDock } from "./catalog.js";
+import { CATEGORIES, GROUPS, ITEMS, CAPS, buildModel, addDock } from "./catalog.js";
 import { TEMPLATES } from "../data/templates.js";
 import { cart as blCart, byId as P } from "../assets/bl.js";
 import { createSim } from "./sim.js";
@@ -391,10 +391,12 @@ const openCats = new Set();   // every group starts collapsed; a search opens th
 function banner() {
   const q = $("#search").value.trim().toLowerCase();
   const hit = i => !q || (i.name + " " + i.sub + " " + i.cat + " " + (i.note || "")).toLowerCase().includes(q);
+  let lastGroup = null;
   $("#lib").innerHTML = CATEGORIES.map(c => {
-    const list = ITEMS.filter(i => i.cat === c.id && hit(i)); if (q && !list.length) return "";
+    const list = ITEMS.filter(i => i.cat === c.id && hit(i)); if (!list.length) return "";
+    const head = c.group !== lastGroup ? `<h6 class="lib-g">${GROUPS.find(g => g.id === c.group)?.name || ""}</h6>` : ""; lastGroup = c.group;
     const open = q ? true : openCats.has(c.id);
-    return `<section class="grp${open ? " open" : ""}"><button type="button" class="gh" data-c="${c.id}" aria-expanded="${open}"><i style="background:${c.color}"></i><span>${c.name}</span><em>${list.length}</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+    return head + `<section class="grp${open ? " open" : ""}"><button type="button" class="gh" data-c="${c.id}" aria-expanded="${open}"><i style="background:${c.color}"></i><span>${c.name}</span><em>${list.length}</em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
       <div class="devs">${open ? list.map(it => `
         <div class="dev" draggable="true" data-id="${it.id}" tabindex="0" title="${esc(it.note || "Drag into the workstation, or press Enter")}">
           <span class="th"><img src="${it.thumb || `thumbs/${it.id}.png`}" alt="" loading="lazy" onerror="this.remove()"></span>
@@ -481,6 +483,7 @@ else { await load(saved || TEMPLATES.sfl); startScreen(!!saved); }
 /* template render mode: ?shot=<template> frames the loaded layout and writes a 1600 × 900 PNG into <pre id="shot-out"> (read by headless --dump-dom;
    used for the template cards on the home page, saved to assets/img/templates/<template>.webp) */
 if (Q.get("shot") && TEMPLATES[Q.get("shot")] && renderer) {
+  try {
   await load(TEMPLATES[Q.get("shot")]); running = false; showLabels = false; for (const o of placed) o.label.style.display = "none";
   await new Promise(r => setTimeout(r, 400));
   const W = 1600, H = 900; renderer.setPixelRatio(1); renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
@@ -489,7 +492,9 @@ if (Q.get("shot") && TEMPLATES[Q.get("shot")] && renderer) {
   const dist = rad / Math.sin(Math.min(vf, hf) / 2) * .74; camera.position.copy(c).add(new THREE.Vector3(.62, -1.15, .72).normalize().multiplyScalar(dist)); controls.target.copy(c); controls.update();
   renderer.render(scene, camera);
   const out = document.createElement("pre"); out.id = "shot-out"; out.textContent = renderer.domElement.toDataURL("image/png"); document.body.append(out);
+  } catch (e) { const o = document.createElement("pre"); o.id = "shot-error"; o.textContent = String(e?.stack || e); document.body.append(o); }
 }
+
 if (Q.toString()) history.replaceState(null, "", location.pathname + location.hash);
 
 /* ================================================================ start screen (like a "new design" chooser) */
@@ -500,7 +505,7 @@ function startScreen(hasSaved) {
     <div class="start-g">
       ${hasSaved ? `<button type="button" class="opt hl" data-k="__saved"><b>Continue your design</b><span>${saved.items.length} parts, saved in this browser</span></button>` : ""}
       <button type="button" class="opt" data-k="empty"><b>Blank workstation</b><span>A 3 × 2 m floor and the whole library</span></button>
-      ${Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => `<button type="button" class="opt" data-k="${k}"><div class="ims">${[...new Set(t.items.map(i => i[0]))].slice(0, 3).map(id => `<img src="thumbs/${id}.png" alt="" onerror="this.remove()">`).join("")}</div><b>${esc(t.name)}</b><span>${t.items.length} parts · from ${money(total(t))}</span></button>`).join("")}
+      ${Object.entries(TEMPLATES).filter(([k]) => k !== "empty").map(([k, t]) => `<button type="button" class="opt" data-k="${k}"><div class="ims">${[...new Set(t.items.map(i => i[0]))].filter(id => !byId[id]?.digital).slice(0, 3).map(id => `<img src="${byId[id]?.thumb || `thumbs/${id}.png`}" alt="" onerror="this.remove()">`).join("")}</div><b>${esc(t.name)}</b><span>${t.items.length} parts · from ${money(total(t))}</span></button>`).join("")}
     </div><p class="fine">Every template is a starting point. Swap any part, check the cell, then send it to your cart.</p></div>`;
   document.body.append(el);
   const close = () => el.remove();

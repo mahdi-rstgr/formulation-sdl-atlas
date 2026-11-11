@@ -14,21 +14,41 @@
  *   caps    capabilities it adds to a cell: liquids pastes powders weigh move mix characterize mount orchestrate simulate decide
  */
 
+/* Categories, grouped by layer of a self-driving lab (group). Every product is placed by classify() below. */
+export const GROUPS = [
+  { id: "dose", name: "Dispensing & dosing" }, { id: "move", name: "Motion & automation" }, { id: "process", name: "Synthesis & processing" },
+  { id: "measure", name: "Characterization" }, { id: "infra", name: "Lab infrastructure" }, { id: "software", name: "Software" },
+];
 export const CATS = [
-  { id: "liquid", name: "Liquid handling", blurb: "Pipettes, syringe and peristaltic pumps for low- to medium-viscosity liquids." },
-  { id: "paste", name: "Paste & gel dispensing", blurb: "Pneumatic, syringe and auger extrusion for yield-stress materials." },
-  { id: "powder", name: "Powder dosing", blurb: "Gravimetric heads, screw and vibratory feeders for granular solids." },
-  { id: "arm", name: "Robot arms", blurb: "Cartesian, SCARA, 6-DOF, 7-DOF, delta and mobile manipulators." },
-  { id: "motion", name: "Gantries & motion", blurb: "CNC gantries, tool-changers and linear tracks that carry tools and arms." },
-  { id: "platform", name: "Integrated platforms", blurb: "Turnkey liquid handlers and formulation workstations." },
-  { id: "station", name: "Mixers, balances & analysis", blurb: "Stations the premix cup visits: weigh, mix, characterize." },
-  { id: "structure", name: "Workstations & mounting", blurb: "Tables, pedestals and enclosures the cell is built on (McMaster-Carr)." },
-  { id: "analysis", name: "Analytical instruments", blurb: "Spectroscopy, chromatography, thermal, particle, imaging and elemental analysis (ChemLab-Assets 3D models)." },
-  { id: "prep", name: "Synthesis & sample prep", blurb: "Reactors, evaporators, dryers, mills, coaters and extractors (ChemLab-Assets 3D models)." },
-  { id: "facility", name: "Lab environment & utilities", blurb: "Fume hoods, gloveboxes, furnaces, freezers, gas and water supply (ChemLab-Assets 3D models)." },
-  { id: "orchestration", name: "Orchestration software", blurb: "Open-source systems that run devices as one workflow." },
-  { id: "simulation", name: "Simulation & twins", blurb: "From discrete-event models to GPU physics for rehearsing a cell." },
-  { id: "ai", name: "Decision & AI", blurb: "Optimizers and AI agents that choose the next experiment." },
+  { id: "liquid", group: "dose", name: "Liquid handling", blurb: "Pipettes, syringe, peristaltic and piston pumps for low- to medium-viscosity liquids." },
+  { id: "paste", group: "dose", name: "Paste & gel dispensing", blurb: "Pneumatic, syringe and auger extrusion for yield-stress materials." },
+  { id: "powder", group: "dose", name: "Powder dosing", blurb: "Gravimetric heads, screw and vibratory feeders for granular solids." },
+  { id: "arm", group: "move", name: "Robot arms", blurb: "Cartesian, SCARA, 6-DOF, 7-DOF, delta and mobile manipulators." },
+  { id: "motion", group: "move", name: "Gantries & motion", blurb: "CNC gantries, tool-changers and linear tracks that carry tools and arms." },
+  { id: "platform", group: "move", name: "Integrated platforms", blurb: "Turnkey liquid handlers and formulation workstations." },
+  { id: "labauto", group: "move", name: "Plate & tube automation", blurb: "Sealers, decappers, barcode readers and labware the robots handle." },
+  { id: "synthesis", group: "process", name: "Synthesis & reactors", blurb: "Batch, parallel, microwave, photo-, electro- and flow chemistry." },
+  { id: "mixing", group: "process", name: "Mixing & dispersion", blurb: "Stirrers, shakers, planetary and vortex mixers, rotor–stator and ultrasonic dispersers." },
+  { id: "separation", group: "process", name: "Separation, purification & drying", blurb: "Evaporators, centrifuges, extractors, flash chromatography, dryers and stills." },
+  { id: "sampleprep", group: "process", name: "Sample prep & digestion", blurb: "Mills, sieves, presses, digesters and fusion for analysis-ready samples." },
+  { id: "materials", group: "process", name: "Materials processing", blurb: "Coaters, extruders, printers, electrospinning, granulation and deposition." },
+  { id: "physprop", group: "measure", name: "Weighing & physical properties", blurb: "Balances, density, refraction, moisture, pH, flow and melting point." },
+  { id: "rheo", group: "measure", name: "Rheology & mechanical", blurb: "Rheometers, viscometers, powder rheology, DMA, tribology and indentation." },
+  { id: "thermal", group: "measure", name: "Thermal & electrical", blurb: "DSC, TGA, calorimetry, thermal conductivity and electrical transport." },
+  { id: "spectro", group: "measure", name: "Spectroscopy", blurb: "UV-Vis, fluorescence, IR, Raman, NMR, EPR and chiroptical methods." },
+  { id: "chrom", group: "measure", name: "Chromatography & mass spec", blurb: "HPLC, GC, SFC, IC, GPC, electrophoresis, mass spectrometry and autosamplers." },
+  { id: "elemental", group: "measure", name: "Elemental analysis", blurb: "CHNS, TOC, AAS, ICP, XRF and gas analyzers." },
+  { id: "particle", group: "measure", name: "Particle & surface", blurb: "Particle size, zeta potential, surface area, porosity, wetting and stability." },
+  { id: "imaging", group: "measure", name: "Microscopy, imaging & diffraction", blurb: "Electron, probe and optical microscopy, X-ray diffraction, scattering and XPS." },
+  { id: "electrochem", group: "measure", name: "Electrochemistry & titration", blurb: "Potentiostats, titrators, Karl Fischer and osmometry." },
+  { id: "bio", group: "measure", name: "Bioassays & cell culture", blurb: "Plate readers and washers, qPCR, cytometry, incubators and binding assays." },
+  { id: "structure", group: "infra", name: "Workstations & mounting", blurb: "Tables, pedestals and enclosures the cell is built on (McMaster-Carr)." },
+  { id: "environment", group: "infra", name: "Enclosures & environment", blurb: "Fume hoods, gloveboxes, safety cabinets, furnaces, climate chambers and freezers." },
+  { id: "utilities", group: "infra", name: "Utilities & supply", blurb: "Gas flow and pressure control, valves, vacuum, water, circulators and washers." },
+  { id: "orchestration", group: "software", name: "Orchestration & integration", blurb: "Systems and standards that run devices as one workflow." },
+  { id: "simulation", group: "software", name: "Simulation & digital twins", blurb: "From discrete-event models to GPU physics for rehearsing a cell." },
+  { id: "optimize", group: "software", name: "Optimization & planning", blurb: "Bayesian and multi-objective optimizers that choose the next experiment." },
+  { id: "agents", group: "software", name: "AI agents", blurb: "Agents that plan campaigns, assist scientists and recover from faults." },
 ];
 
 import { CHEMLAB, CHEMLAB_CREDIT } from "./chemlab.js";
@@ -162,6 +182,48 @@ for (const c of CHEMLAB) PRODUCTS.push(T({ id: c.id, name: c.name, brand: c.make
   spec: `${c.maker} ${c.model}; ${c.size.map(v => v.toFixed(2)).join(" × ")} m${c.panel ? "; working front panel in the source asset" : ""}`, ref: "", design: true, caps: c.caps,
   thumb: c.thumb ? `assets/img/chemlab/${c.thumb}` : null, credit: CHEMLAB_CREDIT,
   note: `3D model from ${CHEMLAB_CREDIT.name} (${CHEMLAB_CREDIT.license}), built from the maker's published documents; not manufacturer CAD. Ask ${c.maker} for a quote.` }));
+
+/* Classification: every product gets one category by what it does in the lab. ChemLab instruments are placed by their domain and name. */
+const RULES = [   // [category, regex on "name · sub · model"], first match wins
+  ["agents", /\bagent|copilot|assistant/i], ["orchestration", /model context protocol/i],
+  ["labauto", /heat sealer|decapper|recapper|barcode|premix cup/i],
+  ["powder", /powder dosing/i], ["liquid", /syringe pump|liquid flow sensor/i],
+  // specific cases before the general rules
+  ["physprop", /moisture analyzer/i], ["elemental", /icp|isotope-ratio|kjeldahl|organic halogen/i], ["separation", /partition chromatograph/i],
+  ["sampleprep", /sieve/i], ["utilities", /controlled evaporator/i], ["materials", /nanoparticle formulation/i],
+  ["spectro", /raman/i], ["electrochem", /electrochemical microscope/i],
+  ["rheo", /rheometer|viscometer|tribometer|scratch tester|nanoindent|dynamic mechanical|thermomechanical/i],
+  ["thermal", /calorimet|thermogravimetric|thermal diffusivity|thermal-conductivity|seebeck|dielectric|hall-effect|four-point|vibrating-sample/i],
+  ["chrom", /chromatograph(?!y system)|hplc|electrophoresis system|capillary electro|field-flow|mass spectrometer|autosampler|pyrolyzer|thermal desorber|laser ablation|tlc scanner|gc–ion|gpc/i],
+  ["elemental", /chns|organic carbon|atomic absorption|icp|xrf|halogen|mercury|residual gas|inert-gas fusion|isotope-ratio|no\/nox/i],
+  ["imaging", /microscope|diffractometer|x-ray|tomography|ellipsometer|profilometer|photoelectron/i],
+  ["spectro", /spectrometer|spectrophotometer|spectrofluorometer|raman|nmr|relaxometer|polarimeter|ft-ir|dichroism|luminescence|transient absorption|stopped-flow|tcspc/i],
+  ["particle", /particle|dls|zeta|pycnometer|physisorption|porosimeter|porometer|tensiometer|contact-angle|chemisorption|vapour sorption|streaming-potential|dispersion stability|langmuir|image analyzer/i],
+  ["electrochem", /potentiostat|titrat|karl fischer|coulometer|osmometer|electrochemical|ring-disk/i],
+  ["bio", /microplate|qpcr|cytometer|cell-culture|gel |blot|surface plasmon|respirometric|segmented continuous|electrophoresis/i],
+  ["physprop", /balance|density meter|refractometer|moisture analyzer|ph \/|melting-point|water-activity|turbidimeter|flow sensor/i],
+  ["mixing", /stirrer|shaker|mixer|disperser|ultrasonic|homogeni|ball mill(?!.*sample)/i],
+  ["sampleprep", /mill|sieve|sample divider|pellet press|digest|kjeldahl|hydrolysis|fusion bead/i],
+  ["separation", /evaporat|dryer|drying|centrifug|extract|flash chromatography|partition chromatograph|ultrafiltration|electrodialysis|distillation|still|concentrator|solid-phase/i],
+  ["synthesis", /reactor|synthes|flow chemistry|hydrogenation|reaction station/i],
+  ["materials", /coater|extruder|inkjet|electrospinning|encapsulator|granulator|deposition|nanoparticle formulation/i],
+  ["environment", /fume hood|glovebox|safety cabinet|furnace|climate|freezer|autoclave|incubator|oven/i],
+  ["utilities", /mass-flow|back-pressure|valve|vacuum|water system|circulator|washer|leak detector|dew-point|hydrogen generator|solvent purification|controlled evaporator/i],
+];
+const DOMAIN_DEFAULT = { metrology: "physprop", spectroscopy: "spectro", chromatography: "chrom", elemental: "elemental", imaging: "imaging", particles: "particle", thermal: "thermal",
+  electrochem: "electrochem", bio: "bio", sampling: "chrom", synthesis: "synthesis", separation: "separation", digestion: "sampleprep", materials: "materials", facility: "utilities", automation: "utilities" };
+const OLD = { liquid: "liquid", paste: "paste", powder: "powder", arm: "arm", motion: "motion", platform: "platform", structure: "structure", orchestration: "orchestration", simulation: "simulation" };
+const CL = Object.fromEntries(CHEMLAB.map(c => [c.id, c]));
+function classify(p) {
+  const text = `${p.name} · ${p.sub || ""}`, cl = CL[p.id];
+  if (p.cat === "ai") return /model context protocol/i.test(text) ? "orchestration" : /agent|copilot|assistant/i.test(text) ? "agents" : "optimize";
+  if (p.cat === "simulation" || p.cat === "orchestration" || p.cat === "structure" || p.cat === "arm" || p.cat === "motion" || (p.cat === "platform" && !cl)) return OLD[p.cat];
+  if (!cl && (p.cat === "liquid" || p.cat === "paste" || p.cat === "powder")) return p.cat;
+  for (const [c, rx] of RULES) if (rx.test(text)) return c;
+  return cl ? DOMAIN_DEFAULT[cl.domain] : OLD[p.cat] || "physprop";
+}
+for (const p of PRODUCTS) p.cat = classify(p);
+export const catOf = id => CATS.find(c => c.id === id);
 
 export const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 PRODUCTS.forEach((p, i) => { p.sku = "BL-" + String(1001 + i); });

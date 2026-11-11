@@ -45,6 +45,7 @@ select.sort{padding:11px 12px;border:1px solid var(--line-2);border-radius:var(-
   .side.open{display:block}
   .filt-btn{display:inline-flex}
 }
+.grp-h{font:500 10.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:16px 10px 6px}
 </style>
 </head>
 <body>
@@ -72,7 +73,7 @@ select.sort{padding:11px 12px;border:1px solid var(--line-2);border-radius:var(-
 </div>
 </main>
 <script type="module">
-import { mountChrome, PRODUCTS, CATS, byId, card, wireCards, GLYPH, esc, priceOf, openProduct, MAT } from "../assets/bl.js";
+import { mountChrome, PRODUCTS, CATS, GROUPS, byId, card, wireCards, GLYPH, esc, priceOf, openProduct, MAT } from "../assets/bl.js";
 mountChrome("parts");
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const U = new URLSearchParams(location.search);
@@ -98,7 +99,7 @@ function side() {
   const brands = [...new Set(PRODUCTS.map(brandOf))].sort((a, b) => a.localeCompare(b));
   $("#side").innerHTML = `<h4>Category</h4>
     <button type="button" class="opt" data-cat="all" aria-pressed="${st.cat === "all"}">All parts<span class="c">${cnt("cat", () => true)}</span></button><div class="sep"></div>
-    ${CATS.map((c, i) => `${i === 8 ? '<div class="sep"></div>' : ""}<button type="button" class="opt" data-cat="${c.id}" aria-pressed="${st.cat === c.id}">${GLYPH[c.id]}${c.name}<span class="c">${cnt("cat", p => p.cat === c.id)}</span></button>`).join("")}
+    ${GROUPS.map(g => `<h5 class="grp-h">${g.name}</h5>` + CATS.filter(c => c.group === g.id).map(c => `<button type="button" class="opt" data-cat="${c.id}" aria-pressed="${st.cat === c.id}">${GLYPH[c.id]}${c.name}<span class="c">${cnt("cat", p => p.cat === c.id)}</span></button>`).join("")).join("")}
     <h4>Material handled</h4>${Object.entries(MAT).map(([k, [n, col]]) => `<label class="chk"><input type="checkbox" data-mat="${k}" ${st.mat.has(k) ? "checked" : ""}><i class="dot" style="background:${col}"></i>${n}<span class="c">${cnt("mat", p => p.mat.includes(k))}</span></label>`).join("")}
     <h4>Type</h4>${[["hardware", "Hardware"], ["software", "Software"]].map(([k, n]) => `<label class="chk"><input type="checkbox" data-kind="${k}" ${st.kind.has(k) ? "checked" : ""}>${n}<span class="c">${cnt("kind", p => p.kind === k)}</span></label>`).join("")}
     <label class="chk"><input type="checkbox" id="d3" ${st.d3 ? "checked" : ""}>Placeable in 3D design<span class="c">${cnt(null, p => p.design)}</span></label>

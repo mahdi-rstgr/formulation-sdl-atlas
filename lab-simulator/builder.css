@@ -284,3 +284,6 @@ body.panel-off .collapse{transform:scaleX(-1);border-radius:0 8px 8px 0;border:1
 .run-log li i{font-style:normal;color:var(--ink-3)}
 .run-log li.model i{color:#4ADE80}.run-log li.data i{color:#22D3EE}.run-log li.gate i{color:#F59E0B}.run-log li.warn{color:#FCA5A5}.run-log li.warn i{color:#F87171}
 #run-who .fix{border:1px solid var(--mint);background:transparent;color:var(--mint);border-radius:6px;padding:1px 7px;font-size:11.5px}
+
+.lib-g{margin:12px 8px 4px;font:500 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.lib-g:first-child{margin-top:0}

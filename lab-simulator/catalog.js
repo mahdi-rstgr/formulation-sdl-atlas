@@ -8,20 +8,11 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { CHEMLAB, CHEMLAB_BASE, CHEMLAB_CREDIT } from "../data/chemlab.js";
 
-export const CATEGORIES = [
-  { id: "handler", name: "Material handlers", color: "var(--liquid)" },
-  { id: "motion", name: "Motion providers", color: "var(--semi)" },
-  { id: "arm", name: "Robot arms", color: "var(--object)" },
-  { id: "mixer", name: "Mixers", color: "var(--powder)" },
-  { id: "station", name: "Balances & stations", color: "var(--ink-3)" },
-  { id: "platform", name: "Integrated platforms", color: "var(--accent)" },
-  { id: "structure", name: "Workstations & mounting", color: "#c9a45c" },
-  { id: "analysis", name: "Analytical instruments", color: "#F472B6" },
-  { id: "prep", name: "Synthesis & sample prep", color: "#FB923C" },
-  { id: "facility", name: "Lab environment & utilities", color: "#94A3B8" },
-  { id: "orchestration", name: "Orchestration software", color: "#22D3EE" },
-  { id: "decide", name: "Optimizers & AI agents", color: "#4ADE80" },
-];
+/* library groups: the site-wide classification (data/catalog.js), so the Lab Simulator and the parts library agree */
+import { CATS as SITE_CATS, GROUPS as SITE_GROUPS, byId as SITE } from "../data/catalog.js";
+const CAT_COLOR = { dose: "var(--liquid)", move: "var(--object)", process: "#FB923C", measure: "#F472B6", infra: "#c9a45c", software: "#22D3EE" };
+export const GROUPS = SITE_GROUPS;
+export const CATEGORIES = SITE_CATS.filter(c => !["simulation"].includes(c.id)).map(c => ({ id: c.id, group: c.group, name: c.name, color: c.id === "optimize" ? "#4ADE80" : c.id === "agents" ? "#F59E0B" : CAT_COLOR[c.group] }));
 
 /* capability each device provides (used by the cell intelligence panel) */
 export const CAPS = {
@@ -118,6 +109,10 @@ const CL_CAT = { station: "station", analysis: "analysis", prep: "prep", facilit
 for (const c of CHEMLAB) ITEMS.push({ id: c.id, cat: CL_CAT[c.cat] || "analysis", sub: `${c.maker} ${c.model}`, name: c.name, model: "glb:" + c.glb, up: c.up, dims: c.size,
   thumb: c.thumb ? `../assets/img/chemlab/${c.thumb}` : null, price: "See vendor", caps: c.caps, chemlab: true,
   note: `${c.maker} ${c.model}. 3D model: ${CHEMLAB_CREDIT.name}, ${CHEMLAB_CREDIT.license}${c.joints ? `; ${c.joints} working joints in the source asset` : ""}.` });
+
+const SIM_OLD = { handler: null, mixer: "mixing", station: "physprop", decide: null, orchestration: "orchestration", motion: "motion", arm: "arm", platform: "platform", structure: "structure", analysis: "spectro", prep: "synthesis", facility: "utilities" };
+for (const it of ITEMS) { const site = SITE[it.id];
+  it.cat = site ? site.cat : it.cat === "handler" ? (it.caps?.includes("powders") ? "powder" : it.caps?.includes("pastes") ? "paste" : "liquid") : it.cat === "decide" ? (it.role === "agent" ? "agents" : "optimize") : SIM_OLD[it.cat] || "physprop"; }
 
 /* ============================================================== materials & primitives */
 const std = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: .45, metalness: .05, ...o });

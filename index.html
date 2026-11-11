@@ -137,6 +137,17 @@
 .cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
 .cats a{display:flex;flex-direction:column;gap:8px;padding:20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-decoration:none;min-height:168px;position:relative;background:var(--card);transition:background .15s}
 .cats a:hover{background:var(--paper)}
+.cats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cats .gtile{display:flex;flex-direction:column;gap:8px;padding:20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;background:var(--card)}
+.cats .gtile .glyph{width:34px;height:34px;color:var(--accent-ink)}
+.cats .gtile b{font-weight:650;font-size:17px}
+.cats .gtile .n{position:absolute;right:16px;top:18px;font:500 12px/1 var(--mono);color:var(--muted)}
+.cats .gtile ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:2px}
+.cats .gtile li a{display:flex;justify-content:space-between;gap:10px;padding:5px 8px;border-radius:7px;text-decoration:none;font-size:13.5px;color:var(--ink-2);min-height:0;border:0;background:none}
+.cats .gtile li a:hover{background:var(--paper-2);color:var(--ink)}
+.cats .gtile li i{font:500 11.5px/1.6 var(--mono);font-style:normal;color:var(--muted)}
+@media (max-width:1000px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.cats{grid-template-columns:minmax(0,1fr)}}
 .cats a .glyph{width:36px;height:36px;color:var(--ink-2)}
 .cats a b{font-weight:650;font-size:16.5px;margin-top:auto}
 .cats a span{font-size:13.5px;color:var(--muted);line-height:1.45}
@@ -334,7 +345,7 @@
 </main>
 
 <script type="module">
-import { mountChrome, PRODUCTS, CATS, byId, card, wireCards, GLYPH, ROOT, esc, priceOf, fmtPrice, money, vendorOf, ICON, MAT, imgHTML } from "./assets/bl.js";
+import { mountChrome, PRODUCTS, CATS, GROUPS, byId, card, wireCards, GLYPH, ROOT, esc, priceOf, fmtPrice, money, vendorOf, ICON, MAT, imgHTML } from "./assets/bl.js";
 import { STAGES, BANDS } from "./data/sdl-workflow.js";
 import { TEMPLATES } from "./data/templates.js";
 mountChrome();
@@ -405,12 +416,13 @@ drawM(); wireCards($("#mpanel"));
 const NODES = ["Design", "Dose", "Move", "Measure", "Learn", "Decide"];
 $("#loopNodes").innerHTML = NODES.map((n, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / NODES.length, x = 200 + 150 * Math.cos(a), y = 200 + 150 * Math.sin(a), tx = 200 + 186 * Math.cos(a), ty = 200 + 186 * Math.sin(a) + 4;
   return `<circle cx="${x}" cy="${y}" r="8" style="fill:var(--night);stroke:var(--night-ink)" stroke-width="1.4"/><text x="${tx}" y="${ty}" text-anchor="${Math.abs(Math.cos(a)) < .2 ? "middle" : Math.cos(a) > 0 ? "start" : "end"}" style="fill:var(--night-ink);font-size:12px">${n.toUpperCase()}</text>`; }).join("");
-$("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").length, "orchestration and integration tools"], [PRODUCTS.filter(p => p.cat === "simulation").length, "simulation and benchmarking tools"], [PRODUCTS.filter(p => p.cat === "ai").length, "optimizers and AI agents"], [20, "published sense–act loops"]]
+$("#nstats").innerHTML = [[PRODUCTS.filter(p => p.cat === "orchestration").length, "orchestration and integration tools"], [PRODUCTS.filter(p => p.cat === "simulation").length, "simulation and benchmarking tools"], [PRODUCTS.filter(p => p.cat === "optimize" || p.cat === "agents").length, "optimizers and AI agents"], [20, "published sense–act loops"]]
   .map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join("");
 
 /* ---------------- 6 · categories */
-$("#cats").innerHTML = CATS.map(c => `<a href="parts/?cat=${c.id}" class="${c.id === "structure" ? "hl" : ""}"><span class="n">${PRODUCTS.filter(p => p.cat === c.id).length}</span>${GLYPH[c.id]}<b>${c.name}</b><span>${c.blurb}</span></a>`).join("")
-  + `<a href="parts/"><span class="n">${PRODUCTS.length}</span>${GLYPH.platform}<b>Everything</b><span>Search and filter the whole library by material, maker and price.</span></a>`;
+const GROUP_ICON = { dose: "liquid", move: "arm", process: "synthesis", measure: "spectro", infra: "structure", software: "orchestration" };
+$("#cats").innerHTML = GROUPS.map(g => { const cs = CATS.filter(c => c.group === g.id), n = PRODUCTS.filter(p => cs.some(c => c.id === p.cat)).length;
+    return `<div class="gtile"><span class="n">${n}</span>${GLYPH[GROUP_ICON[g.id]]}<b>${g.name}</b><ul>${cs.map(c => `<li><a href="parts/?cat=${c.id}">${c.name}<i>${PRODUCTS.filter(p => p.cat === c.id).length}</i></a></li>`).join("")}</ul></div>`; }).join("");
 
 /* ---------------- 2 · templates: the formulation cell first, from its render; the others from renders made by the Lab Simulator (lab-simulator/?shot=<template>) */
 const tplTotal = t => { let lo = 0, n = 0; for (const [id] of t.items) { const v = priceOf(byId[id]); if (v && v.cur === "$") lo += v.lo; else n++; } return [lo, n]; };

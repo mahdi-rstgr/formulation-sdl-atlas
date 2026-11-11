@@ -1,7 +1,7 @@
 /* assemblab shared runtime: app shell (sidebar + top bar), footer, cart store, provider logos, product cards, drawer, toast.
  * Every page loads it as a module. Paths are resolved from this file, so pages at any depth work. */
-import { CATS, PRODUCTS, byId, parsePrice, vendorOf, logoOf } from "../data/catalog.js";
-export { CATS, PRODUCTS, byId, parsePrice, vendorOf, logoOf };
+import { CATS, GROUPS, PRODUCTS, byId, parsePrice, vendorOf, logoOf } from "../data/catalog.js";
+export { CATS, GROUPS, PRODUCTS, byId, parsePrice, vendorOf, logoOf };
 
 export const ROOT = new URL("../", import.meta.url).href;
 export const $ = (s, el = document) => el.querySelector(s);
@@ -64,9 +64,26 @@ export const GLYPH = {
   platform: G('<rect x="6" y="10" width="36" height="28" rx="2"/><path d="M6 30h36M12 16h24"/><path d="M16 22v4M22 22v4M28 22v4M34 22v4"/>'),
   station: G('<path d="M10 38h28l-3-10H13l-3 10Z"/><path d="M16 28v-4h16v4M14 20h20"/><path d="M24 14v6"/>'),
   structure: G('<path d="M6 16h36M6 22h36M10 22v18M38 22v18M10 34h28"/><path d="M14 16V8h8v8"/>'),
-  analysis: G('<rect x="8" y="12" width="32" height="20" rx="2"/><path d="M12 26l6-7 5 4 6-9 7 8"/><path d="M16 38h16M24 32v6"/>'),
-  prep: G('<path d="M19 6h10M21 6v10l-9 18a3 3 0 0 0 2.7 4.4h18.6A3 3 0 0 0 36 34l-9-18V6"/><path d="M15 29h18"/><circle cx="21" cy="33" r="1.2"/><circle cx="27" cy="31" r="1.2"/>'),
-  facility: G('<path d="M8 40V12l16-6 16 6v28"/><path d="M8 40h32M16 40V24h16v16M16 30h16"/>'),
+  labauto: G('<rect x="8" y="14" width="32" height="20" rx="2"/><path d="M8 20h32M14 14v-4h20v4"/><circle cx="16" cy="27" r="2"/><circle cx="24" cy="27" r="2"/><circle cx="32" cy="27" r="2"/>'),
+  synthesis: G('<path d="M19 6h10M21 6v10l-9 18a3 3 0 0 0 2.7 4.4h18.6A3 3 0 0 0 36 34l-9-18V6"/><path d="M15 29h18"/><circle cx="21" cy="33" r="1.2"/><circle cx="27" cy="31" r="1.2"/>'),
+  mixing: G('<path d="M14 10h20l-2 28H16Z"/><path d="M24 4v24M18 22c4 3 8 3 12 0"/>'),
+  separation: G('<path d="M10 8h28L28 24v12l-8 4V24Z"/>'),
+  sampleprep: G('<circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="5"/><path d="M24 10v9M24 29v9M10 24h9M29 24h9"/>'),
+  materials: G('<path d="M8 34h32M12 34V22h24v12"/><path d="M16 22l4-10h8l4 10"/><path d="M18 28h12"/>'),
+  physprop: G('<path d="M10 38h28l-3-10H13l-3 10Z"/><path d="M16 28v-4h16v4M14 20h20"/><path d="M24 14v6"/>'),
+  rheo: G('<path d="M24 6v14"/><path d="M14 20h20l-4 6H18Z"/><path d="M10 34c4-6 8 6 14 0s10 6 14 0"/>'),
+  thermal: G('<path d="M20 8a4 4 0 0 1 8 0v18a8 8 0 1 1-8 0Z"/><path d="M24 16v14"/>'),
+  spectro: G('<path d="M6 34 18 12l12 22"/><path d="M30 22h12M30 28h10M30 34h8"/>'),
+  chrom: G('<path d="M6 38h36"/><path d="M8 38c3 0 3-20 6-20s3 20 6 20 2-10 4-10 2 10 4 10 3-26 6-26 3 26 6 26"/>'),
+  elemental: G('<rect x="10" y="10" width="28" height="28" rx="3"/><path d="M18 30V18l12 12V18"/>'),
+  particle: G('<circle cx="16" cy="18" r="6"/><circle cx="31" cy="15" r="4"/><circle cx="28" cy="31" r="7"/><circle cx="14" cy="33" r="3"/>'),
+  imaging: G('<circle cx="22" cy="20" r="10"/><path d="M29 27l11 11"/><path d="M18 20h8M22 16v8"/>'),
+  electrochem: G('<path d="M14 6v20M34 6v20"/><path d="M10 26h28v12H10Z"/><path d="M14 10h4M32 10h4M34 8v4"/>'),
+  bio: G('<rect x="8" y="12" width="32" height="24" rx="3"/><circle cx="16" cy="20" r="2"/><circle cx="24" cy="20" r="2"/><circle cx="32" cy="20" r="2"/><circle cx="16" cy="28" r="2"/><circle cx="24" cy="28" r="2"/><circle cx="32" cy="28" r="2"/>'),
+  environment: G('<path d="M8 40V12l16-6 16 6v28"/><path d="M8 40h32M16 40V24h16v16M16 30h16"/>'),
+  utilities: G('<path d="M6 24h10M32 24h10"/><circle cx="24" cy="24" r="8"/><path d="M24 16v-8M20 8h8"/>'),
+  optimize: G('<path d="M8 38c6-20 12-26 16-26s10 6 16 26"/><circle cx="24" cy="12" r="3"/><path d="M24 15v23"/>'),
+  agents: G('<rect x="10" y="14" width="28" height="22" rx="6"/><circle cx="19" cy="25" r="2.5"/><circle cx="29" cy="25" r="2.5"/><path d="M24 8v6M20 31h8"/>'),
   orchestration: G('<circle cx="24" cy="10" r="4"/><circle cx="10" cy="36" r="4"/><circle cx="38" cy="36" r="4"/><path d="M22 14 12 32M26 14l10 18M14 36h20"/>'),
   simulation: G('<path d="M24 6 8 15v18l16 9 16-9V15L24 6Z" stroke-dasharray="3 3"/><path d="M8 15l16 9 16-9M24 24v18"/>'),
   ai: G('<path d="M38 24a14 14 0 1 1-4.1-9.9"/><path d="M34 6v8h-8"/><circle cx="24" cy="24" r="3"/>'),
@@ -220,7 +237,7 @@ export function mountChrome() {
   f.innerHTML = `<div class="wrap"><div class="top">
       <div><img class="flogo" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and Lab Simulator for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
       <div><h4>Platform</h4><a href="${ROOT}lab-simulator/">Lab Simulator</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin atlas</a></div>
-      <div><h4>Parts</h4>${CATS.slice(0, 5).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=ai">Decision &amp; AI</a></div>
+      <div><h4>Parts</h4>${CATS.slice(0, 5).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=agents">AI agents</a></div>
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
     </div>
     <div class="dev"><span>Developed by <b>${DEVELOPER.name}</b></span><a href="${DEVELOPER.scholar}" target="_blank" rel="noopener">${SCHOLAR_SVG}Google Scholar</a><a href="${DEVELOPER.linkedin}" target="_blank" rel="noopener">${LINKEDIN_SVG}LinkedIn</a></div>
