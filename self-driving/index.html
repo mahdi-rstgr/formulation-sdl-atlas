@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Self-driving layer · assemblab</title>
 <meta name="description" content="Make a lab cell decide for itself: compare eight open-source orchestration systems by the functions you need, choose simulators on a four-level fidelity ladder, and pick optimizers and AI agent roles with human checkpoints.">
@@ -48,7 +48,7 @@
 .mx td.v i.p{background:linear-gradient(90deg,var(--ink) 50%,transparent 50%)}
 .mx td.v i.f{background:var(--ink)}
 .mx td.v i.n{border-color:var(--line-2)}
-.mx tr.grp td{background:var(--paper);font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--muted);padding:9px 14px;text-transform:uppercase}
+.mx tr.grp td{background:var(--paper);font:600 13px/1 var(--body);letter-spacing:-.008em;color:var(--muted);padding:9px 14px;text-transform:none}
 .mx td.fn{min-width:240px}
 .mx td.fn label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .mx td.fn input{accent-color:var(--accent);width:16px;height:16px;margin-top:2px;flex:none}
@@ -85,7 +85,7 @@
 .agent .au i.on{background:var(--night-ink)}
 .agent .au i.on.hi{background:var(--night-accent)}
 .agent dl{margin:0;font-size:13.5px}
-.agent dt{font:500 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--night-muted);margin-top:10px}
+.agent dt{font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:var(--night-muted);margin-top:10px}
 .agent dd{margin:4px 0 0;color:var(--night-ink)}
 .optz{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:40px}
 </style>

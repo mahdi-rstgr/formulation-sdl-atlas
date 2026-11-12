@@ -147,7 +147,7 @@ export function wireCards(root = document) {
 /* ================================================================ product drawer */
 export function openProduct(id, push = true) {
   const p = byId[id]; if (!p) return;
-  closeDrawer(false);
+  closeDrawer(false, true);
   const cat = CATS.find(c => c.id === p.cat), v = vendorOf(p);
   const scrim = document.createElement("div"); scrim.className = "scrim"; scrim.id = "bl-scrim";
   const d = document.createElement("aside"); d.className = "drawer"; d.id = "bl-drawer"; d.setAttribute("role", "dialog"); d.setAttribute("aria-modal", "true"); d.setAttribute("aria-label", p.name);
@@ -182,8 +182,11 @@ export function openProduct(id, push = true) {
   if (push && location.pathname.includes("/parts/")) history.replaceState(null, "", `?p=${p.id}`);
 }
 function escClose(e) { if (e.key === "Escape") closeDrawer(); }
-export function closeDrawer(clearUrl = true) {
-  $("#bl-scrim")?.remove(); $("#bl-drawer")?.remove(); document.removeEventListener("keydown", escClose);
+export function closeDrawer(clearUrl = true, immediate = false) {
+  // the sheet leaves along the path it came in (to the right); replacing it with another product is instant
+  const d = $("#bl-drawer"), sc = $("#bl-scrim"); document.removeEventListener("keydown", escClose);
+  const still = immediate || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (const el of [d, sc]) { if (!el) continue; el.removeAttribute("id"); if (still) el.remove(); else { el.classList.add("out"); el.addEventListener("animationend", () => el.remove(), { once: true }); setTimeout(() => el.remove(), 500); } }
   if (clearUrl && location.search.includes("p=")) { const u = new URL(location.href); u.searchParams.delete("p"); history.replaceState(null, "", u); }
 }
 
@@ -255,8 +258,9 @@ export function mountChrome() {
 
   // theme: dark dashboard by default, light on request; remembered per browser
   const tb = $("#bl-theme", top), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
-  const paint = () => { const t = document.documentElement.dataset.theme || "dark"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
-  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("assemblab-theme", t); } catch { } paint(); };
+  const paint = () => { const t = document.documentElement.dataset.theme || "light"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
+  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "light") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("assemblab-theme", t); } catch { } paint(); };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => { let saved = null; try { saved = localStorage.getItem("assemblab-theme"); } catch { } if (!saved) { document.documentElement.dataset.theme = e.matches ? "dark" : "light"; paint(); } });
   paint();
 
   const upd = () => { const n = cart.count(); for (const el of [$("#bl-cart-n"), $("#bl-side-n")]) if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };

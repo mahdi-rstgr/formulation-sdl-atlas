@@ -19,9 +19,7 @@ theme:
   logo: assets/assemblab.svg
   favicon: assets/assemblab-favicon.svg
   language: en
-  font:
-    text: Inter
-    code: Roboto Mono
+  font: false          # system font (SF Pro on Apple devices), set in stylesheets/extra.css
   features:
     - navigation.tabs
     - navigation.instant

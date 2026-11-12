@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Render the hero product shot</title>
+<meta name="robots" content="noindex">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body style="margin:0;background:#fff">
+<!-- Renders the home-page hero: the assemblab platform alone, studio-lit on a transparent background with a soft contact
+     shadow, swaying gently (yaw = base + amp·sin), so the loop is seamless. Headless: --dump-dom with
+     ?n=<frames>&k0=<first>&k1=<end>&w=&h=; the PNG frames (with alpha) land in the last <pre id="out"> as a JSON list. -->
+<pre id="out"></pre>
+<script type="module">
+import * as THREE from "three";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { buildPlatform } from "../assets/platform.js";
+const Q = new URLSearchParams(location.search), N = +(Q.get("n") || 120), K0 = +(Q.get("k0") || 0), K1 = +(Q.get("k1") || N), W = +(Q.get("w") || 1800), H = +(Q.get("h") || 900);
+const r = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setSize(W, H); r.setPixelRatio(1);
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.0; r.outputColorSpace = THREE.SRGBColorSpace;
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; r.setClearColor(0x000000, 0);
+const scene = new THREE.Scene(); scene.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), .02).texture;
+// studio lighting: soft key from the front-left, fill from the right, a cool rim from behind
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd8d8de, .7));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-1.2, -2.2, 8); key.castShadow = true; key.shadow.mapSize.set(4096, 4096);
+Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: .5, far: 16 }); key.shadow.bias = -.0004; key.shadow.radius = 10; scene.add(key);
+const fill = new THREE.DirectionalLight(0xffffff, .55); fill.position.set(4, -2, 3); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xdbe8ff, .6); rim.position.set(1, 5, 4); scene.add(rim);
+const P = await buildPlatform(THREE, { root: "../" });
+P.group.traverse(o => { if (o.isMesh && !o.material.transparent) { o.castShadow = true; o.receiveShadow = true; } });
+const turn = new THREE.Group(); turn.add(P.group); scene.add(turn);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), new THREE.ShadowMaterial({ opacity: .22 })); floor.receiveShadow = true; scene.add(floor);
+const cam = new THREE.PerspectiveCamera(18, W / H, .05, 80); cam.up.set(0, 0, 1);
+cam.position.set(0, -10.2, 4.0); cam.lookAt(0, 0, .66);
+const frames = [];
+for (let k = K0; k < K1; k++) {
+  turn.rotation.z = -.32 + .28 * Math.sin(k / N * Math.PI * 2);     // base yaw −18°, sway ±16°
+  turn.updateMatrixWorld(true); r.render(scene, cam); frames.push(r.domElement.toDataURL("image/png"));
+}
+document.getElementById("out").textContent = JSON.stringify(frames);
+</script>
+</body>
+</html>

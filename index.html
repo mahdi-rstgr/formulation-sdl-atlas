@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>assemblab · Configure a self-driving lab</title>
 <meta name="description" content="assemblab is a catalogue and Lab Simulator for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:title" content="assemblab · Configure a self-driving laboratory">
 <meta property="og:description" content="Compare instruments and software with citations, lay the cell out in 3D, and source each part from its maker.">
-<meta property="og:image" content="assets/img/lab-orbit-poster.webp">
+<meta property="og:image" content="assets/img/hero-product.webp">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
@@ -16,18 +16,32 @@
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
 /* ---------- hero */
-/* hero: the platform render full width, a dark gradient over its left side, the title on that shadow (like vention.com) */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(60% 80% at 68% 60%,rgba(59,130,246,.22),rgba(109,93,246,.08) 45%,transparent 75%),var(--paper)}
-.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(148,163,184,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.06) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:radial-gradient(70% 70% at 60% 60%,#000,transparent);mask-image:radial-gradient(70% 70% at 60% 60%,#000,transparent);pointer-events:none}
-.hero .media{position:relative;aspect-ratio:16/9;max-height:calc(100vh - 70px);width:100%}
-.hero .media img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
-.hero .media::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,13,25,.94) 0%,rgba(8,13,25,.82) 26%,rgba(8,13,25,.45) 46%,rgba(8,13,25,0) 64%),linear-gradient(0deg,rgba(8,13,25,.55),transparent 30%)}
-.hero h1{position:absolute;z-index:2;left:clamp(20px,4.5vw,72px);top:50%;transform:translateY(-50%);width:min(54%,17ch);margin:0;text-align:left;font-size:clamp(28px,3.5vw,58px);line-height:1.07;color:#F8FAFC;text-shadow:0 2px 24px rgba(8,13,25,.6)}
-.hero h1 em{display:block;font-style:normal;color:#7DB3FF}
-:root[data-theme="light"] .hero{background:#0B1222}
-@media (max-width:760px){.hero .media{aspect-ratio:auto;height:min(92vw,520px)}.hero .media img{object-position:72% center}.hero h1{width:auto;right:20px;top:auto;bottom:24px;transform:none;font-size:clamp(26px,7vw,40px)}.hero .media::after{background:linear-gradient(0deg,rgba(8,13,25,.95) 0%,rgba(8,13,25,.7) 45%,rgba(8,13,25,0) 80%)}}
 
-:root[data-theme="light"] 
+/* ---------- hero: an Apple-style product presentation. Centred headline and calls to action, then the product itself,
+   studio-lit on a clean ground with a soft contact shadow, swaying gently (tools/render-hero-product.html). */
+.hero{background:var(--paper-2);padding:clamp(48px,7vw,96px) var(--gut) clamp(28px,4vw,56px);text-align:center;overflow:hidden}
+.hero-copy{max-width:980px;margin:0 auto}
+.hero .hero-eyebrow{font:600 clamp(19px,1.8vw,24px)/1.2 var(--display);letter-spacing:.006em;color:var(--accent-ink);margin:0 0 10px}
+.hero h1{font:700 clamp(44px,6.4vw,84px)/1.04 var(--display);letter-spacing:-.022em;margin:0;color:var(--ink)}
+.hero .hero-sub{font:500 clamp(20px,2.1vw,28px)/1.2 var(--display);letter-spacing:.004em;color:var(--muted);margin:14px auto 0;max-width:30ch;text-wrap:balance}
+.hero .hero-cta{display:flex;gap:14px 28px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:26px}
+.hero .hero-cta .btn{font-size:17px;padding:12px 22px}
+.hero .hero-cta .lnk{font:400 19px/1.2 var(--body);letter-spacing:-.02em;color:var(--accent-ink);text-decoration:none}
+.hero .hero-cta .lnk:hover{text-decoration:underline}
+.hero-stage{position:relative;max-width:1100px;margin:clamp(18px,3vw,40px) auto 0}
+.hero-stage img{width:100%;height:auto;display:block}
+:root[data-theme="dark"] .hero-stage img{filter:drop-shadow(0 40px 60px rgba(255,255,255,.04))}
+.hero-specs{list-style:none;display:flex;justify-content:center;gap:clamp(20px,5vw,72px);flex-wrap:wrap;margin:clamp(12px,2vw,28px) auto 0;padding:0}
+.hero-specs li{display:flex;flex-direction:column;align-items:center;gap:2px}
+.hero-specs b{font:700 clamp(28px,3vw,40px)/1.05 var(--display);letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums}
+.hero-specs span{font:400 15px/1.3 var(--body);letter-spacing:-.016em;color:var(--muted)}
+/* arrive gently: the copy rises first, then the product */
+@keyframes hero-rise{from{opacity:0;transform:translateY(18px)}}
+.hero-copy{animation:hero-rise .9s var(--ease-out) both}
+.hero-stage{animation:hero-rise 1.1s var(--ease-out) .15s both}
+.hero-specs{animation:hero-rise 1.1s var(--ease-out) .3s both}
+@media (prefers-reduced-motion:reduce){.hero-copy,.hero-stage,.hero-specs{animation:none}}
+
 /* ---------- section heads */
 .shead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;margin-bottom:36px}
 .shead .secno{display:block;margin-bottom:12px}
@@ -39,7 +53,7 @@
 /* stage tabs, grouped by band (like a floor-plan tab bar) */
 .sdl-tabs{display:flex;gap:18px;overflow-x:auto;padding:0 0 2px;margin:0 0 14px;scrollbar-width:thin;scroll-snap-type:x proximity}
 .sdl-tabs .grp{flex:none;display:flex;flex-direction:column;gap:8px}
-.sdl-tabs .gh{font:500 10.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding-left:4px;display:flex;align-items:center;gap:8px}
+.sdl-tabs .gh{font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:var(--muted);padding-left:4px;display:flex;align-items:center;gap:8px}
 .sdl-tabs .gh::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--bc,var(--accent))}
 .sdl-tabs .row{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
 .sdl-tabs button{scroll-snap-align:start;display:flex;align-items:center;gap:8px;white-space:nowrap;padding:9px 13px;border:0;border-radius:9px;background:none;cursor:pointer;color:var(--ink-2);font:600 13.5px/1 var(--body)}
@@ -61,7 +75,7 @@
 .sdl-info{padding:22px 24px 24px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:30px;align-items:start}
 .sdl-info h3{font-size:21px;margin:8px 0 8px}
 .sdl-info p{color:var(--ink-2);font-size:15px;margin:0}
-.sdl-info .bandtag{display:inline-flex;font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--bc,var(--accent));padding:5px 8px;border-radius:6px}
+.sdl-info .bandtag{display:inline-flex;font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:#fff;background:var(--bc,var(--accent));padding:5px 8px;border-radius:6px}
 .bandtag.overview{--bc:#3B82F6}.bandtag.physical{--bc:#2563EB}.bandtag.digital{--bc:#0891B2}.bandtag.intelligence{--bc:#16A34A}.bandtag.safety{--bc:#D97706}
 .sdl-info .flows{list-style:none;padding:0;margin:12px 0 0}
 .sdl-info .flows li{font-size:13.5px;color:var(--ink);padding:5px 0 5px 18px;position:relative}
@@ -79,7 +93,7 @@
 .viewer .load{position:absolute;inset:0;display:grid;place-items:center;font:500 13px/1.4 var(--mono);color:#94A3B8;text-align:center;padding:20px}
 .viewer .reset{position:absolute;right:12px;top:12px;font:600 12.5px/1 var(--body);padding:8px 11px;border-radius:8px;border:1px solid rgba(148,163,184,.25);background:rgba(11,18,34,.82);color:#E2E8F0;cursor:pointer}
 .viewer .reset:hover{border-color:#60A5FA}
-.uo-parts h4{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px}
+.uo-parts h4{font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:var(--muted);margin:2px 0 10px}
 .uo-parts ul{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
 .uo-parts li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .uo-parts li .im{width:44px;height:36px;border-radius:5px;background:var(--plate);display:grid;place-items:center;overflow:hidden}
@@ -195,6 +209,95 @@
 .research{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(32px,5vw,64px);align-items:center}
 .research .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
 @media (max-width:900px){.research{grid-template-columns:minmax(0,1fr)}}
+
+/* ================================================================ Apple design layer (overrides the rules above; see assets/bl.css) */
+.shead .secno{margin-bottom:8px}
+/* stage tabs as a segmented control */
+.sdl-tabs{gap:14px}
+.sdl-tabs .gh{font:600 12px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:var(--muted)}
+.sdl-tabs .gh::before{width:7px;height:7px;border-radius:50%}
+.sdl-tabs .row{background:rgba(127,127,135,.12);border:0;border-radius:11px;padding:3px;gap:2px}
+.sdl-tabs button{padding:7px 13px;border-radius:8px;color:var(--ink);font:500 14px/1.2 var(--body);letter-spacing:-.016em;transition:background-color .2s ease,transform .1s ease-out}
+.sdl-tabs button:active{transform:scale(.97)}
+.sdl-tabs button .k{font:600 11px/1 var(--body);background:transparent;color:var(--muted)}
+.sdl-tabs button:hover{background:rgba(127,127,135,.12)}
+.sdl-tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12),0 3px 8px -2px rgba(0,0,0,.1)}
+.sdl-tabs button[aria-selected="true"] .k{background:transparent;color:var(--bc,var(--accent))}
+.grp.overview{--bc:#0071E3}.grp.physical{--bc:#0071E3}.grp.digital{--bc:#32ADE6}.grp.intelligence{--bc:#34C759}.grp.safety{--bc:#FF9500}
+.sdl{border:0;border-radius:var(--r-xl);box-shadow:var(--shadow)}
+.viewer{background:radial-gradient(80% 80% at 50% 30%,#2C2C2E,#0B0B0C 78%);border-bottom:0}
+.viewer .hud span,.legend3d,.viewer .reset{background:rgba(30,30,32,.62);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.08);border-radius:980px}
+.viewer .hud span{font:500 12px/1 var(--body);letter-spacing:-.008em;color:#F5F5F7;padding:8px 12px}
+.viewer .hud span:first-child::before{background:#30D158;box-shadow:0 0 0 3px rgba(48,209,88,.22)}
+.legend3d{padding:8px 14px}
+.legend3d span{font:500 12px/1 var(--body);color:#E5E5EA}
+.viewer .reset{font:500 13px/1 var(--body);padding:8px 14px;color:#F5F5F7;transition:background-color .15s,transform .1s ease-out}
+.viewer .reset:hover{background:rgba(60,60,64,.7);border-color:rgba(255,255,255,.12)}
+.viewer .reset:active{transform:scale(.95)}
+.viewer .load{font:400 14px/1.4 var(--body);color:#A1A1A6}
+.sdl-labels span{font:500 12.5px/1 var(--body);letter-spacing:-.008em;background:rgba(30,30,32,.66);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.1);border-radius:980px;padding:7px 11px}
+.sdl-lines line{stroke:#F5F5F7;stroke-opacity:.55;stroke-width:1}
+.sdl-lines circle{fill:#0A84FF;stroke:#fff}
+.sdl-info .bandtag{font:600 12px/1 var(--body);letter-spacing:-.008em;text-transform:none;border-radius:980px;padding:5px 10px}
+.bandtag.overview,.bandtag.physical{--bc:#0071E3}.bandtag.digital{--bc:#32ADE6}.bandtag.intelligence{--bc:#34C759}.bandtag.safety{--bc:#FF9500}
+.sdl-info h3{font-size:24px;letter-spacing:-.01em}
+.sdl-info p,.sdl-info .flows li{font-size:15px;letter-spacing:-.016em}
+.sdl-info .ref{font:400 13px/1.4 var(--body);letter-spacing:-.008em}
+.uo-parts h4{font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none}
+.uo-parts li .im{border-radius:8px}
+.uo-parts li a{font-weight:500;font-size:15px;letter-spacing:-.016em}
+.uo-parts li .pr{font:500 14px/1 var(--body);font-variant-numeric:tabular-nums}
+/* method steps as cards */
+.methods{border-top:0;gap:16px}
+.methods li{padding:24px 24px 18px;border:0;margin:0;background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.methods .k{font:600 13px/1 var(--body);letter-spacing:-.008em}
+.methods h3{font-size:21px;letter-spacing:.009em}
+.methods p{font-size:15px;letter-spacing:-.016em}
+.methods a{color:var(--accent-ink);border:0;font-weight:400}
+.methods a::after{content:" ›"}
+@media (max-width:560px){.methods li{border:0}}
+/* material tabs as a segmented control */
+.mtabs{display:inline-flex;gap:2px;border-bottom:0;padding:3px;border-radius:11px;background:rgba(127,127,135,.12);max-width:100%}
+.mtabs button{border:0;margin:0;padding:8px 16px;border-radius:8px;font:500 15px/1.2 var(--body);letter-spacing:-.016em;color:var(--ink)}
+.mtabs button[aria-selected="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.12),0 3px 8px -2px rgba(0,0,0,.1)}
+.mpanel .facts2{border-top:0}
+.mpanel .facts2 dt{font:400 14px/1.5 var(--body);letter-spacing:-.016em}
+.mpanel .facts2 div{font-size:15px;letter-spacing:-.016em}
+/* self-driving layer */
+.loopsvg text{font-family:var(--body);font-size:12px;letter-spacing:0}
+.loopsvg .big{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em}
+.layers .L{font:600 13px/1 var(--body)}
+.layers a{font:400 15px/1 var(--body);color:var(--night-accent)}
+.nstats b{font:700 44px/1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.nstats span{font-size:15px;letter-spacing:-.016em}
+/* layer tiles and templates as cards */
+.cats{border:0;gap:16px}
+.cats .gtile{border:0;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:22px}
+.cats .gtile b{font-size:21px;font-weight:600;letter-spacing:.009em}
+.cats .gtile .n,.cats .gtile li i{font:500 13px/1.6 var(--body)}
+.cats .gtile li a{font-size:15px;letter-spacing:-.016em;color:var(--ink);border-radius:8px}
+.cats .gtile li a:hover{background:rgba(127,127,135,.12)}
+.tpls{gap:20px}
+.tpl{border:0;border-radius:var(--r-lg);box-shadow:var(--shadow);transition:box-shadow .45s var(--ease),transform .45s var(--ease)}
+.tpl:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px)}
+.tpl:active{transform:scale(.985)}
+.tpl .ph{border-bottom:0}
+.tpl .ph img.full{transition:transform .8s var(--ease)}
+.tpl h3{font-size:19px;letter-spacing:-.01em}
+.tpl p{font-size:14px;letter-spacing:-.016em;line-height:1.43}
+.tpl .ft{font:400 13px/1 var(--body);letter-spacing:-.008em}
+/* sourcing */
+.model ol li{border-top:1px solid var(--line)}
+.model ol li::before{font:600 15px/1.5 var(--body);color:var(--accent-ink)}
+.model ol span{font-size:15px;letter-spacing:-.016em}
+.receipt{border:0;border-radius:var(--r-lg)}
+.receipt .vh b{font:600 15px/1.2 var(--body);letter-spacing:-.016em}
+.receipt .vh a{font:500 13px/1 var(--body);border:0;border-radius:980px;background:var(--accent-soft);color:var(--accent-ink);padding:6px 11px}
+.receipt .vh a:hover{background:var(--accent);color:#fff}
+.receipt .vh .mono,.receipt .vh .fine{font:500 13px/1 var(--body)}
+.receipt .ln{font-size:15px;letter-spacing:-.016em}
+.receipt .ln b{font:500 14px/1.4 var(--body);font-variant-numeric:tabular-nums}
+.receipt hr{border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -202,10 +305,16 @@
 
 <!-- ================================================================ hero -->
 <section class="hero" aria-labelledby="h">
-  <h1 id="h" class="display">Configure a Self&#8209;Driving Lab, <em>from Labware to Orchestrator, Data, ML Models, and AI Agents</em></h1>
-  <div class="media">
-    <img id="heroImg" src="assets/img/lab-orbit-poster.webp" alt="A self-driving formulation lab, turning slowly: the platform built from parts in the library, with its digital twin, orchestration cabinet, data centre, model display and the AI agents desk around it on the lab floor." width="1120" height="630" fetchpriority="high">
+  <div class="hero-copy">
+    <p class="hero-eyebrow">assemblab</p>
+    <h1 id="h">Configure a self&#8209;driving lab.</h1>
+    <p class="hero-sub">From labware to orchestrator, data, ML models and AI agents.</p>
+    <div class="hero-cta"><a class="btn btn-accent" href="lab-simulator/">Open the Lab Simulator</a><a class="lnk" href="parts/">Browse the library ›</a></div>
   </div>
+  <div class="hero-stage">
+    <img id="heroImg" src="assets/img/hero-product.webp" alt="The assemblab demonstration platform, built only from parts in the library: two T-slot workstations under a stainless deck carrying an Opentrons OT-2, a compact cobot, a balance, labware, a dispensing gantry with its tools, a gantry viscometer, a planetary mixer, pumps and a stack light." width="1100" height="742" fetchpriority="high">
+  </div>
+  <ul class="hero-specs" id="heroSpecs" aria-label="The library at a glance"></ul>
 </section>
 
 <!-- ================================================================ 1 · the self-driving laboratory, stage by stage -->
@@ -351,9 +460,10 @@ import { TEMPLATES } from "./data/templates.js";
 mountChrome();
 const $ = s => document.querySelector(s);
 
-/* ---------------- hero: a slow 360° turn around the whole lab (tools/render-hero-orbit.html); the still frame shows first,
-   the animation replaces it once loaded, and stays off for visitors who prefer reduced motion */
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { const im = new Image(); im.onload = () => { $("#heroImg").src = im.src; }; im.src = "assets/img/lab-orbit.webp"; }
+/* ---------------- hero: the product sways gently once its animation has loaded; the still stays for reduced motion */
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { const im = new Image(); im.onload = () => { $("#heroImg").src = im.src; }; im.src = "assets/img/hero-product-loop.webp"; }
+$("#heroSpecs").innerHTML = [[PRODUCTS.length, "parts and tools"], [PRODUCTS.filter(p => p.design).length, "placeable in 3D"], [Object.values(TEMPLATES).filter(t => t.auto).length, "self-driving lab templates"]]
+  .map(([n, l]) => `<li><b>${n}</b><span>${l}</span></li>`).join("");
 
 
 /* ---------------- 1 · the self-driving laboratory, stage by stage (content: data/sdl-workflow.js, 3D: assets/sdl-scene.js) */

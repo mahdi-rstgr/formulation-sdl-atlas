@@ -15,7 +15,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { buildPlatform } from "./platform.js";
 
-const C = { data: 0x22D3EE, command: 0x818CF8, model: 0x4ADE80, gate: 0xF59E0B, ghost: 0x556179 };
+const C = { data: 0x22D3EE, command: 0x818CF8, model: 0x4ADE80, gate: 0xF59E0B, ghost: 0x636366 };
 const LINK = { data: C.data, command: C.command, model: C.model, gate: C.gate };
 const NAMES = {
   frame: "T-slot workstations", labware: "Labware", gantry: "Compact gantry", dispensers: "Dispensing tools", ot2: "Opentrons OT-2",
@@ -33,7 +33,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.toneMapping = THREE.ACESFilmicToneMapping;
   r.outputColorSpace = THREE.SRGBColorSpace; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; host.prepend(r.domElement);
   const scene = new THREE.Scene(); const pm = new THREE.PMREMGenerator(r); scene.environment = pm.fromScene(new RoomEnvironment(), .04).texture;
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x3b4660, .5));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x3A3A3C, .5));
   const key = new THREE.DirectionalLight(0xffffff, 1.5); key.position.set(-3, -4.5, 7); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
   Object.assign(key.shadow.camera, { left: -6, right: 6, top: 5, bottom: -5, near: .5, far: 20 }); key.shadow.bias = -.0005; key.shadow.radius = 4; scene.add(key);
   const rim = new THREE.DirectionalLight(0x9cc3ff, .5); rim.position.set(4, 5, 3); scene.add(rim);
@@ -51,14 +51,14 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const ZONES = { cell: [-F.w / 2 - .55, -F.d / 2 - .55, F.w / 2 + .55, F.d / 2 + .55], control: [-3.0, -3.0, 3.3, -1.25], data: [-.8, 1.25, 3.5, 2.75] };
   {
     const ft = canvasTex(SW * PX, SD * PX), x = ft.x, X = v => (v + SW / 2) * PX, Y = v => (SD / 2 - v) * PX;
-    x.fillStyle = "#1A2335"; x.fillRect(0, 0, ft.c.width, ft.c.height);
+    x.fillStyle = "#2C2C2E"; x.fillRect(0, 0, ft.c.width, ft.c.height);
     for (let i = 0; i < 9000; i++) { x.fillStyle = `rgba(255,255,255,${Math.random() * .025})`; x.fillRect(Math.random() * ft.c.width, Math.random() * ft.c.height, 2, 2); }
-    x.strokeStyle = "rgba(148,163,184,.08)"; x.lineWidth = 2; for (let m = -SW / 2; m <= SW / 2; m++) { x.beginPath(); x.moveTo(X(m), 0); x.lineTo(X(m), ft.c.height); x.stroke(); }
+    x.strokeStyle = "rgba(235,235,245,.06)"; x.lineWidth = 2; for (let m = -SW / 2; m <= SW / 2; m++) { x.beginPath(); x.moveTo(X(m), 0); x.lineTo(X(m), ft.c.height); x.stroke(); }
     for (let m = -SD / 2; m <= SD / 2; m++) { x.beginPath(); x.moveTo(0, Y(m)); x.lineTo(ft.c.width, Y(m)); x.stroke(); }
     const rect = ([a, b, c, d]) => [X(a), Y(d), X(c) - X(a), Y(b) - Y(d)];
     // zone tints
-    x.fillStyle = "rgba(59,130,246,.10)"; x.fillRect(...rect(ZONES.control)); x.fillStyle = "rgba(109,93,246,.11)"; x.fillRect(...rect(ZONES.data));
-    for (const [z, col] of [[ZONES.control, "rgba(96,165,250,.55)"], [ZONES.data, "rgba(139,124,255,.55)"]]) { x.strokeStyle = col; x.lineWidth = 4; x.setLineDash([22, 14]); x.strokeRect(...rect(z)); } x.setLineDash([]);
+    x.fillStyle = "rgba(10,132,255,.10)"; x.fillRect(...rect(ZONES.control)); x.fillStyle = "rgba(94,92,230,.11)"; x.fillRect(...rect(ZONES.data));
+    for (const [z, col] of [[ZONES.control, "rgba(100,210,255,.5)"], [ZONES.data, "rgba(125,122,255,.5)"]]) { x.strokeStyle = col; x.lineWidth = 4; x.setLineDash([22, 14]); x.strokeRect(...rect(z)); } x.setLineDash([]);
     // hatched safety border around the cell
     { const [a, b, c, d] = ZONES.cell, t = .14; x.save(); x.beginPath(); x.rect(...rect([a, b, c, d])); x.rect(...rect([a + t, b + t, c - t, d - t])); x.clip("evenodd");
       x.fillStyle = "#F2C230"; x.fillRect(...rect([a, b, c, d])); x.strokeStyle = "#151A24"; x.lineWidth = 16; for (let k = -2000; k < 4000; k += 44) { x.beginPath(); x.moveTo(X(a) + k, Y(b) + 10); x.lineTo(X(a) + k + 600, Y(b) - 590); x.stroke(); } x.restore();
@@ -68,14 +68,14 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
       x.fillStyle = "rgba(255,255,255,.35)"; const yc = Y((y0 + y1) / 2); for (let m = -5; m < 5.5; m += 1.4) { x.beginPath(); x.moveTo(X(m), yc - 14); x.lineTo(X(m) + 34, yc); x.lineTo(X(m), yc + 14); x.closePath(); x.fill(); } }
     // floor lettering
     x.font = '600 64px "Space Grotesk", Inter, sans-serif'; x.textBaseline = "alphabetic";
-    const word = (s, vx, vy, col = "rgba(226,232,240,.32)") => { x.fillStyle = col; x.fillText(s, X(vx), Y(vy)); };
+    const word = (s, vx, vy, col = "rgba(235,235,245,.3)") => { x.fillStyle = col; x.fillText(s, X(vx), Y(vy)); };
     word("SELF-DRIVING CELL", ZONES.cell[0] + .25, ZONES.cell[3] - .32, "rgba(242,194,48,.55)");
-    word("CONTROL · TWIN · AGENTS", ZONES.control[0] + .2, ZONES.control[1] + .2, "rgba(147,197,253,.5)");
-    word("DATA · MODELS", ZONES.data[0] + .2, ZONES.data[3] - .4, "rgba(196,181,253,.55)");
+    word("CONTROL · TWIN · AGENTS", ZONES.control[0] + .2, ZONES.control[1] + .2, "rgba(235,235,245,.42)");
+    word("DATA · MODELS", ZONES.data[0] + .2, ZONES.data[3] - .4, "rgba(235,235,245,.42)");
     ft.t.needsUpdate = true;
-    const side = new THREE.MeshStandardMaterial({ color: 0x2A3550, roughness: .8 }), top = new THREE.MeshStandardMaterial({ map: ft.t, roughness: .85, metalness: 0 });
+    const side = new THREE.MeshStandardMaterial({ color: 0x1C1C1E, roughness: .8 }), top = new THREE.MeshStandardMaterial({ map: ft.t, roughness: .85, metalness: 0 });
     const slab = new THREE.Mesh(new THREE.BoxGeometry(SW, SD, .16), [side, side, side, side, top, side]); slab.position.z = -.08; slab.receiveShadow = true; scene.add(slab);
-    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(slab.geometry), new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: .35 })); edge.position.copy(slab.position); scene.add(edge);
+    const edge = new THREE.LineSegments(new THREE.EdgesGeometry(slab.geometry), new THREE.LineBasicMaterial({ color: 0x8E8E93, transparent: true, opacity: .25 })); edge.position.copy(slab.position); scene.add(edge);
     const sh = new THREE.Mesh(new THREE.PlaneGeometry(SW, SD), new THREE.ShadowMaterial({ opacity: .45 })); sh.position.z = .002; sh.receiveShadow = true; scene.add(sh);
   }
 
@@ -113,7 +113,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const cupT = new THREE.Mesh(new THREE.SphereGeometry(.035, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffd166 })); tScene.add(cupT);
   const tCam = new THREE.PerspectiveCamera(34, 16 / 9, .05, 30); tCam.up.set(0, 0, 1);
   const twin = new THREE.Group(); const TW = { x: -1.95, y: -1.95 };
-  const desk = std(0xD7DCE4), dark = std(0x1B2233), legM = std(0x8A94A6, { metalness: .5 });
+  const desk = std(0xD7DCE4), dark = std(0x1C1C1E), legM = std(0x8A94A6, { metalness: .5 });
   { twin.add(box(1.5, .7, .04, desk, 0, 0, .72)); for (const s of [-1, 1]) twin.add(box(.04, .62, .72, legM, s * .7, 0, 0));
     twin.add(box(.06, .06, .3, dark, 0, .12, .76)); twin.add(box(1.02, .04, .6, dark, 0, .1, 1.02));
     const scr = new THREE.Mesh(new THREE.PlaneGeometry(.96, .54), new THREE.MeshBasicMaterial({ map: RT.texture, toneMapped: false })); scr.rotation.x = Math.PI / 2; scr.position.set(0, .077, 1.32); twin.add(scr);
@@ -123,15 +123,15 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   /* ------------------------------------------------------------------ orchestration controller: a cabinet with a workflow screen */
   const ctrlTex = canvasTex(256, 320);
   const controller = new THREE.Group();
-  { controller.add(box(.5, .4, 1.1, std(0x1E2638, { metalness: .3 }), 0, 0, 0));
+  { controller.add(box(.5, .4, 1.1, std(0x2C2C2E, { metalness: .3 }), 0, 0, 0));
     const s = new THREE.Mesh(new THREE.PlaneGeometry(.38, .48), new THREE.MeshBasicMaterial({ map: ctrlTex.t, toneMapped: false })); s.rotation.x = Math.PI / 2; s.position.set(0, -.202, .78); controller.add(s);
-    for (let i = 0; i < 4; i++) controller.add(box(.38, .01, .04, std(0x3A4560), 0, -.2, .12 + i * .08)); controller.position.set(-.15, -1.6, 0); }
+    for (let i = 0; i < 4; i++) controller.add(box(.38, .01, .04, std(0x48484A), 0, -.2, .12 + i * .08)); controller.position.set(-.15, -1.6, 0); }
   actor("controller", controller);
 
   /* ------------------------------------------------------------------ data centre: racks with live LEDs */
   const rackTex = canvasTex(128, 512);
   const datacenter = new THREE.Group();
-  { const shell = std(0x161C2A, { metalness: .4, roughness: .4 });
+  { const shell = std(0x1C1C1E, { metalness: .4, roughness: .4 });
     for (let i = 0; i < 3; i++) { const rk = new THREE.Group(); rk.add(box(.6, .9, 2.0, shell, 0, 0, 0));
       const face = new THREE.Mesh(new THREE.PlaneGeometry(.52, 1.86), new THREE.MeshBasicMaterial({ map: rackTex.t, toneMapped: false })); face.rotation.x = Math.PI / 2; face.position.set(0, -.452, 1.0); rk.add(face);
       rk.position.set((i - 1) * .66, 0, 0); datacenter.add(rk); }
@@ -309,7 +309,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
      angle theta; tau is the time used for the connection dots. Returns a JPEG data URL. */
   function capture({ w = 1280, h = 720, theta = 0, tau = 0, elev = .5, zoom = .66, q = .9, shift = 0 } = {}) {
     r.setPixelRatio(1); r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
-    if (!scene.background) { const t = canvasTex(1024, 576), g = t.x.createRadialGradient(512, 230, 40, 512, 288, 620); g.addColorStop(0, "#16233F"); g.addColorStop(1, "#080D19"); t.x.fillStyle = g; t.x.fillRect(0, 0, 1024, 576); t.t.needsUpdate = true; scene.background = t.t; }
+    if (!scene.background) { const t = canvasTex(1024, 576), g = t.x.createRadialGradient(512, 230, 40, 512, 288, 620); g.addColorStop(0, "#2C2C2E"); g.addColorStop(1, "#000000"); t.x.fillStyle = g; t.x.fillRect(0, 0, 1024, 576); t.t.needsUpdate = true; scene.background = t.t; }
     const c = everything.getCenter(new THREE.Vector3()), rad = everything.getSize(new THREE.Vector3()).length() / 2;
     const vf = cam.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * cam.aspect), d = rad / Math.sin(Math.min(vf, hf) / 2) * zoom;
     c.z = Math.max(.55, c.z * .8); goal = null; userMoved = true;

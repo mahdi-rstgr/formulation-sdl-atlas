@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Cart · assemblab</title>
 <meta name="description" content="Your assemblab cart, split by vendor. Each maker gets its own block with a link to order or request a quote.">
@@ -43,7 +43,7 @@
 @media (max-width:640px){.line{grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"im nm rm" "im qty pr"}.line .im{grid-area:im;width:52px}.line .nm{grid-area:nm}.line .qty{grid-area:qty;justify-self:start}.line .pr{grid-area:pr}.line .rm{grid-area:rm}}
 .summary{position:sticky;top:108px;display:flex;flex-direction:column;gap:16px}
 .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px}
-.box h3{font:500 11.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.box h3{font:600 13px/1 var(--body);letter-spacing:-.008em;text-transform:none;color:var(--muted);margin:0 0 14px}
 .tot{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-top:1px solid var(--line);font-size:14.5px}
 .tot b{font:600 15px/1.2 var(--mono)}
 .tot.big{border-top:1px solid var(--ink);padding-top:12px;margin-top:4px}
@@ -56,7 +56,7 @@
 .ready .ok .ck{background:var(--ok-soft);color:var(--ok)}
 .ready .miss .ck{background:var(--accent-soft);color:var(--accent-ink)}
 .ready .miss a{font-size:13px;font-weight:600;margin-left:auto;white-space:nowrap}
-.ready .grp{font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--muted);margin:14px 0 4px;text-transform:uppercase}
+.ready .grp{font:600 13px/1 var(--body);letter-spacing:-.008em;color:var(--muted);margin:14px 0 4px;text-transform:none}
 .acts{display:flex;flex-direction:column;gap:8px}
 .acts .btn{justify-content:center}
 .imp{display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--accent-soft);border:1px solid var(--accent);color:var(--ink);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:16px;flex-wrap:wrap}

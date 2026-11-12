@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Solutions · assemblab</title>
 <meta name="description" content="Self-driving lab solutions by material (liquids, pastes and gels, powders, objects), design templates to start from, and twenty published closed loops to learn from.">
@@ -14,12 +14,12 @@
 .jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:28px}
 .sol{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr);gap:clamp(28px,4vw,56px);padding:clamp(56px,7vw,96px) 0;border-bottom:1px solid var(--line);scroll-margin-top:72px}
 .sol:last-child{border-bottom:0}
-.sol .idx{font:500 12px/1 var(--mono);color:var(--muted);letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.sol .idx{font:600 15px/1 var(--body);color:var(--accent-ink);letter-spacing:-.016em;display:flex;align-items:center;gap:10px}
 .sol h2{margin:14px 0 12px}
 .sol .range{margin:22px 0 0;border-top:1px solid var(--line)}
 .sol .range>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .sol .range b{font-weight:600}
-.sol .range span{font:500 12.5px/1.4 var(--mono);color:var(--muted);text-align:right}
+.sol .range span{font:400 13px/1.4 var(--body);font-variant-numeric:tabular-nums;color:var(--muted);text-align:right}
 .sol .range em{display:block;font-style:normal;font-size:13px;color:var(--ink-2);margin-top:2px}
 .sol .pgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
 .sol .tplcta{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-top:18px;padding:16px 18px;border:1px dashed var(--line-2);border-radius:var(--r-lg);flex-wrap:wrap}
@@ -34,16 +34,16 @@
 .tpl .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
 .tpl h3{font-size:19px}
 .tpl p{font-size:14px;color:var(--ink-2);margin:0}
-.tpl .ft{display:flex;justify-content:space-between;margin-top:auto;padding-top:10px;font:500 12.5px/1 var(--mono);color:var(--muted)}
+.tpl .ft{display:flex;justify-content:space-between;margin-top:auto;padding-top:10px;font:400 13px/1 var(--body);color:var(--muted)}
 .tpl .ft b{color:var(--ink)}
 .loops{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--night-line);border:1px solid var(--night-line);border-radius:var(--r-lg);overflow:hidden}
 .loop{background:var(--night);padding:20px 20px 18px;display:flex;flex-direction:column;gap:10px}
-.loop .fig{font:500 11.5px/1 var(--mono);color:var(--night-muted);display:flex;justify-content:space-between;letter-spacing:.04em}
+.loop .fig{font:500 13px/1 var(--body);color:var(--night-muted);display:flex;justify-content:space-between;letter-spacing:-.008em}
 .loop .chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .loop .chain span{font:600 15px/1.2 var(--body);color:var(--night-ink)}
 .loop .chain i{font-style:normal;color:var(--night-accent)}
 .loop p{font-size:13px;color:var(--night-muted);margin:0;line-height:1.45}
-.loop a{color:var(--night-ink);font:500 12px/1 var(--mono)}
+.loop a{color:var(--night-accent);font:400 15px/1 var(--body)}
 .lf{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
 .lf .chip{background:transparent;color:var(--night-ink);border-color:var(--night-line)}
 .lf .chip[aria-pressed="true"]{background:var(--night-ink);color:var(--night);border-color:var(--night-ink)}
@@ -94,7 +94,7 @@ const SOL = [
 $("#jump").innerHTML = SOL.map(s => `<a class="chip" href="#${s.k}"><i class="dot" style="background:${MAT[s.k][1]}"></i>${s.t}</a>`).join("") + `<a class="chip" href="#templates">Templates</a><a class="chip" href="#loops">Proven loops</a>`;
 $("#sols").innerHTML = SOL.map((s, i) => { const t = TEMPLATES[s.tpl];
   return `<section class="sol" id="${s.k}" aria-labelledby="h-${s.k}">
-    <div><p class="idx"><i class="dot" style="background:${MAT[s.k][1]}"></i>0${i + 1} · ${s.t.toUpperCase()}</p><h2 id="h-${s.k}" class="h2">${s.t}</h2><p style="color:var(--ink-2)">${s.text}</p>
+    <div><p class="idx"><i class="dot" style="background:${MAT[s.k][1]}"></i>Step ${i + 1}</p><h2 id="h-${s.k}" class="h2">${s.t}</h2><p style="color:var(--ink-2)">${s.text}</p>
       <div class="range">${s.rows.map(r => T1[r]).map(r => `<div><div><b>${esc(r.Material)}</b><em>${esc(r["Common Technologies"])}</em></div><span>${esc(r["Viscosity / Particle Size"])}<br>${esc(r["Typical Accuracy"])} accuracy</span></div>`).join("")}</div>
       <p class="fine" style="margin-top:10px">From Table 1 of the review. Watch for: ${s.rows.map(r => esc(T1[r]["Key Challenges"]).toLowerCase()).join("; ")}.</p></div>
     <div><div class="pgrid">${s.ids.map(id => card(byId[id])).join("")}</div>

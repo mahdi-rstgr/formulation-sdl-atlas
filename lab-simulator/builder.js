@@ -65,33 +65,33 @@ try {
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   view.appendChild(renderer.domElement);
 } catch { view.innerHTML = '<p class="nogl">The 3D workstation needs WebGL, which is turned off in this browser.</p>'; }
-const scene = new THREE.Scene(); scene.background = new THREE.Color(0x080D19);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x111112);
 if (renderer) scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
 const camera = new THREE.PerspectiveCamera(36, 1, .02, 80); camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer?.domElement ?? view); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * .49; controls.minDistance = .4; controls.maxDistance = 14;
-scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x1a2230, .55));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x1c1c1e, .6));
 const key = new THREE.DirectionalLight(0xffffff, 1.9); key.position.set(2.5, -3.5, 5); key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: .5, far: 20 }); key.shadow.bias = -.0004; scene.add(key);
-const rim = new THREE.DirectionalLight(0x3B82F6, .5); rim.position.set(-3, 4, 2.5); scene.add(rim);
+const rim = new THREE.DirectionalLight(0xbfd8ff, .45); rim.position.set(-3, 4, 2.5); scene.add(rim);
 
 // floor: shadow catcher, radial glow, rings, fine grid, workstation outline
 const floorPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 const shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: .45 })); shadowFloor.receiveShadow = true; scene.add(shadowFloor);
 function radialTex() { const c = document.createElement("canvas"); c.width = c.height = 512; const x = c.getContext("2d"), g = x.createRadialGradient(256, 256, 0, 256, 256, 256);
-  g.addColorStop(0, "rgba(90,130,200,.30)"); g.addColorStop(.45, "rgba(60,90,150,.12)"); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(0, 0, 512, 512); return new THREE.CanvasTexture(c); }
+  g.addColorStop(0, "rgba(170,170,180,.22)"); g.addColorStop(.45, "rgba(120,120,128,.08)"); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(0, 0, 512, 512); return new THREE.CanvasTexture(c); }
 const glowFloor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: radialTex(), transparent: true, depthWrite: false })); glowFloor.position.z = .0005; scene.add(glowFloor);
 const rings = new THREE.Group(); scene.add(rings);
-const grid = new THREE.GridHelper(14, 140, 0x22303d, 0x141c25); grid.rotation.x = Math.PI / 2; grid.position.z = .0003; scene.add(grid);
+const grid = new THREE.GridHelper(14, 140, 0x2C2C2E, 0x1C1C1E); grid.rotation.x = Math.PI / 2; grid.position.z = .0003; scene.add(grid);
 let area = null, areaW = 3, areaD = 2;
 function drawArea() {
   if (area) scene.remove(area); area = new THREE.Group();
-  const fill = new THREE.Mesh(new THREE.PlaneGeometry(areaW, areaD), new THREE.MeshBasicMaterial({ color: 0x2b5fbf, transparent: true, opacity: .07, depthWrite: false })); fill.position.z = .001; area.add(fill);
-  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(areaW, areaD)), new THREE.LineBasicMaterial({ color: 0x7ea8f2, transparent: true, opacity: .9 })); edge.position.z = .002; area.add(edge);
-  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { const c = new THREE.Mesh(new THREE.BoxGeometry(.12, .012, .004), new THREE.MeshBasicMaterial({ color: 0x9fc0ff })); c.position.set(sx * (areaW / 2 - .06), sy * areaD / 2, .003); area.add(c);
+  const fill = new THREE.Mesh(new THREE.PlaneGeometry(areaW, areaD), new THREE.MeshBasicMaterial({ color: 0x0A84FF, transparent: true, opacity: .06, depthWrite: false })); fill.position.z = .001; area.add(fill);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(areaW, areaD)), new THREE.LineBasicMaterial({ color: 0x8E8E93, transparent: true, opacity: .8 })); edge.position.z = .002; area.add(edge);
+  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { const c = new THREE.Mesh(new THREE.BoxGeometry(.12, .012, .004), new THREE.MeshBasicMaterial({ color: 0xE5E5EA })); c.position.set(sx * (areaW / 2 - .06), sy * areaD / 2, .003); area.add(c);
     const c2 = c.clone(); c2.rotation.z = Math.PI / 2; c2.position.set(sx * areaW / 2, sy * (areaD / 2 - .06), .003); area.add(c2); }
   scene.add(area);
   const s = Math.max(areaW, areaD) * 1.9; glowFloor.scale.set(s, s, 1);
-  rings.clear(); for (let i = 1; i <= 4; i++) { const r = Math.max(areaW, areaD) * .28 * i; const m = new THREE.Mesh(new THREE.RingGeometry(r - .003, r, 128), new THREE.MeshBasicMaterial({ color: 0x3d5b85, transparent: true, opacity: .35 - i * .06, depthWrite: false })); m.position.z = .0008; rings.add(m); }
+  rings.clear(); for (let i = 1; i <= 4; i++) { const r = Math.max(areaW, areaD) * .28 * i; const m = new THREE.Mesh(new THREE.RingGeometry(r - .003, r, 128), new THREE.MeshBasicMaterial({ color: 0x48484A, transparent: true, opacity: .35 - i * .06, depthWrite: false })); m.position.z = .0008; rings.add(m); }
 }
 function resize() { const w = view.clientWidth, h = view.clientHeight; if (!w || !h || !renderer) return; renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix(); }
 new ResizeObserver(resize).observe(view);

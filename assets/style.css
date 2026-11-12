@@ -207,3 +207,36 @@ p{margin:0}
   .twocol{grid-template-columns:minmax(0,1fr);gap:24px}
   .item{grid-template-columns:minmax(0,1fr)}
 }
+
+/* ================================================================ Apple design layer (see ~/.claude/skills/apple-design) */
+:root,:root[data-theme="light"]{
+  --bg:#F5F5F7; --surface:#FFFFFF; --ink:#1D1D1F; --ink-2:#424245; --ink-3:#6E6E73; --line:rgba(0,0,0,.08);
+  --accent:#0071E3; --accent-ink:#FFFFFF; --stage:#E8E8ED;
+  --liquid:#007AFF; --semi:#FF9500; --powder:#AF52DE; --object:#34C759;
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI Variable Display","Segoe UI",Inter,system-ui,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",Inter,system-ui,sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,"Roboto Mono",monospace;
+  --r:12px; --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px -12px rgba(0,0,0,.14); --ease:cubic-bezier(.32,.72,0,1);
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --bg:#000000; --surface:#1C1C1E; --ink:#F5F5F7; --ink-2:#D2D2D7; --ink-3:#98989D; --line:rgba(255,255,255,.08);
+  --accent:#0A84FF; --accent-ink:#FFFFFF; --stage:#1C1C1E;
+  --liquid:#0A84FF; --semi:#FF9F0A; --powder:#BF5AF2; --object:#30D158;
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+body{font-size:17px;line-height:1.47;letter-spacing:-.022em;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:700;letter-spacing:-.012em}
+.h2{font-weight:700;letter-spacing:-.01em}
+.lede{font-size:clamp(17px,1.35vw,21px);line-height:1.42;letter-spacing:.004em}
+.eyebrow,.kicker{font:600 14px/1.3 var(--body);text-transform:none;letter-spacing:-.01em;color:var(--accent)}
+.top{background:color-mix(in srgb,var(--bg) 72%,transparent);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--line)}
+.btn,.chipbtn{border-radius:980px;border:0;font-weight:500;letter-spacing:-.016em;transition:background-color .2s ease,transform .1s ease-out}
+.btn:active,.chipbtn:active{transform:scale(.97)}
+.rcard,.sc,.item,.product,.agent,.rung,.planner-in,.planner-out,.bom,.citation,.chapter .card,.stage{border-color:transparent;border-radius:18px;box-shadow:var(--shadow)}
+.stage-hud,.hud-row,.legend{border-radius:12px;-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%)}
+.lbl,.ref,.state,.hud-meta,.price{font-family:var(--body);letter-spacing:0}
+.foot{background:var(--bg);border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+@media (prefers-reduced-transparency:reduce){.top,.stage-hud,.hud-row,.legend{background:var(--surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
