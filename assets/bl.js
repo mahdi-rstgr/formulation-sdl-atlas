@@ -205,11 +205,6 @@ const NAV = [
   ["Platform", [["", "Overview", "home"], ["lab-simulator/", "Lab Simulator", "design"], ["parts/", "Parts library", "parts"], ["solutions/", "Solutions", "solutions"], ["self-driving/", "Self-driving layer", "sdl"]]],
   ["Resources", [["atlas/", "Digital twin atlas", "twin"], ["wiki/", "Learn (wiki)", "learn"], ["cart/", "Cart", "cart"]]],
 ];
-const TITLES = {
-  "": ["Overview", "Build your self-driving lab, module by module"], "parts/": ["Parts library", "Hardware and software from every maker"],
-  "solutions/": ["Solutions", "Start from what you formulate"], "self-driving/": ["Self-driving layer", "Orchestrate, rehearse and decide"],
-  "cart/": ["Cart", "Each provider, one by one"],
-};
 /* the developer credited in the footer */
 export const DEVELOPER = { name: "Mahdi Rastegar",
   scholar: "https://scholar.google.ca/citations?user=tWmo_h0AAAAJ&hl=en",
@@ -220,25 +215,33 @@ const LINKEDIN_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="
 export function mountChrome() {
   const rootPath = new URL(ROOT).pathname, here = location.pathname.slice(rootPath.length).replace(/index\.html$/, "");
   const sec = NAV.flatMap(g => g[1]).map(i => i[0]).filter(h => h && here.startsWith(h)).sort((a, b) => b.length - a.length)[0] ?? "";
+  /* floating liquid-glass top navigation: logo, a glass capsule of links, then search, theme, cart and the simulator CTA.
+     On narrow screens the capsule folds into a glass sheet behind the menu button. */
   const app = document.createElement("div"); app.className = "app";
-  const side = document.createElement("aside"); side.className = "sidebar"; side.id = "bl-side"; side.setAttribute("aria-label", "Navigation");
-  side.innerHTML = `<a class="brand" href="${ROOT}"><img src="${ROOT}assets/brand/assemblab-favicon.svg" alt=""><span><b>assemb<i>lab</i></b><span>Self-driving lab builder</span></span></a>
-    <nav class="side-nav">${NAV.map(([h, items]) => `<h6>${h}</h6>` + items.map(([href, label, ic]) => `<a href="${ROOT}${href}" class="${href === sec ? "cur" : ""}"${href === sec ? ' aria-current="page"' : ""}>${ICON[ic]}<span>${label}</span>${ic === "cart" ? '<span class="n zero" id="bl-side-n">0</span>' : ""}</a>`).join("")).join("")}</nav>`;
   const main = document.createElement("div"); main.className = "app-main";
-  const [tt, ts] = TITLES[sec] || [document.title.split(" · ")[0], "assemblab"];
-  const top = document.createElement("header"); top.className = "topbar";
+  const LINKS = [["lab-simulator/", "Simulator"], ["parts/", "Parts"], ["solutions/", "Solutions"], ["self-driving/", "Self-driving"], ["atlas/", "Atlas"], ["wiki/", "Learn"]];
+  const link = ([href, label]) => `<a href="${ROOT}${href}" class="${href === sec ? "cur" : ""}"${href === sec ? ' aria-current="page"' : ""}>${label}</a>`;
+  const top = document.createElement("header"); top.className = "gnav";
   top.innerHTML = `<a class="skip" href="#main">Skip to content</a>
-    <button type="button" class="iconbtn burger" aria-label="Menu" aria-expanded="false" aria-controls="bl-side">${ICON.menu}</button>
-    <div class="ttl"><b>${esc(tt)}</b><span>${esc(ts)}</span></div>
-    <form class="search" action="${ROOT}parts/" role="search"><label for="bl-q" class="sr">Search parts</label>${ICON.search}<input id="bl-q" name="q" type="search" placeholder="Search parts, makers, tools…"></form>
-    <button type="button" class="iconbtn" id="bl-theme" aria-label="Switch theme"></button>
-    <a class="iconbtn cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="n zero" id="bl-cart-n">0</span></a>
-    <a class="btn btn-accent btn-sm" href="${ROOT}lab-simulator/">Lab Simulator</a>`;
+    <div class="gnav-in">
+      <a class="gnav-logo" href="${ROOT}" aria-label="assemblab home"><img src="${ROOT}assets/brand/assemblab-favicon.svg" alt=""><span>assemb<i>lab</i></span></a>
+      <nav class="gnav-links glass" aria-label="Main">${LINKS.map(link).join("")}</nav>
+      <div class="gnav-act">
+        <form class="gsearch" action="${ROOT}parts/" role="search"><label for="bl-q" class="sr">Search parts</label>${ICON.search}<input id="bl-q" name="q" type="search" placeholder="Search parts, makers…"></form>
+        <button type="button" class="iconbtn" id="bl-theme" aria-label="Switch theme"></button>
+        <a class="iconbtn cartbtn" href="${ROOT}cart/" aria-label="Cart">${ICON.cart}<span class="n zero" id="bl-cart-n">0</span></a>
+        <a class="btn btn-pill gnav-cta" href="${ROOT}lab-simulator/">Open Simulator</a>
+        <button type="button" class="iconbtn burger" aria-label="Menu" aria-expanded="false" aria-controls="bl-side">${ICON.menu}</button>
+      </div>
+    </div>`;
+  const side = document.createElement("div"); side.className = "gsheet glass"; side.id = "bl-side"; side.setAttribute("aria-label", "Navigation");
+  side.innerHTML = `<form class="gsearch" action="${ROOT}parts/" role="search"><label for="bl-q2" class="sr">Search parts</label>${ICON.search}<input id="bl-q2" name="q" type="search" placeholder="Search parts, makers…"></form>
+    <nav>${[["", "Overview"], ...LINKS, ["cart/", "Cart"]].map(link).join("")}</nav>`;
   const kids = [...document.body.childNodes].filter(n => n.nodeName !== "SCRIPT");
-  main.append(top, ...kids);
+  main.append(...kids);
   const f = document.createElement("footer"); f.className = "bl-footer";
   f.innerHTML = `<div class="wrap"><div class="top">
-      <div><img class="flogo" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and Lab Simulator for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
+      <div><img class="flogo on-dark" src="${ROOT}assets/brand/assemblab-logo-dark.svg" alt="assemblab"><img class="flogo on-light" src="${ROOT}assets/brand/assemblab-logo.svg" alt="assemblab"><p class="tagline">Build your self-driving lab, module by module.</p><p>A catalogue and Lab Simulator for self-driving laboratories. assemblab sells nothing; each part links to its maker.</p></div>
       <div><h4>Platform</h4><a href="${ROOT}lab-simulator/">Lab Simulator</a><a href="${ROOT}solutions/#templates">Templates</a><a href="${ROOT}self-driving/">Self-driving layer</a><a href="${ROOT}atlas/">Digital twin atlas</a></div>
       <div><h4>Parts</h4>${CATS.slice(0, 5).map(c => `<a href="${ROOT}parts/?cat=${c.id}">${c.name}</a>`).join("")}<a href="${ROOT}parts/?cat=agents">AI agents</a></div>
       <div><h4>Learn</h4><a href="${ROOT}wiki/">Wiki</a><a href="${ROOT}wiki/references/">References</a><a href="https://github.com/mahdi-rstgr/formulation-sdl-atlas">GitHub</a><a href="${ROOT}cart/">Cart</a></div>
@@ -246,7 +249,13 @@ export function mountChrome() {
     <div class="dev"><span>Developed by <b>${DEVELOPER.name}</b></span><a href="${DEVELOPER.scholar}" target="_blank" rel="noopener">${SCHOLAR_SVG}Google Scholar</a><a href="${DEVELOPER.linkedin}" target="_blank" rel="noopener">${LINKEDIN_SVG}LinkedIn</a></div>
     <div class="base"><span>Built on the review <i>Self-Driving Laboratories for Formulation</i> (2026). Instrument 3D models: <a href="https://mbzuai-nlp.github.io/ChemLab-Assets/" target="_blank" rel="noopener" style="display:inline;padding:0;text-decoration:underline">ChemLab-Assets (MBZUAI)</a>, CC BY-NC 4.0.</span><span>Product names and logos are trademarks of their owners and identify their products. Prices are published list prices; vendors quote the final price.</span></div></div>`;
   main.append(f);
-  app.append(side, main); document.body.prepend(app);
+  app.append(main); document.body.prepend(top, side, app);
+
+  // over a dark full-bleed hero the bar starts clear with light text; once the hero scrolls away it takes on the glass material
+  const hero = $(".hero2");
+  if (hero) document.body.classList.add("has-hero");
+  const onScroll = () => { top.classList.toggle("scrolled", scrollY > 8); if (hero) top.classList.toggle("over-hero", hero.getBoundingClientRect().bottom > 76); };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
   const burger = $(".burger", top); let scr = null;
   const setNav = v => { side.classList.toggle("open", v); burger.setAttribute("aria-expanded", String(v));
@@ -256,11 +265,10 @@ export function mountChrome() {
   document.addEventListener("keydown", e => { if (e.key === "Escape") setNav(false); });
   const q = new URLSearchParams(location.search).get("q"); if (q && sec === "parts/") $("#bl-q").value = q;
 
-  // theme: dark dashboard by default, light on request; remembered per browser
+  // theme: graphite (dark) by default, light on request; remembered per browser
   const tb = $("#bl-theme", top), SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>';
-  const paint = () => { const t = document.documentElement.dataset.theme || "light"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
-  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "light") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("assemblab-theme", t); } catch { } paint(); };
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => { let saved = null; try { saved = localStorage.getItem("assemblab-theme"); } catch { } if (!saved) { document.documentElement.dataset.theme = e.matches ? "dark" : "light"; paint(); } });
+  const paint = () => { const t = document.documentElement.dataset.theme || "dark"; tb.innerHTML = t === "dark" ? SUN : MOON; tb.setAttribute("aria-label", t === "dark" ? "Switch to light theme" : "Switch to dark theme"); };
+  tb.onclick = () => { const t = (document.documentElement.dataset.theme || "dark") === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("assemblab-theme", t); } catch { } paint(); };
   paint();
 
   const upd = () => { const n = cart.count(); for (const el of [$("#bl-cart-n"), $("#bl-side-n")]) if (el) { el.textContent = n; el.classList.toggle("zero", !n); } };

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Self-driving layer · assemblab</title>
 <meta name="description" content="Make a lab cell decide for itself: compare eight open-source orchestration systems by the functions you need, choose simulators on a four-level fidelity ladder, and pick optimizers and AI agent roles with human checkpoints.">
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="../assets/bl.css">
 <style>
 .phero.night{border-bottom:0}
-.lnav{position:sticky;top:84px;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.lnav{position:sticky;top:72px;z-index:20;background:var(--header);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border-bottom:1px solid var(--line)}
 .lnav .wrap{display:flex;gap:4px;overflow-x:auto}
 .lnav a{padding:14px 16px;text-decoration:none;font:600 14.5px/1 var(--body);color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;display:flex;gap:8px;align-items:center}
 .lnav a span{font:500 11px/1 var(--mono)}

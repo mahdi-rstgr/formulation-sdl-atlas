@@ -61,11 +61,12 @@ if (new URLSearchParams(location.search).has("thumbs")) {
 const view = $("#canvas");
 let renderer = null;
 try {
-  renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
   view.appendChild(renderer.domElement);
 } catch { view.innerHTML = '<p class="nogl">The 3D workstation needs WebGL, which is turned off in this browser.</p>'; }
-const scene = new THREE.Scene(); scene.background = new THREE.Color(0x111112);
+const scene = new THREE.Scene();   // transparent: the glass stage gradient (builder.css) shows through; template renders keep a solid ground
+scene.background = new URLSearchParams(location.search).has("shot") ? new THREE.Color(0x111112) : null;
 if (renderer) scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
 const camera = new THREE.PerspectiveCamera(36, 1, .02, 80); camera.up.set(0, 0, 1);
 const controls = new OrbitControls(camera, renderer?.domElement ?? view); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * .49; controls.minDistance = .4; controls.maxDistance = 14;
@@ -85,7 +86,7 @@ const grid = new THREE.GridHelper(14, 140, 0x2C2C2E, 0x1C1C1E); grid.rotation.x 
 let area = null, areaW = 3, areaD = 2;
 function drawArea() {
   if (area) scene.remove(area); area = new THREE.Group();
-  const fill = new THREE.Mesh(new THREE.PlaneGeometry(areaW, areaD), new THREE.MeshBasicMaterial({ color: 0x0A84FF, transparent: true, opacity: .06, depthWrite: false })); fill.position.z = .001; area.add(fill);
+  const fill = new THREE.Mesh(new THREE.PlaneGeometry(areaW, areaD), new THREE.MeshBasicMaterial({ color: 0xC7FF2E, transparent: true, opacity: .05, depthWrite: false })); fill.position.z = .001; area.add(fill);
   const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(areaW, areaD)), new THREE.LineBasicMaterial({ color: 0x8E8E93, transparent: true, opacity: .8 })); edge.position.z = .002; area.add(edge);
   for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { const c = new THREE.Mesh(new THREE.BoxGeometry(.12, .012, .004), new THREE.MeshBasicMaterial({ color: 0xE5E5EA })); c.position.set(sx * (areaW / 2 - .06), sy * areaD / 2, .003); area.add(c);
     const c2 = c.clone(); c2.rotation.z = Math.PI / 2; c2.position.set(sx * areaW / 2, sy * (areaD / 2 - .06), .003); area.add(c2); }
@@ -190,7 +191,7 @@ function analyse() {
 let selBox = null, hovBox = null;
 function select(obj) {
   selected = obj; if (selBox) { scene.remove(selBox); selBox = null; }
-  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0x3B82F6); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
+  if (obj) { selBox = new THREE.BoxHelper(obj.group, 0xC7FF2E); scene.add(selBox); gizmo.attach(obj.group); } else gizmo.detach();
   $$(".tag").forEach(t => t.classList.toggle("sel", obj && t === obj.label));
   $$("#cart-lines tr[data-no]").forEach(r => r.classList.toggle("sel", obj && +r.dataset.no === obj.no));
   renderInspector();
@@ -378,7 +379,7 @@ function drawRun(S) {
   x.fillStyle = "#94A3B8"; x.fillText("desirability y", L + 4, T1 + 12); x.fillText("thickener fraction x →", Rr - 150, B1 + 14);
   const T2 = H * .7, B2 = H - 16, nmax = Math.max(10, S.Y.length), X2 = i => L + i / (nmax - 1) * (Rr - L), Y2 = v => B2 - Math.max(0, Math.min(1, v)) * (B2 - T2);
   x.strokeStyle = "#1E293B"; x.strokeRect(L, T2, Rr - L, B2 - T2);
-  let best = 0; x.strokeStyle = "#60A5FA"; x.lineWidth = 2; x.beginPath(); S.Y.forEach((v, i) => { best = Math.max(best, v); x[i ? "lineTo" : "moveTo"](X2(i), Y2(best)); }); x.stroke(); x.lineWidth = 1;
+  let best = 0; x.strokeStyle = "#C7FF2E"; x.lineWidth = 2; x.beginPath(); S.Y.forEach((v, i) => { best = Math.max(best, v); x[i ? "lineTo" : "moveTo"](X2(i), Y2(best)); }); x.stroke(); x.lineWidth = 1;
   x.fillStyle = "#94A3B8"; x.fillText("best so far", L + 4, T2 + 12); x.fillText("experiment →", Rr - 92, H - 3);
 }
 sim.on(drawRun);

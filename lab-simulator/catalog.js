@@ -120,7 +120,7 @@ const MAT = {
   white: std(0xf1f2f4), light: std(0xdfe3e8), deck: std(0xd3d8de, { roughness: .7 }), dark: std(0x1f242a, { roughness: .6 }), black: std(0x121519),
   alu: std(0xb9c0c8, { metalness: .6, roughness: .3 }), steel: std(0x9aa3ad, { metalness: .7, roughness: .25 }),
   glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe3f5, transparent: true, opacity: .14, roughness: .05, metalness: 0, depthWrite: false, side: THREE.DoubleSide }),
-  tip: std(0xeef2f6, { roughness: .3, transparent: true, opacity: .92 }), liquid: std(0x2c6fd1, { roughness: .2 }), powder: std(0xd8c49a, { roughness: .9 }),
+  tip: std(0xeef2f6, { roughness: .3, transparent: true, opacity: .92 }), liquid: std(0xc7ff2e, { roughness: .2 }), powder: std(0xd8c49a, { roughness: .9 }),
   well: std(0x2a2f36), amber: std(0xe2b56b, { roughness: .3 }),
 };
 const glow = (c, i = 1.4) => std(c, { emissive: c, emissiveIntensity: i });
@@ -284,7 +284,7 @@ export const PROC = {
     // the protocol, column by column
     let col = 0;
     const zUp = 0, zDip = -(top - deckZ - .3), liquidColor = new THREE.Color();
-    const pal = [0x2c6fd1, 0x3f86e0, 0x5aa0ea, 0x7a5bb5, 0xc27a1e, 0x23906b];
+    const pal = [0xc7ff2e, 0x3f86e0, 0x5aa0ea, 0x7a5bb5, 0xc27a1e, 0x23906b];
     const keys = [];
     const P = (x, y, z, d, on) => keys.push({ x, y, z, d, on });
     function build() {
@@ -382,7 +382,7 @@ export const PROC = {
     const g = new THREE.Group(), fr = std(0x22262c); for (const sx of [-1, 1]) for (const sy of [-1, 1]) B(g, .03, .03, h, fr, sx * (w - .03) / 2, sy * (d - .03) / 2);
     for (const sy of [-1, 1]) B(g, w, .03, .03, fr, 0, sy * (d - .03) / 2, h - .03); for (const sx of [-1, 1]) B(g, .03, d, .03, fr, sx * (w - .03) / 2, 0, h - .03);
     const bed = G(g, 0, 0, h * .3); B(bed, w * .86, d * .8, .012, std(0xc9ced4), 0, 0, 0); plate(bed, -.1, -.05, .012, { pitch: .009 }); plate(bed, .1, -.05, .012, { pitch: .009 });
-    const rack = []; for (let i = 0; i < 4; i++) { const tl = B(g, .06, .05, .11, std([0x2c6fd1, 0xc27a1e, 0x7a5bb5, 0x23906b][i]), -w * .3 + i * w * .2, d / 2 - .07, h * .58); rack.push(tl); }
+    const rack = []; for (let i = 0; i < 4; i++) { const tl = B(g, .06, .05, .11, std([0xc7ff2e, 0xc27a1e, 0x7a5bb5, 0x23906b][i]), -w * .3 + i * w * .2, d / 2 - .07, h * .58); rack.push(tl); }
     const gx = G(g, 0, 0, h - .07); B(gx, w - .06, .04, .03, MAT.alu, 0, 0, 0); const head = G(gx, 0, 0, 0); B(head, .08, .08, .08, std(c), 0, 0, -.06);
     g.userData.tick = t => { gx.position.y = Math.sin(t * .5) * d * .3; head.position.x = Math.sin(t * .9) * w * .3; bed.position.z = h * .3 + (Math.sin(t * .3) + 1) * .03; };
     return g;
@@ -469,7 +469,7 @@ function geo(p, doc) {
   return g;
 }
 const cache = {};
-const getDoc = id => cache[id] ??= fetch(`../data/models/${id}.json`).then(r => r.json());
+const getDoc = id => cache[id] ??= fetch(new URL(`../data/models/${id}.json`, import.meta.url)).then(r => r.json());   // module-relative, so other pages (the home hero) can build models too
 
 async function meshModel(it) {
   const id = it.model.slice(5), doc = await getDoc(id), g = new THREE.Group();
@@ -555,6 +555,6 @@ export function addDock(g, size) {
   for (const sx of [-1, 1]) B(dk, .03, .06, zTop, MAT.dark, sx * w * .38, y);
   B(dk, w * .82, .08, .025, MAT.alu, 0, y, zTop);
   const slots = [-.18, 0, .18].map(x => new THREE.Vector3(x * w / .6, y, zTop + .025));
-  for (const s of slots) { const r = new THREE.Mesh(new THREE.TorusGeometry(.035, .005, 8, 28), glow(0x2c6fd1, .8)); r.position.copy(s); dk.add(r); }
+  for (const s of slots) { const r = new THREE.Mesh(new THREE.TorusGeometry(.035, .005, 8, 28), glow(0xc7ff2e, .8)); r.position.copy(s); dk.add(r); }
   return slots;
 }

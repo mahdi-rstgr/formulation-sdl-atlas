@@ -292,3 +292,21 @@ code, kbd, pre, .md-typeset code { font-family: var(--md-code-font-family); }
 .md-typeset .hero__pitch { color: #D2D2D7; letter-spacing: .004em; }
 .md-typeset .hero__actions .md-button:not(.md-button--primary) { color: #fff; background: rgba(255, 255, 255, .12); border: 0; }
 .md-typeset .hero__actions .md-button:not(.md-button--primary):hover { background: rgba(255, 255, 255, .2); }
+
+/* ================================================================ assemblab palette: graphite + lime
+   #0F0F0F · #2E2E2E · #C7FF2E · #FFFFFF · #B0B0B0. Lime fills and marks; on light pages links carry graphite ink. */
+:root, [data-md-color-scheme="default"] {
+  --ink: #0F0F0F; --ink-2: #2E2E2E; --accent: #4A6600; --muted: #6B6B6B;
+  --md-primary-fg-color: #0F0F0F; --md-primary-fg-color--light: #2E2E2E; --md-primary-fg-color--dark: #0A0A0A;
+  --md-accent-fg-color: #4A6600; --md-accent-fg-color--transparent: rgba(199, 255, 46, .25);
+  --md-typeset-a-color: #3D5500; --md-default-bg-color: #F8F8F6;
+}
+[data-md-color-scheme="slate"] {
+  --accent: #C7FF2E; --md-typeset-a-color: #C7FF2E; --md-accent-fg-color: #C7FF2E; --md-accent-fg-color--transparent: rgba(199, 255, 46, .14);
+  --md-default-bg-color: #0F0F0F; --md-default-bg-color--light: #1C1C1C; --md-code-bg-color: #1C1C1C;
+  --card-bg: #1C1C1C; --card-border: #2E2E2E; --muted: #B0B0B0;
+  --md-primary-fg-color: #0A0A0A; --md-primary-fg-color--dark: #050505;
+}
+.md-header, .md-tabs { background-color: #0F0F0F; }
+.md-tabs__item--active .md-tabs__link { box-shadow: inset 0 -2px 0 #C7FF2E; }
+::selection { background: #C7FF2E; color: #0F0F0F; }

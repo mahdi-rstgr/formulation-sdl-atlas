@@ -15,7 +15,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { buildPlatform } from "./platform.js";
 
-const C = { data: 0x22D3EE, command: 0x818CF8, model: 0x4ADE80, gate: 0xF59E0B, ghost: 0x636366 };
+const C = { data: 0xFFFFFF, command: 0xB0B0B0, model: 0xC7FF2E, gate: 0xFBBF24, ghost: 0x5A5A5A };
 const LINK = { data: C.data, command: C.command, model: C.model, gate: C.gate };
 const NAMES = {
   frame: "T-slot workstations", labware: "Labware", gantry: "Compact gantry", dispensers: "Dispensing tools", ot2: "Opentrons OT-2",
@@ -57,7 +57,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
     for (let m = -SD / 2; m <= SD / 2; m++) { x.beginPath(); x.moveTo(0, Y(m)); x.lineTo(ft.c.width, Y(m)); x.stroke(); }
     const rect = ([a, b, c, d]) => [X(a), Y(d), X(c) - X(a), Y(b) - Y(d)];
     // zone tints
-    x.fillStyle = "rgba(10,132,255,.10)"; x.fillRect(...rect(ZONES.control)); x.fillStyle = "rgba(94,92,230,.11)"; x.fillRect(...rect(ZONES.data));
+    x.fillStyle = "rgba(199,255,46,.08)"; x.fillRect(...rect(ZONES.control)); x.fillStyle = "rgba(255,255,255,.06)"; x.fillRect(...rect(ZONES.data));
     for (const [z, col] of [[ZONES.control, "rgba(100,210,255,.5)"], [ZONES.data, "rgba(125,122,255,.5)"]]) { x.strokeStyle = col; x.lineWidth = 4; x.setLineDash([22, 14]); x.strokeRect(...rect(z)); } x.setLineDash([]);
     // hatched safety border around the cell
     { const [a, b, c, d] = ZONES.cell, t = .14; x.save(); x.beginPath(); x.rect(...rect([a, b, c, d])); x.rect(...rect([a + t, b + t, c - t, d - t])); x.clip("evenodd");
@@ -105,7 +105,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const RT = new THREE.WebGLRenderTarget(768, 432); RT.texture.colorSpace = THREE.SRGBColorSpace;
   const tScene = new THREE.Scene(); tScene.background = new THREE.Color(0x0B1426);
   tScene.add(new THREE.HemisphereLight(0xbfe3ff, 0x0B1426, 1.2));
-  const twinMat = new THREE.MeshLambertMaterial({ color: 0x60A5FA, transparent: true, opacity: .5, depthWrite: false });
+  const twinMat = new THREE.MeshLambertMaterial({ color: 0xC7FF2E, transparent: true, opacity: .45, depthWrite: false });
   for (const [geo, mw] of twinSrc) { const m = new THREE.Mesh(geo, twinMat); m.matrixAutoUpdate = false; m.matrix.copy(mw); tScene.add(m); }
   const tGrid = new THREE.GridHelper(6, 24, 0x2f5576, 0x1d3448); tGrid.rotation.x = Math.PI / 2; tScene.add(tGrid);
   const path = new THREE.CatmullRomCurve3([[.06, .17, deck + .12], [.4, .1, deck + .42], [.95, -.05, deck + .45], [1.32, -.21, deck + .3]].map(p => new THREE.Vector3(...p)));
@@ -175,7 +175,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const linkGroup = new THREE.Group(); scene.add(linkGroup);
   const center = id => { const a = actors[id]; if (!a) return null; const b = new THREE.Box3().setFromObject(a.obj); const c = b.getCenter(new THREE.Vector3()); c.z = Math.min(b.max.z, Math.max(.4, c.z)); return c; };
   let links = [];
-  const shieldTex = (() => { const t = canvasTex(128, 128), x = t.x; x.fillStyle = "#F59E0B"; x.beginPath(); x.moveTo(64, 10); x.lineTo(112, 28); x.quadraticCurveTo(110, 92, 64, 118); x.quadraticCurveTo(18, 92, 16, 28); x.closePath(); x.fill();
+  const shieldTex = (() => { const t = canvasTex(128, 128), x = t.x; x.fillStyle = "#FBBF24"; x.beginPath(); x.moveTo(64, 10); x.lineTo(112, 28); x.quadraticCurveTo(110, 92, 64, 118); x.quadraticCurveTo(18, 92, 16, 28); x.closePath(); x.fill();
     x.strokeStyle = "#fff"; x.lineWidth = 11; x.lineCap = "round"; x.lineJoin = "round"; x.beginPath(); x.moveTo(42, 64); x.lineTo(58, 80); x.lineTo(88, 48); x.stroke(); t.t.needsUpdate = true; return t.t; })();
   function setLinks(list) {
     for (const l of links) { linkGroup.remove(l.g); l.g.traverse(o => { o.geometry?.dispose(); }); } links = [];
@@ -192,11 +192,11 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
   const mono = '500 15px "Roboto Mono", ui-monospace, monospace';
   function drawController(t) { const x = ctrlTex.x, W = 256, H = 320; x.fillStyle = "#0B1222"; x.fillRect(0, 0, W, H); x.fillStyle = "#E2E8F0"; x.font = '600 15px Inter, sans-serif'; x.fillText("Orchestration · L3", 14, 26);
     const steps = ["Dose paste", "Dose powder", "Weigh", "Move to mixer", "Mix 90 s", "Measure viscosity", "Store record"], k = Math.floor(t / 1.2) % steps.length;
-    x.font = mono; steps.forEach((s, i) => { x.fillStyle = i < k ? "#4ADE80" : i === k ? "#FFD166" : "#64748B"; x.fillText(`${i < k ? "✓" : i === k ? "▶" : "·"} ${s}`, 14, 60 + i * 34); });
-    x.fillStyle = "#7DB3FF"; x.fillText("SiLA 2 · REST · ROS 2", 14, H - 16); ctrlTex.t.needsUpdate = true; }
+    x.font = mono; steps.forEach((s, i) => { x.fillStyle = i < k ? "#C7FF2E" : i === k ? "#FFFFFF" : "#6B6B6B"; x.fillText(`${i < k ? "✓" : i === k ? "▶" : "·"} ${s}`, 14, 60 + i * 34); });
+    x.fillStyle = "#C7FF2E"; x.fillText("SiLA 2 · REST · ROS 2", 14, H - 16); ctrlTex.t.needsUpdate = true; }
   function drawRack(t) { const x = rackTex.x; x.fillStyle = "#0E1320"; x.fillRect(0, 0, 128, 512);
     for (let u = 0; u < 22; u++) { const y = 8 + u * 23; x.fillStyle = "#1C2436"; x.fillRect(6, y, 116, 18);
-      for (let k = 0; k < 6; k++) { const on = Math.sin(t * (3 + k) + u * 1.7 + k) > .2; x.fillStyle = on ? (k % 3 ? "#4ADE80" : "#22D3EE") : "#2A3245"; x.fillRect(12 + k * 9, y + 6, 5, 5); }
+      for (let k = 0; k < 6; k++) { const on = Math.sin(t * (3 + k) + u * 1.7 + k) > .2; x.fillStyle = on ? (k % 3 ? "#C7FF2E" : "#FFFFFF") : "#2E2E2E"; x.fillRect(12 + k * 9, y + 6, 5, 5); }
       x.fillStyle = "#334058"; x.fillRect(74, y + 5, 40, 7); } rackTex.t.needsUpdate = true; }
   const obs = []; for (let i = 0; i < 6; i++) obs.push(.08 + i * .16 + Math.sin(i * 7) * .03);
   const f = u => .55 + .28 * Math.sin(6.3 * u + .6) * Math.exp(-1.2 * u) + .12 * u;
@@ -207,11 +207,11 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
     const X = u => L + u * (R - L), Y = v => B - v * (B - T);
     x.strokeStyle = "#334058"; x.lineWidth = 1; x.beginPath(); x.moveTo(L, T); x.lineTo(L, B); x.lineTo(R, B); x.stroke();
     const sd = u => .03 + .22 * Math.min(1, Math.min(...pts.map(p => Math.abs(u - p))) * 5);
-    x.fillStyle = "rgba(59,130,246,.25)"; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100; x.lineTo(X(u), Y(f(u) + sd(u))); } for (let i = 100; i >= 0; i--) { const u = i / 100; x.lineTo(X(u), Y(f(u) - sd(u))); } x.fill();
-    x.strokeStyle = "#60A5FA"; x.lineWidth = 3; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100; x[i ? "lineTo" : "moveTo"](X(u), Y(f(u))); } x.stroke();
+    x.fillStyle = "rgba(199,255,46,.20)"; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100; x.lineTo(X(u), Y(f(u) + sd(u))); } for (let i = 100; i >= 0; i--) { const u = i / 100; x.lineTo(X(u), Y(f(u) - sd(u))); } x.fill();
+    x.strokeStyle = "#C7FF2E"; x.lineWidth = 3; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100; x[i ? "lineTo" : "moveTo"](X(u), Y(f(u))); } x.stroke();
     x.fillStyle = "#F8FAFC"; for (const p of pts) { x.beginPath(); x.arc(X(p), Y(f(p)), 7, 0, 7); x.fill(); }
     let best = 0, bu = 0; const A = u => f(u) + 1.6 * sd(u); for (let i = 0; i <= 100; i++) { const u = i / 100; if (A(u) > best) { best = A(u); bu = u; } }
-    const T2 = 420, B2 = 500; x.strokeStyle = "#4ADE80"; x.lineWidth = 3; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100, v = (A(u) - .3) / 1.0; x[i ? "lineTo" : "moveTo"](X(u), B2 - Math.max(0, v) * (B2 - T2)); } x.stroke();
+    const T2 = 420, B2 = 500; x.strokeStyle = "#C7FF2E"; x.lineWidth = 3; x.beginPath(); for (let i = 0; i <= 100; i++) { const u = i / 100, v = (A(u) - .3) / 1.0; x[i ? "lineTo" : "moveTo"](X(u), B2 - Math.max(0, v) * (B2 - T2)); } x.stroke();
     x.strokeStyle = "#FFD166"; x.setLineDash([8, 6]); x.beginPath(); x.moveTo(X(bu), T); x.lineTo(X(bu), B2); x.stroke(); x.setLineDash([]);
     x.fillStyle = "#FFD166"; x.font = '600 18px Inter, sans-serif'; x.fillText("next experiment", Math.min(X(bu) + 10, R - 160), T + 20);
     x.fillStyle = "#94A3B8"; x.font = mono; x.fillText("composition →", R - 150, B + 26); x.fillText("acquisition", L + 6, T2 - 8); mlTex.t.needsUpdate = true; }
@@ -219,7 +219,7 @@ export async function createSDLScene(host, { root = "./", onProgress = () => { }
     ["Laboratory copilot", "INFORM", ["Run 18: mixing 90 s", "Why rejected? Cup out of reach", "Validation: twin clearance 14 mm", "Next: viscosity at 25 °C"]],
     ["Recovery advisor", "DRAFT", ["Fault: pen stall at 0.8 bar", "Context: lot B12, 31 °C", "Option 1: purge and retry", "Operator decides ▶"]]];
   function drawAgents(t) { AGENTS.forEach(([name, lvl, lines], i) => { const x = agTex[i].x, W = 512, H = 320; x.fillStyle = "#0B1222"; x.fillRect(0, 0, W, H);
-    x.fillStyle = "#E2E8F0"; x.font = '600 24px Inter, sans-serif'; x.fillText(name, 20, 40); x.fillStyle = lvl === "INFORM" ? "#4ADE80" : "#FFD166"; x.font = '600 15px Inter, sans-serif'; x.fillText(lvl, W - 90, 38);
+    x.fillStyle = "#E2E8F0"; x.font = '600 24px Inter, sans-serif'; x.fillText(name, 20, 40); x.fillStyle = lvl === "INFORM" ? "#C7FF2E" : "#FBBF24"; x.font = '600 15px Inter, sans-serif'; x.fillText(lvl, W - 90, 38);
     const shown = Math.floor((t * 1.4 + i * 1.3) % (lines.length + 2)); x.font = '400 19px "Roboto Mono", monospace';
     lines.slice(0, shown).forEach((l, k) => { x.fillStyle = l.endsWith("▶") ? "#FFD166" : "#CBD5E1"; x.fillText(l, 20, 92 + k * 46); });
     agTex[i].t.needsUpdate = true; }); }

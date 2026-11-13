@@ -2,9 +2,9 @@
    Translucent materials for the floating chrome (toolbar, library, inspector, HUDs), system font, capsule controls,
    segmented controls, feedback on press, critically damped motion. A single dark appearance, like pro 3D tools. */
 :root{
-  --bg:#111112; --panel:#1C1C1E; --panel-2:#2C2C2E; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
-  --ink:#F5F5F7; --ink-2:#D1D1D6; --ink-3:#98989D; --accent:#0A84FF; --accent-2:#0071E3; --mint:#30D158; --warn:#FF453A; --amber:#FF9F0A;
-  --liquid:#0A84FF; --semi:#FF9F0A; --powder:#BF5AF2; --object:#30D158;
+  --bg:#0F0F0F; --panel:#1C1C1C; --panel-2:#2E2E2E; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --ink:#FFFFFF; --ink-2:#E2E2E2; --ink-3:#B0B0B0; --accent:#C7FF2E; --accent-2:#A8E000; --mint:#C7FF2E; --warn:#FF5A4E; --amber:#FBBF24;
+  --liquid:#60A5FA; --semi:#FBBF24; --powder:#C084FC; --object:#C7FF2E;
   --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI Variable Display","Segoe UI",Inter,system-ui,sans-serif;
   --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI Variable Text","Segoe UI",Inter,system-ui,sans-serif;
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,"Roboto Mono",monospace;
@@ -400,3 +400,91 @@ kbd{font-family:var(--body);border-radius:5px}
 @media (prefers-reduced-motion:reduce){.inspector,.start-in{animation:none}*{transition-duration:.01ms!important}}
 @media (prefers-reduced-transparency:reduce){.side,.bar,.seg,.metric,.inspector,.panel,.tag,.tip,.toast,.start-in,.keys{background:#1C1C1E!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
 @media (prefers-contrast:more){:root{--line:rgba(255,255,255,.3);--mat-edge:rgba(255,255,255,.35)}}
+
+/* ================================================================ liquid glass layer
+   The 3D stage fills the whole window. The library, the toolbar and the side panel float over it as glass islands:
+   translucent fill, deep backdrop blur with saturation, a bright specular rim, and soft shadow. HUDs are smaller lenses. */
+:root{
+  --g:rgba(28,32,44,.42); --g-strong:rgba(22,26,36,.66); --g-hover:rgba(255,255,255,.08); --g-sel:rgba(255,255,255,.16);
+  --g-blur:blur(28px) saturate(190%); --g-blur-lg:blur(44px) saturate(200%);
+  --g-ring:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.08),0 24px 60px -24px rgba(0,0,0,.75);
+  --g-rim:linear-gradient(140deg,rgba(255,255,255,.38),rgba(255,255,255,.04) 38%,transparent 55%,rgba(255,255,255,.04) 75%,rgba(255,255,255,.22));
+  --gap:12px; --side-w:288px; --panel-w:360px; --bar-h:64px;
+}
+/* the stage: a deep blue-violet field with a warm horizon glow, under the transparent renderer */
+.work{background:radial-gradient(60% 50% at 50% 62%,rgba(255,150,80,.10),transparent 65%),radial-gradient(55% 50% at 85% 8%,rgba(60,130,255,.22),transparent 65%),
+  radial-gradient(50% 45% at 12% 15%,rgba(120,90,255,.18),transparent 65%),linear-gradient(180deg,#0A0E18,#11141D 55%,#0B0C10)}
+/* the glass material and its rim */
+.side,.bar,.panel,.seg,.metric,.keys,.inspector,.tip,.toast,.tag,.collapse,.start-in{background:var(--g);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);box-shadow:var(--g-ring);border:0}
+.side,.panel,.inspector,.start-in{background:var(--g-strong);-webkit-backdrop-filter:var(--g-blur-lg);backdrop-filter:var(--g-blur-lg)}
+.side::before,.bar::before,.panel::before,.inspector::before,.start-in::before,.seg::before,.metric::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;z-index:5;background:var(--g-rim);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.seg,.metric,.bar,.start-in{position:relative}
+.metric{border-radius:14px;border-left:0}
+.metric.bad{box-shadow:var(--g-ring),inset 3px 0 0 var(--warn)}
+.seg{border-radius:14px}
+.seg button[aria-pressed="true"],.ptabs button[aria-selected="true"],.ins-modes button[aria-pressed="true"]{background:var(--g-sel);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.seg button:hover,.grp .gh:hover{background:var(--g-hover)}
+.ptabs,.ins-modes{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.dev{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.dev:hover,.dev:focus-visible{background:rgba(255,255,255,.10)}
+.dev .th{background:radial-gradient(ellipse at 50% 70%,rgba(255,255,255,.12),rgba(255,255,255,.02) 70%)}
+.grp.open .gh{background:var(--g-sel);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+#search{background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.bar-tools select,.bar-tools button,.burger,.ghost,.ins-actions button,.start-h .x{background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.06)}
+.bar-tools button:hover,.bar-tools select:hover{background:rgba(255,255,255,.14)}
+.tocart{background:linear-gradient(180deg,#3A9BFF,#0A84FF)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px -10px #0A84FF!important}
+.table-wrap,.budget,.caps li,.checks li,.run-stats div,.run-log li,.start .opt{background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.start .opt:hover,.start .opt:focus-visible{background:rgba(255,255,255,.10)}
+.start .opt.hl{background:linear-gradient(180deg,#3A9BFF,#0A84FF);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+#run-plot{background:rgba(5,7,12,.6)}
+.start{background:rgba(4,6,10,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.toast{border-radius:980px}
+
+/* floating layout on wide screens: the canvas fills the window, chrome floats over it */
+@media (min-width:1101px){
+  body{display:block;overflow:hidden}
+  .work{position:fixed;inset:0;z-index:0;pointer-events:auto}
+  .side{position:fixed;left:var(--gap);top:var(--gap);bottom:var(--gap);width:var(--side-w);height:auto;border-radius:26px;z-index:40}
+  .shell{position:relative;z-index:2;height:100vh;margin-left:calc(var(--side-w) + var(--gap));pointer-events:none}
+  .bar{margin:var(--gap) var(--gap) 0;border-radius:22px;min-height:var(--bar-h);pointer-events:auto}
+  .app{background:transparent;padding:var(--gap);gap:var(--gap);grid-template-columns:minmax(0,1fr) var(--panel-w)}
+  body.panel-off .app{grid-template-columns:minmax(0,1fr) 0}
+  .panel{grid-column:2;grid-row:1;border-radius:26px;pointer-events:auto;overflow:visible;min-height:0}
+  .panel>.pane{border-radius:0 0 26px 26px}
+  .collapse{border-radius:12px 0 0 12px;left:-34px;width:30px}
+  body.panel-off .collapse{border-radius:12px}
+  body.panel-off .panel{background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  body.panel-off .panel::before{display:none}
+  /* stage HUDs sit inside the clear area between the islands */
+  .work{--l:calc(var(--side-w) + var(--gap) * 3); --t:calc(var(--bar-h) + var(--gap) * 3); --r:calc(var(--panel-w) + var(--gap) * 3)}
+  body.panel-off .work{--r:calc(var(--gap) * 2 + 30px)}
+  .hud-l{left:var(--l);top:var(--t);right:calc(var(--r) + 210px)}
+  .hud-r{right:var(--r);top:var(--t)}
+  .keys{left:var(--l);bottom:calc(var(--gap) * 2)}
+  .inspector{left:var(--l);bottom:calc(var(--gap) * 2 + 44px);width:min(440px,calc(100vw - var(--l) - var(--r)))}
+  .canvas.drop::after{inset:var(--t) var(--r) var(--gap) var(--l)}
+}
+@media (min-width:1101px) and (max-width:1300px){:root{--side-w:260px;--panel-w:320px}}
+@media (prefers-reduced-transparency:reduce){.side,.bar,.panel,.seg,.metric,.keys,.inspector,.tip,.toast,.tag,.collapse,.start-in{background:#1C1C1E!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+
+/* ================================================================ graphite + lime (#0F0F0F · #2E2E2E · #C7FF2E · #FFFFFF · #B0B0B0) */
+.work{background:radial-gradient(60% 50% at 50% 62%,rgba(199,255,46,.06),transparent 65%),radial-gradient(55% 50% at 50% 0%,rgba(255,255,255,.06),transparent 65%),linear-gradient(180deg,#121212,#0F0F0F 60%,#0A0A0A)}
+:root{--g:rgba(46,46,46,.38);--g-strong:rgba(28,28,28,.7);--g-rim:linear-gradient(140deg,rgba(255,255,255,.34),rgba(255,255,255,.04) 38%,transparent 55%,rgba(255,255,255,.04) 75%,rgba(199,255,46,.22))}
+.tocart,.start .opt.hl{background:#C7FF2E!important;color:#0F0F0F!important;font-weight:600;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 20px -10px rgba(199,255,46,.6)!important}
+.tocart:hover{background:#D4FF5C!important}
+.start .opt.hl span{color:rgba(15,15,15,.7)!important}
+.tag.sel b,.ins-head .no,.caps .fix:hover,#run-who .fix:hover,.add:hover{background:#C7FF2E;color:#0F0F0F}
+.tag.hot b{color:#0F0F0F}
+.caps .fix,#run-who .fix{background:rgba(199,255,46,.14);color:#C7FF2E}
+.live{background:rgba(199,255,46,.14);color:#C7FF2E}.live i{background:#C7FF2E;box-shadow:0 0 8px #C7FF2E}
+.brand i,.side .brand i{color:#C7FF2E}
+#search:focus{box-shadow:0 0 0 4px rgba(199,255,46,.22),0 0 0 1px #C7FF2E}
+.side-foot a{color:#B0B0B0}.side-foot a:hover{color:#C7FF2E}
+.seg .smart{color:#C7FF2E}
+.bbar i{background:#C7FF2E}
+.approve{background:#FBBF24;color:#0F0F0F}
+.chip.on{background:rgba(199,255,46,.16);color:#C7FF2E}
+#run-plot{background:rgba(10,10,10,.6)}
+.canvas.drop::after{color:#C7FF2E;border-color:#C7FF2E;background:rgba(199,255,46,.05)}
+::selection{background:#C7FF2E;color:#0F0F0F}

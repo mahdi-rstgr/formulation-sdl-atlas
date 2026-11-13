@@ -129,7 +129,7 @@ function focus(name, instant = false) {
     target = c; const dir = new THREE.Vector3(c.x, c.y, 0).normalize(); if (!dir.lengthSq()) dir.set(1, 0, 0);
     pos = c.clone().add(dir.multiplyScalar(R0 * .55)).add(new THREE.Vector3(R0 * .25, -R0 * .35, R0 * .45));
   } else if (name === "arm") { target.set(0.05, 0.05, 0.35); pos.set(R0 * .55, -R0 * .95, R0 * .7); }
-  for (const [k, g] of Object.entries(devGroups)) g.traverse(o => { if (o.material) o.material.emissive = new THREE.Color(k === name ? 0x2c6fd1 : 0x000000), o.material.emissiveIntensity = k === name ? .35 : 0; });
+  for (const [k, g] of Object.entries(devGroups)) g.traverse(o => { if (o.material) o.material.emissive = new THREE.Color(k === name ? 0xc7ff2e : 0x000000), o.material.emissiveIntensity = k === name ? .35 : 0; });
   if (instant || reduced) { camera.position.copy(pos); controls.target.copy(target); controls.update(); camGoal = null; }
   else camGoal = { pos, target };
 }

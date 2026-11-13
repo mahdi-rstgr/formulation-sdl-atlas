@@ -2,45 +2,82 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("assemblab-theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>assemblab · Configure a self-driving lab</title>
 <meta name="description" content="assemblab is a catalogue and Lab Simulator for research labs that want to automate: compare dispensers, robot arms, platforms and open-source software with published specifications and citations, lay the cell out in 3D, and source each part from its maker.">
 <meta property="og:title" content="assemblab · Configure a self-driving laboratory">
 <meta property="og:description" content="Compare instruments and software with citations, lay the cell out in 3D, and source each part from its maker.">
-<meta property="og:image" content="assets/img/hero-product.webp">
+<meta property="og:image" content="assets/img/hero-sdl.webp">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/bl.css">
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 <style>
-/* ---------- hero */
-
-/* ---------- hero: an Apple-style product presentation. Centred headline and calls to action, then the product itself,
-   studio-lit on a clean ground with a soft contact shadow, swaying gently (tools/render-hero-product.html). */
-.hero{background:var(--paper-2);padding:clamp(48px,7vw,96px) var(--gut) clamp(28px,4vw,56px);text-align:center;overflow:hidden}
-.hero-copy{max-width:980px;margin:0 auto}
-.hero .hero-eyebrow{font:600 clamp(19px,1.8vw,24px)/1.2 var(--display);letter-spacing:.006em;color:var(--accent-ink);margin:0 0 10px}
-.hero h1{font:700 clamp(44px,6.4vw,84px)/1.04 var(--display);letter-spacing:-.022em;margin:0;color:var(--ink)}
-.hero .hero-sub{font:500 clamp(20px,2.1vw,28px)/1.2 var(--display);letter-spacing:.004em;color:var(--muted);margin:14px auto 0;max-width:30ch;text-wrap:balance}
-.hero .hero-cta{display:flex;gap:14px 28px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:26px}
-.hero .hero-cta .btn{font-size:17px;padding:12px 22px}
-.hero .hero-cta .lnk{font:400 19px/1.2 var(--body);letter-spacing:-.02em;color:var(--accent-ink);text-decoration:none}
-.hero .hero-cta .lnk:hover{text-decoration:underline}
-.hero-stage{position:relative;max-width:1100px;margin:clamp(18px,3vw,40px) auto 0}
-.hero-stage img{width:100%;height:auto;display:block}
-:root[data-theme="dark"] .hero-stage img{filter:drop-shadow(0 40px 60px rgba(255,255,255,.04))}
-.hero-specs{list-style:none;display:flex;justify-content:center;gap:clamp(20px,5vw,72px);flex-wrap:wrap;margin:clamp(12px,2vw,28px) auto 0;padding:0}
-.hero-specs li{display:flex;flex-direction:column;align-items:center;gap:2px}
-.hero-specs b{font:700 clamp(28px,3vw,40px)/1.05 var(--display);letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums}
-.hero-specs span{font:400 15px/1.3 var(--body);letter-spacing:-.016em;color:var(--muted)}
-/* arrive gently: the copy rises first, then the product */
+/* ---------- hero: copy on the left, a live 3D self-driving cell bleeding off the right edge (assets/hero-scene.js).
+   Graphite and lime, always dark. Height follows the content with sensible caps, so it holds on any screen. */
+.hero2{--h-bg:#0F0F0F;--h-2:#2E2E2E;--h-lime:#C7FF2E;--h-ink:#FFFFFF;--h-mute:#B0B0B0;
+  position:relative;isolation:isolate;overflow:hidden;color:var(--h-ink);background:radial-gradient(55% 70% at 72% 55%,rgba(199,255,46,.07),transparent 70%),var(--h-bg);
+  display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;
+  padding:72px 0 0;min-height:clamp(560px,86svh,860px)}
+.hero2::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;z-index:1;pointer-events:none;background:linear-gradient(transparent,#0F0F0F)}
+.h3-copy{position:relative;z-index:2;padding:clamp(28px,5vh,56px) 0 clamp(28px,5vh,56px) max(var(--gut),calc((100vw - 1360px) / 2 + var(--gut)));animation:hero-rise .9s var(--ease-out) both}
+.h3-eyebrow{display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;padding:7px 14px 7px 10px;border-radius:980px;background:rgba(46,46,46,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.07);font:500 13px/1 var(--body);letter-spacing:-.008em;color:var(--h-mute)}
+.h3-eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--h-lime);box-shadow:0 0 0 3px rgba(199,255,46,.18);animation:h3-pulse 2.4s ease-in-out infinite}
+@keyframes h3-pulse{50%{box-shadow:0 0 0 6px rgba(199,255,46,.05)}}
+.hero2 h1{font:700 clamp(40px,4.6vw,72px)/1.02 var(--display);letter-spacing:-.035em;margin:0;color:var(--h-ink);text-wrap:balance}
+.hero2 h1 span{color:var(--h-mute)}
+.h3-sub{font:400 clamp(16px,1.25vw,19px)/1.45 var(--body);letter-spacing:-.016em;color:var(--h-mute);margin:18px 0 0;max-width:40ch}
+.hero-cta{display:flex;align-items:center;gap:6px;margin-top:28px}
+.hero-cta .go{display:inline-flex;align-items:center;padding:15px 26px;border-radius:980px;background:var(--h-lime);color:var(--h-bg);font:600 16px/1 var(--body);letter-spacing:-.016em;text-decoration:none;box-shadow:0 12px 30px -12px rgba(199,255,46,.55);transition:transform .15s ease-out,filter .2s}
+.hero-cta .go:hover{filter:brightness(1.06)}
+.hero-cta .go:active{transform:scale(.96)}
+.hero-cta .arr{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--h-ink);color:var(--h-bg);text-decoration:none;transition:transform .3s var(--ease)}
+.hero-cta .arr:hover{transform:rotate(45deg)}
+.hero-cta .arr svg{width:18px;height:18px}
+.hero-specs{list-style:none;display:flex;gap:clamp(22px,3.5vw,48px);margin:clamp(28px,5vh,48px) 0 0;padding:22px 0 0;border-top:1px solid rgba(255,255,255,.08)}
+.hero-specs li{display:flex;flex-direction:column;gap:5px}
+.hero-specs b{font:600 clamp(26px,2.4vw,36px)/1 var(--display);letter-spacing:-.025em;font-variant-numeric:tabular-nums;color:var(--h-ink)}
+.hero-specs span{font:400 13.5px/1.3 var(--body);letter-spacing:-.008em;color:var(--h-mute)}
+/* the 3D stage */
+.h3-stage{position:relative;align-self:stretch;min-height:440px;margin-left:-4vw;animation:hero-rise 1.1s var(--ease-out) .1s both}
+.h3-stage canvas{position:absolute;inset:0;display:block;touch-action:pan-y}
+.h3-poster{position:absolute;inset:8% 0 12%;width:100%;height:80%;object-fit:contain;opacity:0;pointer-events:none}
+.h3-stage.nogl .h3-poster{opacity:.9}
+.h3-load{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);font:500 12px/1 var(--body);letter-spacing:.02em;color:var(--h-mute);display:flex;align-items:center;gap:8px;transition:opacity .4s}
+.h3-load i{width:90px;height:2px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden;position:relative}
+.h3-load i::after{content:"";position:absolute;inset:0;background:var(--h-lime);transform-origin:left;transform:scaleX(var(--p,0));transition:transform .4s var(--ease)}
+.h3-stage.ready .h3-load{opacity:0;pointer-events:none}
+/* the component legend: glass chips that also highlight their part in 3D */
+.h3-legend{position:absolute;left:4vw;right:var(--gut);bottom:clamp(16px,3vh,28px);display:flex;flex-wrap:wrap;gap:6px;z-index:3;justify-content:center;list-style:none;margin:0;padding:0}
+.h3-legend button{display:inline-flex;align-items:center;gap:8px;padding:8px 13px 8px 10px;border:0;border-radius:980px;background:rgba(46,46,46,.42);-webkit-backdrop-filter:blur(18px) saturate(160%);backdrop-filter:blur(18px) saturate(160%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.07);color:var(--h-mute);font:500 12.5px/1 var(--body);letter-spacing:-.008em;transition:background-color .2s,color .2s,transform .1s ease-out}
+.h3-legend button i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);transition:background-color .2s,box-shadow .2s}
+.h3-legend button:hover,.h3-legend button.on{background:rgba(199,255,46,.12);color:var(--h-ink)}
+.h3-legend button:hover i,.h3-legend button.on i{background:var(--h-lime);box-shadow:0 0 0 3px rgba(199,255,46,.2)}
+.h3-legend button:active{transform:scale(.96)}
+.h3-hint{position:absolute;right:var(--gut);top:clamp(12px,3vh,24px);z-index:3;font:500 12px/1 var(--body);color:rgba(255,255,255,.45);display:flex;align-items:center;gap:7px;pointer-events:none}
+.h3-hint svg{width:14px;height:14px}
+/* the label that rides above the highlighted component */
+.h3d-label{position:absolute;left:0;top:0;z-index:4;pointer-events:none;display:grid;gap:3px;padding:9px 13px;border-radius:14px;white-space:nowrap;
+  background:rgba(28,28,28,.6);-webkit-backdrop-filter:blur(20px) saturate(160%);backdrop-filter:blur(20px) saturate(160%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(199,255,46,.25),0 18px 40px -16px rgba(0,0,0,.8);opacity:0;margin-top:-10px;transition:opacity .2s ease,margin-top .3s var(--ease)}
+.h3d-label.on{opacity:1;margin-top:-16px}
+.h3d-label b{font:600 13.5px/1.1 var(--body);letter-spacing:-.012em;color:#fff}
+.h3d-label span{font:400 12px/1.2 var(--body);letter-spacing:-.006em;color:var(--h-mute)}
 @keyframes hero-rise{from{opacity:0;transform:translateY(18px)}}
-.hero-copy{animation:hero-rise .9s var(--ease-out) both}
-.hero-stage{animation:hero-rise 1.1s var(--ease-out) .15s both}
-.hero-specs{animation:hero-rise 1.1s var(--ease-out) .3s both}
-@media (prefers-reduced-motion:reduce){.hero-copy,.hero-stage,.hero-specs{animation:none}}
+.gnav.over-hero{--accent-ink:#C7FF2E}
+@media (max-width:1100px){.hero2{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}}
+@media (max-width:900px){
+  .hero2{grid-template-columns:minmax(0,1fr);min-height:0;padding-top:64px}
+  .h3-copy{padding:28px var(--gut) 8px}
+  .h3-stage{margin:0;min-height:0;height:clamp(340px,78vw,520px)}
+  .h3-legend{left:var(--gut)}
+  .h3-hint{display:none}
+}
+@media (max-width:520px){.h3-legend button{padding:7px 11px 7px 9px;font-size:12px}.hero-specs{gap:18px}.hero-specs b{font-size:24px}}
+@media (prefers-reduced-motion:reduce){.h3-copy,.h3-stage{animation:none}.h3-eyebrow i{animation:none}}
 
 /* ---------- section heads */
 .shead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;margin-bottom:36px}
@@ -166,7 +203,7 @@
 .cats a b{font-weight:650;font-size:16.5px;margin-top:auto}
 .cats a span{font-size:13.5px;color:var(--muted);line-height:1.45}
 .cats a .n{position:absolute;right:16px;top:18px;font:500 12px/1 var(--mono);color:var(--muted)}
-.cats a.hl{background:var(--accent);color:#fff}
+.cats a.hl{background:var(--accent);color:var(--on-accent)}
 .cats a.hl .glyph,.cats a.hl b{color:#fff}
 .cats a.hl span,.cats a.hl .n{color:rgba(255,255,255,.8)}
 .cats a.hl:hover{background:var(--berry)}
@@ -223,7 +260,7 @@
 .sdl-tabs button:hover{background:rgba(127,127,135,.12)}
 .sdl-tabs button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12),0 3px 8px -2px rgba(0,0,0,.1)}
 .sdl-tabs button[aria-selected="true"] .k{background:transparent;color:var(--bc,var(--accent))}
-.grp.overview{--bc:#0071E3}.grp.physical{--bc:#0071E3}.grp.digital{--bc:#32ADE6}.grp.intelligence{--bc:#34C759}.grp.safety{--bc:#FF9500}
+.grp.overview{--bc:#C7FF2E}.grp.physical{--bc:#E4FF9C}.grp.digital{--bc:#B0B0B0}.grp.intelligence{--bc:#C7FF2E}.grp.safety{--bc:#FBBF24}
 .sdl{border:0;border-radius:var(--r-xl);box-shadow:var(--shadow)}
 .viewer{background:radial-gradient(80% 80% at 50% 30%,#2C2C2E,#0B0B0C 78%);border-bottom:0}
 .viewer .hud span,.legend3d,.viewer .reset{background:rgba(30,30,32,.62);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.08);border-radius:980px}
@@ -237,9 +274,11 @@
 .viewer .load{font:400 14px/1.4 var(--body);color:#A1A1A6}
 .sdl-labels span{font:500 12.5px/1 var(--body);letter-spacing:-.008em;background:rgba(30,30,32,.66);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,.1);border-radius:980px;padding:7px 11px}
 .sdl-lines line{stroke:#F5F5F7;stroke-opacity:.55;stroke-width:1}
-.sdl-lines circle{fill:#0A84FF;stroke:#fff}
+.sdl-lines circle{fill:#C7FF2E;stroke:#0F0F0F}
 .sdl-info .bandtag{font:600 12px/1 var(--body);letter-spacing:-.008em;text-transform:none;border-radius:980px;padding:5px 10px}
-.bandtag.overview,.bandtag.physical{--bc:#0071E3}.bandtag.digital{--bc:#32ADE6}.bandtag.intelligence{--bc:#34C759}.bandtag.safety{--bc:#FF9500}
+.bandtag.overview{--bc:#C7FF2E}.bandtag.physical{--bc:#E4FF9C}.bandtag.digital{--bc:#B0B0B0}.bandtag.intelligence{--bc:#C7FF2E}.bandtag.safety{--bc:#FBBF24}
+.sdl-info .bandtag{color:#0F0F0F}
+:root:not([data-theme="dark"]) .sdl-tabs button[aria-selected="true"] .k{color:var(--ink)}
 .sdl-info h3{font-size:24px;letter-spacing:-.01em}
 .sdl-info p,.sdl-info .flows li{font-size:15px;letter-spacing:-.016em}
 .sdl-info .ref{font:400 13px/1.4 var(--body);letter-spacing:-.008em}
@@ -293,28 +332,38 @@
 .receipt{border:0;border-radius:var(--r-lg)}
 .receipt .vh b{font:600 15px/1.2 var(--body);letter-spacing:-.016em}
 .receipt .vh a{font:500 13px/1 var(--body);border:0;border-radius:980px;background:var(--accent-soft);color:var(--accent-ink);padding:6px 11px}
-.receipt .vh a:hover{background:var(--accent);color:#fff}
+.receipt .vh a:hover{background:var(--accent);color:var(--on-accent)}
 .receipt .vh .mono,.receipt .vh .fine{font:500 13px/1 var(--body)}
 .receipt .ln{font-size:15px;letter-spacing:-.016em}
 .receipt .ln b{font:500 14px/1.4 var(--body);font-variant-numeric:tabular-nums}
 .receipt hr{border-top:1px solid var(--line)}
+/* liquid glass: the section surfaces take the shared material (assets/bl.css) */
+.methods li,.cats .gtile,.tpl,.receipt,.sdl{background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--glass-ring)}
+.tpl:hover{box-shadow:var(--glass-ring),0 30px 60px -28px rgba(15,23,42,.35)}
+.sdl-tabs .row,.mtabs{background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--glass-ring)}
+.sdl-tabs button[aria-selected="true"],.mtabs button[aria-selected="true"]{background:var(--glass-sel);box-shadow:var(--glass-sel-shadow)}
+.uo-parts li .im{background:color-mix(in srgb,var(--plate) 60%,transparent)}
+.fig .frame{box-shadow:var(--glass-ring);border-radius:var(--r-xl)}
 </style>
 </head>
 <body>
 <main id="main">
 
 <!-- ================================================================ hero -->
-<section class="hero" aria-labelledby="h">
-  <div class="hero-copy">
-    <p class="hero-eyebrow">assemblab</p>
-    <h1 id="h">Configure a self&#8209;driving lab.</h1>
-    <p class="hero-sub">From labware to orchestrator, data, ML models and AI agents.</p>
-    <div class="hero-cta"><a class="btn btn-accent" href="lab-simulator/">Open the Lab Simulator</a><a class="lnk" href="parts/">Browse the library ›</a></div>
+<section class="hero2" aria-labelledby="h">
+  <div class="h3-copy">
+    <p class="h3-eyebrow"><i></i>Self-driving lab builder</p>
+    <h1 id="h">Configure a self&#8209;driving lab, <span>module by module.</span></h1>
+    <p class="h3-sub">From labware to orchestrator, data, ML models and AI agents. Every part comes from its maker and drops into a 3D layout.</p>
+    <div class="hero-cta"><a class="go" href="lab-simulator/">Open the Lab Simulator</a><a class="arr" href="parts/" aria-label="Browse the parts library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
+    <ul class="hero-specs" id="heroSpecs" aria-label="The library at a glance"></ul>
   </div>
-  <div class="hero-stage">
-    <img id="heroImg" src="assets/img/hero-product.webp" alt="The assemblab demonstration platform, built only from parts in the library: two T-slot workstations under a stainless deck carrying an Opentrons OT-2, a compact cobot, a balance, labware, a dispensing gantry with its tools, a gantry viscometer, a planetary mixer, pumps and a stack light." width="1100" height="742" fetchpriority="high">
+  <div class="h3-stage" id="h3Stage" role="group" aria-label="A self-driving cell in 3D, built from library parts: a T-slot robot workstation carrying an Opentrons Flex liquid handler, a UR3e cobot, a magnetic hotplate stirrer and an HPLC system.">
+    <img class="h3-poster" src="assets/img/hero-sdl.webp" alt="" width="2400" height="1240">
+    <div class="h3-load" id="h3Load">Loading the cell <i></i></div>
+    <p class="h3-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v10.5l-2-2a1.6 1.6 0 0 0-2.3 2.3L9 18.2A6 6 0 0 0 13.3 20H14a5 5 0 0 0 5-5v-4a1.5 1.5 0 0 0-3 0v-1a1.5 1.5 0 0 0-3 0V9a1.5 1.5 0 0 0-3 0V3a1.5 1.5 0 0 0-3 0Z"/></svg>Point at a component</p>
+    <ul class="h3-legend" id="h3Legend" aria-label="Components in the cell"></ul>
   </div>
-  <ul class="hero-specs" id="heroSpecs" aria-label="The library at a glance"></ul>
 </section>
 
 <!-- ================================================================ 1 · the self-driving laboratory, stage by stage -->
@@ -330,7 +379,7 @@
       <div class="sdl-main">
         <div class="viewer" id="viewer"><div class="load" id="load">Loading the platform (about 8 MB of CAD)…</div>
           <div class="hud"><span id="hud1">assemblab demonstration platform · catalogue CAD</span><span>Drag to rotate · scroll to zoom</span></div>
-          <div class="legend3d" aria-hidden="true"><span><i style="background:#22D3EE"></i>data</span><span><i style="background:#818CF8"></i>commands</span><span><i style="background:#4ADE80"></i>model proposals</span><span><i style="background:#F59E0B"></i>safety gate</span></div>
+          <div class="legend3d" aria-hidden="true"><span><i style="background:#FFFFFF"></i>data</span><span><i style="background:#B0B0B0"></i>commands</span><span><i style="background:#C7FF2E"></i>model proposals</span><span><i style="background:#FBBF24"></i>safety gate</span></div>
           <button type="button" class="reset" id="reset">Reset view</button></div>
         <div class="sdl-info" id="sdl-info" role="tabpanel" aria-live="polite"></div>
       </div>
@@ -460,11 +509,30 @@ import { TEMPLATES } from "./data/templates.js";
 mountChrome();
 const $ = s => document.querySelector(s);
 
-/* ---------------- hero: the product sways gently once its animation has loaded; the still stays for reduced motion */
-if (!matchMedia("(prefers-reduced-motion: reduce)").matches) { const im = new Image(); im.onload = () => { $("#heroImg").src = im.src; }; im.src = "assets/img/hero-product-loop.webp"; }
+/* ---------------- hero: the library at a glance */
 $("#heroSpecs").innerHTML = [[PRODUCTS.length, "parts and tools"], [PRODUCTS.filter(p => p.design).length, "placeable in 3D"], [Object.values(TEMPLATES).filter(t => t.auto).length, "self-driving lab templates"]]
   .map(([n, l]) => `<li><b>${n}</b><span>${l}</span></li>`).join("");
 
+
+/* ---------------- hero: the live 3D cell (assets/hero-scene.js). Legend chips and the scene highlight each other;
+   a click opens the part in the library. Without WebGL the poster stays. */
+{ const stage = $("#h3Stage"), legend = $("#h3Legend");
+  import("./assets/hero-scene.js").then(async ({ createHeroScene, HERO_PARTS }) => {
+    legend.innerHTML = HERO_PARTS.map(p => `<li><button type="button" data-k="${p.key}"><i></i>${p.name}</button></li>`).join("");
+    const mark = k => legend.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === k));
+    const hero = await createHeroScene(stage, {
+      onHover: P => mark(P?.key ?? null),
+      onSelect: P => { location.href = `parts/?p=${P.id}`; },
+      onProgress: (n, of) => { $("#h3Load").style.setProperty("--p", n / of); if (n >= 1) stage.classList.add("ready"); },
+    });
+    const hl = new URLSearchParams(location.search).get("hl"); if (hl) { hero.highlight(hl); mark(hl); }   // ?hl=<part> previews a highlight
+    legend.addEventListener("pointerover", e => { const b = e.target.closest("button"); if (b) { hero.highlight(b.dataset.k); mark(b.dataset.k); } });
+    legend.addEventListener("pointerout", e => { if (!legend.contains(e.relatedTarget)) { hero.highlight(null); mark(null); } });
+    legend.addEventListener("focusin", e => { const b = e.target.closest("button"); if (b) { hero.highlight(b.dataset.k); mark(b.dataset.k); } });
+    legend.addEventListener("focusout", () => { hero.highlight(null); mark(null); });
+    legend.addEventListener("click", e => { const b = e.target.closest("button"); const p = b && HERO_PARTS.find(x => x.key === b.dataset.k); if (p) location.href = `parts/?p=${p.id}`; });
+  }).catch(err => { console.warn("3D hero unavailable:", err); $("#h3Load")?.remove(); stage.classList.add("nogl"); });
+}
 
 /* ---------------- 1 · the self-driving laboratory, stage by stage (content: data/sdl-workflow.js, 3D: assets/sdl-scene.js) */
 let sdlIdx = Math.max(0, STAGES.findIndex(st => location.hash === `#sdl-${st.id}`)), sdlScene = null, playing = null, safetyOn = false;

@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="assemblab"><title>assemblab</title><rect x="4" y="4" width="26" height="26" rx="5" fill="#0E1A2B"/><rect x="34" y="4" width="26" height="26" rx="5" fill="#0E1A2B"/><rect x="4" y="34" width="26" height="26" rx="5" fill="#2563EB"/><rect x="35.5" y="35.5" width="23" height="23" rx="4" fill="none" stroke="#2563EB" stroke-width="3" stroke-dasharray="5 3.4"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 6 46 47" role="img" aria-label="assemblab">
+  <!-- the mark for light backgrounds: three modules set, the fourth (lime) dropping into place -->
+  <rect x="13" y="33" width="17" height="17" rx="4.5" fill="#0F0F0F"/>
+  <rect x="34" y="33" width="17" height="17" rx="4.5" fill="#0F0F0F"/>
+  <rect x="13" y="12" width="17" height="17" rx="4.5" fill="#2E2E2E" opacity=".55"/>
+  <rect x="36" y="9" width="17" height="17" rx="4.5" fill="#C7FF2E" stroke="#0F0F0F" stroke-width="1.2"/>
+</svg>

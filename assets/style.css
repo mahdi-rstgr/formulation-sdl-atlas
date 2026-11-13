@@ -240,3 +240,18 @@ h1,h2,h3{font-weight:700;letter-spacing:-.012em}
 .foot{background:var(--bg);border-top:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 @media (prefers-reduced-transparency:reduce){.top,.stage-hud,.hud-row,.legend{background:var(--surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+
+/* ================================================================ graphite + lime (#0F0F0F · #2E2E2E · #C7FF2E · #FFFFFF · #B0B0B0)
+   --accent fills, --accent-ink is the text on it; on light paper lime is only a fill, links carry graphite ink. */
+:root,:root[data-theme="light"]{
+  --bg:#F2F2F0; --surface:#FFFFFF; --ink:#0F0F0F; --ink-2:#2E2E2E; --ink-3:#6B6B6B; --line:rgba(15,15,15,.08);
+  --accent:#C7FF2E; --accent-ink:#0F0F0F; --stage:#E8E8E5;
+  --liquid:#3B82F6; --semi:#F59E0B; --powder:#A855F7; --object:#65A30D;
+}
+:root[data-theme="dark"]{
+  --bg:#0F0F0F; --surface:#1C1C1C; --ink:#FFFFFF; --ink-2:#E2E2E2; --ink-3:#B0B0B0; --line:rgba(255,255,255,.08);
+  --accent:#C7FF2E; --accent-ink:#0F0F0F; --stage:#1C1C1C;
+  --liquid:#60A5FA; --semi:#FBBF24; --powder:#C084FC; --object:#C7FF2E;
+}
+:root:not([data-theme="dark"]) a{color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:2px}
+::selection{background:#C7FF2E;color:#0F0F0F}

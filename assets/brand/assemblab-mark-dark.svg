@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="assemblab"><title>assemblab</title><rect x="4" y="4" width="26" height="26" rx="5" fill="#F7F8FA"/><rect x="34" y="4" width="26" height="26" rx="5" fill="#F7F8FA"/><rect x="4" y="34" width="26" height="26" rx="5" fill="#60A5FA"/><rect x="35.5" y="35.5" width="23" height="23" rx="4" fill="none" stroke="#60A5FA" stroke-width="3" stroke-dasharray="5 3.4"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 6 46 47" role="img" aria-label="assemblab">
+  <!-- the mark for dark backgrounds -->
+  <rect x="13" y="33" width="17" height="17" rx="4.5" fill="#FFFFFF"/>
+  <rect x="34" y="33" width="17" height="17" rx="4.5" fill="#FFFFFF"/>
+  <rect x="13" y="12" width="17" height="17" rx="4.5" fill="#B0B0B0"/>
+  <rect x="36" y="9" width="17" height="17" rx="4.5" fill="#C7FF2E"/>
+</svg>
