@@ -488,3 +488,22 @@ kbd{font-family:var(--body);border-radius:5px}
 #run-plot{background:rgba(10,10,10,.6)}
 .canvas.drop::after{color:#C7FF2E;border-color:#C7FF2E;background:rgba(199,255,46,.05)}
 ::selection{background:#C7FF2E;color:#0F0F0F}
+
+/* ================================================================ site menu in the toolbar */
+.bar{position:relative;z-index:30}
+.smenu{position:relative}
+.menubtn{display:inline-flex;align-items:center;gap:8px;padding:8px 14px 8px 11px;border:0;border-radius:980px;background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.06);color:var(--ink);font:500 14px/1 var(--body);letter-spacing:-.016em;transition:background-color .15s,transform .1s ease-out}
+.menubtn svg{width:16px;height:16px;color:#C7FF2E}
+.menubtn:hover,.menubtn[aria-expanded="true"]{background:rgba(255,255,255,.14)}
+.menubtn:active{transform:scale(.96)}
+.smenu-sheet{position:absolute;left:0;top:calc(100% + 10px);width:300px;padding:8px;border-radius:20px;display:grid;gap:2px;z-index:60;
+  background:linear-gradient(180deg,rgba(38,38,38,.97),rgba(24,24,24,.97));   /* opaque: a blur nested in the blurred toolbar cannot see the page behind it */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.08),0 30px 60px -20px rgba(0,0,0,.85);transform-origin:top left;animation:pop-in .35s var(--ease)}
+.smenu-sheet a{display:grid;gap:3px;padding:10px 12px;border-radius:13px;text-decoration:none;color:var(--ink)}
+.smenu-sheet a b{font:500 14.5px/1.15 var(--body);letter-spacing:-.016em}
+.smenu-sheet a span{font:400 12px/1.25 var(--body);color:var(--ink-3)}
+.smenu-sheet a:hover,.smenu-sheet a:focus-visible{background:rgba(255,255,255,.08);outline:none}
+.smenu-sheet a:hover b{color:#C7FF2E}
+.smenu-sheet a.cart{margin-top:4px;border-top:1px solid var(--line);border-radius:0 0 13px 13px;padding-top:12px}
+@media (max-width:760px){.menubtn{padding:8px 11px}.smenu-sheet{width:min(300px,calc(100vw - 32px))}}
+@media (prefers-reduced-motion:reduce){.smenu-sheet{animation:none}}

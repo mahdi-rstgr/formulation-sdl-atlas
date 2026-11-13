@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lab Simulator · assemblab</title>
 <meta name="description" content="assemblab Lab Simulator: lay out a self-driving lab in 3D from every maker's parts, including McMaster-Carr workstations, watch it run, check reach and capabilities, and send the parts list to a cart that refers you to each vendor.">
-<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.svg?v=3" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png?v=3" sizes="32x32" type="image/png"><link rel="shortcut icon" href="../assets/favicon.ico?v=3"><link rel="apple-touch-icon" href="../assets/favicon.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap">
@@ -30,6 +30,18 @@
   <button type="button" class="burger" id="burger" aria-label="Device library" aria-controls="side" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   <div class="ttl"><h1>Lab Simulator</h1><span>Drag devices from the left into the workstation</span></div>
   <span class="live"><i></i>Live simulation</span>
+  <div class="smenu">
+    <button type="button" class="menubtn" id="menuBtn" aria-expanded="false" aria-controls="smenuSheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/></svg>Menu</button>
+    <nav class="smenu-sheet" id="smenuSheet" aria-label="Site" hidden>
+      <a href="../"><b>Overview</b><span>assemblab home</span></a>
+      <a href="../parts/"><b>Parts library</b><span>Hardware and software from every maker</span></a>
+      <a href="../solutions/"><b>Solutions</b><span>Start from what you formulate</span></a>
+      <a href="../self-driving/"><b>Self-driving layer</b><span>Orchestrate, rehearse and decide</span></a>
+      <a href="../atlas/"><b>Digital twin atlas</b><span>The review, as a live twin</span></a>
+      <a href="../wiki/"><b>Learn</b><span>The wiki</span></a>
+      <a href="../cart/" class="cart"><b>Cart</b><span>Each provider, one by one</span></a>
+    </nav>
+  </div>
   <div class="bar-tools">
     <label for="template" class="sr">Load a template</label>
     <select id="template"></select>
@@ -113,6 +125,15 @@
 </main>
 </div>
 <div id="toast" class="toast" role="status" hidden></div>
+<script>
+/* site menu: a glass dropdown from the toolbar; closes on outside click, Escape, or choosing a link */
+(() => { const b = document.getElementById("menuBtn"), m = document.getElementById("smenuSheet");
+  const set = v => { m.hidden = !v; b.setAttribute("aria-expanded", String(v)); if (v) m.querySelector("a").focus({ preventScroll: true }); };
+  b.addEventListener("click", e => { e.stopPropagation(); set(m.hidden); });
+  document.addEventListener("click", e => { if (!m.hidden && !m.contains(e.target)) set(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !m.hidden) { set(false); b.focus(); } });
+})();
+</script>
 <script type="module" src="builder.js"></script>
 </body>
 </html>
